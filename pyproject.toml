@@ -1,0 +1,12 @@
+[project]
+name = "django-diploma"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django==5.0",
+    "docutils>=0.21.2",
+    "pillow>=11.1.0",
+    "requests>=2.32.3",
+]
