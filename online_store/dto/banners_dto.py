@@ -33,7 +33,7 @@ class BannerCategoryDTO:
     id: int
     image: str
     category_id: int
-    product_name: str
+    category_name: str
 
     @classmethod
     def from_queryset(
@@ -43,8 +43,8 @@ class BannerCategoryDTO:
             cls(
                 id=b.id,
                 image=b.image.url,
-                product_id=b.category.id,
-                product_name=b.category.name,
+                category_id=b.category.id,
+                category_name=b.category.name,
             )
             for b in queryset
         ]
