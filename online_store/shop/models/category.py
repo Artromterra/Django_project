@@ -11,4 +11,4 @@ class Category(models.Model):
     # DB fields
     name = models.CharField(blank=False, max_length=50)
     description = models.TextField(blank=False, max_length=5000)
-    subcategory = models.ForeignKey("self", on_delete=models.CASCADE, related_name="subcategories")
+    parent_category = models.ForeignKey("self", on_delete=models.CASCADE, related_name="subcategories", null=True)
