@@ -5,73 +5,62 @@ from django.core.cache import cache
 
 from typing import Optional, Dict
 
-from banners.models import Banner
+from banners.models import BannerProduct, BannerCategory
+from dto.banners_dto import BannerProductDTO, BannerCategoryDTO
 
 
 class BannerService:
     def __init__(self, user: User):
         self.user = user
 
-    def get_banners_to_homepage(self) -> Dict[str, QuerySet[Optional[Banner]]]:
+    def get_banners_to_homepage(
+        self,
+    ) -> Dict[str, QuerySet[Optional[BannerProduct | BannerCategory]]]:
         """
         ## Получить активные баннеры для главной страницы
         Выдает баннеры по группам:
-        - основные
-        - популярные
-        - ограниченное издание
-        - ограниченное предложение
+        - 3 баннера новинок
+        - 3 баннера популярных категорий
 
         ### Вывод
         - Словарь с кверисетами, групированный по названиям групп
         """
         try:
-            cache_data = cache.get("banners_homepage")
-            if cache_data:
-                return cache_data
+            banners_product = cache.get("banners_product_homepage")
+            banners_category = cache.get("banners_category_homepage")
 
-            objects = (
-                Banner.objects.filter(is_active=True)
-                .select_related("product")
-                .all()
-            )
-
-            # 3 больших основных баннера
-            main_banners = objects.filter(banner_type="main").order_by(
-                "-created_at"
-            )[:3]
-            objects = objects.exclude(
-                id__in=main_banners.values_list("id", flat=True)
-            )
-
-            # популярные продукты
-            popular_banners = (
-                objects.filter(
-                    banner_type="main", product__category__name="popular"
+            if not banners_product:
+                # Большие баннеры для товаров новинок
+                banners_product = BannerProductDTO.from_queryset(
+                    BannerProduct.objects.filter(is_active=True)
+                    .select_related("product")
+                    .order_by("-created_at")[:3]
                 )
-                .annotate(orders_count=Count("product__orders"))
-                .order_by("-orders_count")
-            )
+                cache.set(
+                    "banners_product_homepage", banners_product, timeout=600
+                )
 
-            # ограниченный тираж
-            limited_edition_banners = objects.filter(
-                banner_type="main", product__category__name="limited"
-            ).order_by("product__count")
-
-            # ограниченные предложения
-            limited_offer_banners = (
-                objects.filter(
-                    banner_type="main",
-                ).order_by("product__discount__exp_date")
-            )[:3]
+            if not banners_category:
+                # Баннеры популярных категорий
+                banners_category = BannerCategoryDTO.from_queryset(
+                    BannerCategory.objects.filter(is_active=True)
+                    .select_related("category")
+                    .annotate(
+                        orders_count=Count(
+                            "category__products__oreders", distinct=True
+                        )
+                    )
+                    .order_by("-orders_count")[:3]
+                )
+                cache.set(
+                    "banners_category_homepage", banners_category, timeout=600
+                )
 
             result = {
-                "main_banners": main_banners,
-                "popular_banners": popular_banners,
-                "limited_edition_banners": limited_edition_banners,
-                "limited_offer_banners": limited_offer_banners,
+                "banners_product": banners_product,
+                "banners_category": banners_category,
             }
 
-            cache.set("banners_homepage", result, timeout=600)
             return result
 
         except Exception as ex:
