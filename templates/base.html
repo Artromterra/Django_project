@@ -57,21 +57,30 @@
       | для правильного отображения сайта.
   -->
     {% block body %}
-        <main class="Middle">
-            {% block main %}
-                {% block top-menu %}
-                    {% include top-menu.html' %}
-                {% endblock %}
-                {% block content %}
-                    <h1>No Content</h1>
-                {% endblock %}
-            {% endblock %}
-        </main>
+        {% block header %}
+            {% include "header.html" %}
+        {% endblock %}
+        {% block content %}
+            <h1>No Content</h1>
+        {% endblock %}
         <footer class="Footer">
             {% block footer %}
-                {% include footer.html' %}
+                {% include "footer.html" %}
             {% endblock %}
         </footer>
+    {% endblock %}
+    {% block scripts-after-footer %}
+        <!--+Middle-->
+    <!--    +div.-top-->
+    <!--        +breadcrumbs('Главная','Портфолио')-->
+    <!--    +Article('portfolio')-->
+    <!---->
+    <script src="static/assets/plg/jQuery/jquery-3.5.0.slim.min.js"></script>
+    <script src="static/assets/plg/form/jquery.form.js"></script>
+    <script src="static/assets/plg/form/jquery.maskedinput.min.js"></script>
+    <script src="static/assets/plg/range/ion.rangeSlider.min.js"></script>
+    <script src="static/assets/plg/Slider/slick.min.js"></script>
+    <script src="static/assets/js/scripts.js"></script>
     {% endblock %}
 </body>
 
