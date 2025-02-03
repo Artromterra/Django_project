@@ -11,6 +11,11 @@ Layout of an online store using the Jinja2 template engine.
 - **footer** - The block that includes the content inside the footer tag. By default, it loads into itself footer.html
 - **scripts-after-footer** - The block responsible for scripts that are loaded after the entire page is loaded. It is located after the footer tag.
 
+## Warning
+
+- Some templates combined header and content in one tag. Therefore, such templates still have an empty content block. As soon as the header and footer are ready, these templates will be completed.
+- Since all static files have been moved to the static directory, you need to fix the links to these files by adding /static/ at the beginning of the url. This is not fixed in all templates. If images or styles (or other static files) are not loaded on any page, then you just need to find this object in html and fix the link.
+
 ## Example
 ```commandline
 {% extends "base.html" %}
