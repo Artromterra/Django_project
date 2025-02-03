@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-*=-!s%)9*qwolmf+wkljh&gs50_dk*xfy8$a)@85x^g!qt6+p@
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "0.0.0.0"
+    "0.0.0.0",
+    "127.0.0.1",
 ]
 
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'profiles.apps.ProfilesConfig',
     'shop.apps.ShopConfig',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [
