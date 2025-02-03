@@ -1,5 +1,14 @@
 from django.db import models
 
+
+# TODO: The Product model references the SubCategory class -
+#  need to add an implementation of the SubCategory class.
+
+
+class SubCategory(models.Model):
+    pass
+
+
 class Category(models.Model):
     class Meta:
         verbose_name = "Category"
