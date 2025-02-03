@@ -1,4 +1,12 @@
 from django.contrib import admin
 from django.urls import path
 
-urlpatterns = []
+from .views import check_integration_with_frontend
+
+app_name = "shop"
+
+# TODO: Remove the check_integration_with_frontend view function
+#  - it is needed to check integration with the base frontend
+urlpatterns = [
+    path("check-frontend/", check_integration_with_frontend, name="check-frontend")
+]
