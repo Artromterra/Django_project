@@ -21,7 +21,6 @@ def validate_svg(file):
         raise ValidationError("Uploaded file is not a valid SVG")
 
 
-
 class Category(models.Model):
     name = models.CharField(max_length=50)
     subcategory_icon = models.FileField(
