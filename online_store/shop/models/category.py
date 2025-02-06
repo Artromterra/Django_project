@@ -23,16 +23,16 @@ def validate_svg(file):
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    subcategory_icon = models.FileField(
-        upload_to="subcategory/icons/", validators=[validate_svg], blank=True, null=True
+    category_icon = models.FileField(
+        upload_to="category/icons/", validators=[validate_svg], blank=True, null=True
     )
 
     def __str__(self):
         return self.name
 
     def icon_preview(self):
-        if self.subcategory_icon:
-            return mark_safe(f'<img src="{self.subcategory_icon.url}" width="50" height="50" />')
+        if self.category_icon:
+            return mark_safe(f'<img src="{self.category_icon.url}" width="50" height="50" />')
         return "(No Icon)"
 
     icon_preview.short_description = "Preview"
