@@ -31,10 +31,12 @@
       </div>
       <nav class="row-block">
         <div class="row ControlPanel-rowSplit">
-          <div class="row-block">
-            <a class="ControlPanel-title" href="#">Вход</a>
-            <a class="ControlPanel-title" href="#">Регистрация</a>
-          </div>
+          {% if not user.is_authenticated %}
+            <div class="row-block">
+              <a class="ControlPanel-title" href="#">Вход</a>
+              <a class="ControlPanel-title" href="#">Регистрация</a>
+            </div>
+          {% endif %}
         </div>
       </nav>
     </div>
@@ -76,12 +78,16 @@
     <div class="row-block">
       <div class="CartBlock">
         <div class="dropdown">
-          <button class="dropbtn">
-            <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
-          </button>
+          {% if user.is_authenticated %}
+            <button class="dropbtn">
+              <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
+            </button>
+          {% endif %}
           <div class="dropdown-content">
             <a class="dropdown-content-a" href="#">Личный кабинет</a>
-            <a class="dropdown-content-a" href="#">Административный раздел</a>
+            {% if user.is_superuser %}
+              <a class="dropdown-content-a" href="#">Административный раздел</a>
+            {% endif %}
             <a class="dropdown-content-a" href="#">Выход</a>
           </div>
         </div>
