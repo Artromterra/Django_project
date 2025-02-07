@@ -77,12 +77,11 @@
     </nav>
     <div class="row-block">
       <div class="CartBlock">
+      {% if user.is_authenticated %}
         <div class="dropdown">
-          {% if user.is_authenticated %}
-            <button class="dropbtn">
-              <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
-            </button>
-          {% endif %}
+          <button class="dropbtn">
+            <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
+          </button>
           <div class="dropdown-content">
             <a class="dropdown-content-a" href="#">Личный кабинет</a>
             {% if user.is_superuser %}
@@ -91,6 +90,7 @@
             <a class="dropdown-content-a" href="#">Выход</a>
           </div>
         </div>
+      {% endif %}
           <a class="CartBlock-block" href="#">
             <img class="CartBlock-img" src="/static/assets/img/icons/cart.svg" alt="cart.svg" />
             <span class="CartBlock-amount">0</span>
