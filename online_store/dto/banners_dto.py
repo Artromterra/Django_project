@@ -10,6 +10,7 @@ from banners.models import BannerProduct, BannerCategory
 class BannerProductDTO:
     id: int
     image: str
+    url: str
     product_id: int
     product_title: str
 
@@ -21,6 +22,7 @@ class BannerProductDTO:
             cls(
                 id=b.id,
                 image=b.image.url,
+                url=b.get_absolute_url,
                 product_id=b.product.id,
                 product_title=b.product.title,
             )
@@ -32,6 +34,7 @@ class BannerProductDTO:
 class BannerCategoryDTO:
     id: int
     image: str
+    url: str
     category_id: int
     category_name: str
 
@@ -43,6 +46,7 @@ class BannerCategoryDTO:
             cls(
                 id=b.id,
                 image=b.image.url,
+                url=b.get_absolute_url,
                 category_id=b.category.id,
                 category_name=b.category.name,
             )
