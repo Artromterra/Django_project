@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'shop.apps.ShopConfig',
     'django_cleanup',
+    'banners.apps.BannersConfig',
 ]
 
 MIDDLEWARE = [
