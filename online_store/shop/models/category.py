@@ -22,6 +22,10 @@ def validate_svg(file):
 
 
 class Category(models.Model):
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
     name = models.CharField(max_length=50)
     category_icon = models.FileField(
         upload_to="category/icons/", validators=[validate_svg], blank=True, null=True
