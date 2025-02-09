@@ -1,6 +1,6 @@
 from services.category_menu import CategoryMenuService
 
-def category_menu():
+def category_menu(request):
     """
     Context processor, который добавляет меню категорий в контекст всех шаблонов.
     """
