@@ -1,95 +1,74 @@
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.safestring import mark_safe
+
+from .managers import UserManager
 
 
 # Create your models here.
-def user_avatar_directory_path(instance: 'UserProfile', filename: str) -> str:
+def user_avatar_directory_path(instance: 'User', filename: str) -> str:
     return 'profile/user_{pk}/avatar/{filename}'.format(
         pk=instance.pk,
         filename=filename,
     )
 
 
-class UserProfile(AbstractBaseUser, PermissionsMixin):
+def image_file_validate_size(fieldfile):
+    filesize = fieldfile.file.size
+    if filesize > (2 * 1024 * 1024):
+        raise ValidationError('Максимальный размер файла не может быть более 2Mb')
+
+
+class User(AbstractBaseUser, PermissionsMixin):
     """
     Переопределенная модель пользователя
     """
-    username = models.CharField(max_length=20, null=True, blank=True)
-    first_name = models.CharField(max_length=20, verbose_name='имя пользователя')
-    last_name = models.CharField(max_length=50, verbose_name='фамилия пользователя')
-    email = models.EmailField(max_length=255, unique=True, verbose_name='электронная почта')
-    phone_number = models.CharField(max_length=15, unique=True, verbose_name='телефонный номер')
-    image = models.ImageField(
+    username = models.CharField(
+        'user name',
+        max_length=150,
+        null=False,
+        blank=False,
+    )
+    email = models.EmailField(
+        'email',
+        max_length=255,
+        unique=True,
+        null=False,
+        blank=False,
+    )
+    phone = models.CharField(
+        'phone number',
+        max_length=15,
+        unique=True,
+        null=True,
+        blank=True,
+    )
+    is_active = models.BooleanField('is active', default=False)
+    is_staff = models.BooleanField('is staff', default=False)
+    is_superuser = models.BooleanField('is superuser', default=False)
+    avatar = models.ImageField(
+        'avatar',
         upload_to=user_avatar_directory_path,
         null=True,
         blank=True,
-        verbose_name='картинка пользователя'
+        validators=[image_file_validate_size],
     )
 
+    objects = UserManager()
+
+    class Meta:
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone_number', 'first_name', 'last_name', 'password']
+    REQUIRED_FIELDS = ['username', 'password']
 
     def __str__(self):
-        return ('Имя пользователя {}, почта {}'.
-                format(self.first_name, self.email))
+        return (' {}, email: {}'.
+                format(self.username, self.email))
 
-
-class UserProfileManager(BaseUserManager):
-    """
-    менеджер для создания профилей пользователей
-    """
-    def create_user(
-            self,
-            email,
-            first_name,
-            last_name,
-            phone_number,
-            password,
-            image,
-    ):
-        """
-        создаем новый профиль пользователя
-        """
-        if not email:
-            raise ValueError('У пользователя должен быть почтовый адрес')
-
-        email = self.normalize_email(email)
-        user = self.model(
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            phone_number=phone_number,
-            image=image,
-        )
-        user.set_password(password)
-        user.is_active = True
-        user.save(using=self._db)
-
-        return user
-
-    def create_superuser(
-            self,
-            email,
-            first_name,
-            last_name,
-            phone_number,
-            password,
-            image,
-    ):
-        """
-          создаем новый профиль суперпользователя
-        """
-        user = self.create_user(
-            email,
-            first_name,
-            last_name,
-            phone_number,
-            password,
-            image,
-        )
-        user.is_superuser = True
-        user.is_staff = True
-        user.is_active = True
-        user.save(using=self._db)
-
-        return user
+    def image_preview(self):
+        if self.avatar:
+            return mark_safe(f'<img src="{self.avatar.url}" width="50" height="50" />')
+        return 'No avatar'
