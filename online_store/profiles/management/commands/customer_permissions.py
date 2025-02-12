@@ -10,17 +10,21 @@ class Command(BaseCommand):
         parser.add_argument('user_id', type=int)
 
     def handle(self, *args, **options):
+        codenames = [
+            'view_user',
+            'view_category',
+            'view_product',
+            'view_productimage',
+        ]
         user = User.objects.get(id=options['user_id'])
         group, created = Group.objects.get_or_create(name='Customer_permissions')
-        permission_user = Permission.objects.get(codename='view_user')
-        permission_category = Permission.objects.get(codename='view_category')
-        permission_product = Permission.objects.get(codename='view_product')
-        permission_productimage = Permission.objects.get(codename='view_productimage')
 
-        group.permissions.add(permission_user)
-        group.permissions.add(permission_category)
-        group.permissions.add(permission_product)
-        group.permissions.add(permission_productimage)
+        permissions = Permission.objects.filter(
+            codename__in=codenames,
+        )
+        for permission in permissions:
+            group.permissions.add(permission)
+
         user.groups.add(group)
         user.save()
         group.save()

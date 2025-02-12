@@ -1,3 +1,4 @@
+from django.core import management
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
@@ -26,9 +27,10 @@ class RegisterView(CreateView):
         user.set_password(password)
         user.is_active = True
         user.save()
-        user = authenticate(
-            self.request,
-            email=email,
-            password=password
-        )
+        management.call_command('customer_permissions', user.id)
+        # user = authenticate(
+        #     self.request,
+        #     email=email,
+        #     password=password
+        # )
         return response
