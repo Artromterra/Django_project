@@ -1,0 +1,16 @@
+<!--{% extends 'base.html' %}-->
+
+<!--{% block body %}-->
+
+<h2>{{ product.title }}</h2>
+
+
+<p>{{ product.description }}</p>
+
+<h3>Характеристики:</h3>
+<ul>
+    {% for key, value in characteristics.items %}
+        <li><strong>{{ key|title }}:</strong> {{ value }}</li>
+    {% endfor %}
+</ul>
+<!--{% endblock body %}-->
