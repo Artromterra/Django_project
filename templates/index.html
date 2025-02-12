@@ -1,40 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="Header-slider">
+        <div class="Slider Slider_main">
+            <div class="Slider-box">
+                <div class="Slider-item">
+                    <div class="Slider-content">
+                        <div class="row">
+                            <div class="row-block">
+                                {% for banner in banners.banners_product %}
+                                <strong class="Slider-title">{{ banner.product_title}}</strong>
+                                <div class="Slider-text">{{ banner.product_description }}</div>
+                                <div class="Slider-footer"><a class="btn btn_primary" href="{{ banner.url }}">Get Started</a>
+                            </div>
+                        </div>
+                      <div class="row-block">
+                        <div class="Slider-img"><img src="{{ banner.image }}" alt="slider.png"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="Slider-navigateWrap">
+                <div class="Slider-navigate">
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
     <div class="Middle">
         <div class="Section">
             <div class="wrap">
                 <div class="BannersHome">
-                    {% for banner in banners.banners_product %}
-                        <a class="BannersHomeBlock" href="#">
-                            <div class="BannersHomeBlock-row">
-                                <div class="BannersHomeBlock-block">
-                                    <strong class="BannersHomeBlock-title">{{ banner.product.name }}</strong>
-                                    <div class="BannersHomeBlock-content">from&#32;
-                                        <span class="BannersHomeBlock-price">$${{ banner.price }}</span>
-                                    </div>
-                                </div>
-                                <div class="BannersHomeBlock-block">
-                                    <div class="BannersHomeBlock-img">
-                                        <img src="{{ banner.image.url }}" alt="{{ banner.product.name }}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-
                     {% for category in banners.banners_category %}
-                    <a class="BannersHomeBlock" href="#">
+                    <a class="BannersHomeBlock" href="{{ category.url }}">
                         <div class="BannersHomeBlock-row">
                             <div class="BannersHomeBlock-block">
-                                <strong class="BannersHomeBlock-title">{{ category.name }}</strong>
+                                <strong class="BannersHomeBlock-title">{{ category.category_name }}</strong>
                                 <div class="BannersHomeBlock-content">from&#32;
-                                    <span class="BannersHomeBlock-price">${{ category.price }}</span>
+                                    <span class="BannersHomeBlock-price">${{ category.min_product_price }}</span>
                                 </div>
                             </div>
                             <div class="BannersHomeBlock-block">
                                 <div class="BannersHomeBlock-img">
-                                    <img src="{{ category.image.url }}" alt="{{ category.name }}" />
+                                    <img src="{{ category.image }}" alt="{{ category.category_name }}" />
                                 </div>
                             </div>
                         </div>

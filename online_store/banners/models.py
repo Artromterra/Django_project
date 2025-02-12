@@ -1,7 +1,7 @@
 from django.db import models
 
-from products.models import Product
-from categories.models import Category
+from shop.models.product import Product
+from shop.models.category import Category
 
 
 def banner_category_directory_path(
