@@ -23,3 +23,15 @@ class FeedbacksListView(ListView):
         product_id = self.request.GET.get("product_id")
         context["num_feedbacks"] = Feedback.objects.filter(Feedback.product.id == product_id).count()
         return context
+
+
+class FeedbackCreateView(CreateView):
+    model = Feedback
+    fields = ["comment"]
+    template_name = "feedback-create.html"
+    context_object_name = "feedback"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.pub_date = datetime.now()
+        return super().form_valid(form)
