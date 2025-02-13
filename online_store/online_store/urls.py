@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from banners.views import HomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profiles/', include('profiles.urls')),
     path('shop/', include('shop.urls')),
+    path('', HomepageView.as_view(), name='homepage'),
 ]
 
 if settings.DEBUG:
