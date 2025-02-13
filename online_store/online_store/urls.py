@@ -22,10 +22,11 @@ from banners.views import HomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profiles/', include('profiles.urls')),
+    path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
     path('', HomepageView.as_view(), name='homepage'),
 ]
 
 if settings.DEBUG:
     urlpatterns.extend(static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
