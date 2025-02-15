@@ -5,7 +5,8 @@ from django.core.cache import cache
 
 from typing import Optional, Dict
 
-from banners.models import BannerProduct, BannerCategory
+from banners.models.banner_product import BannerProduct
+from banners.models.banner_category import BannerCategory
 from dto.banners_dto import BannerProductDTO, BannerCategoryDTO
 
 
@@ -45,12 +46,14 @@ class BannerService:
                 banners_category = BannerCategoryDTO.from_queryset(
                     BannerCategory.objects.filter(is_active=True)
                     .select_related("category")
-                    .annotate(
-                        orders_count=Count(
-                            "category__products__oreders", distinct=True
-                        )
-                    )
-                    .order_by("-orders_count")[:3]
+                    # закомментировал ниже строки для запуска приложения для тестирования
+                    # на этом этапе нет таблицы orders. Когда появится - раскомментируйте!!!!
+                    # .annotate(
+                    #     orders_count=Count(
+                    #         "category__products__orders", distinct=True
+                    #     )
+                    # )
+                    # .order_by("-orders_count")[:3]
                 )
                 cache.set(
                     "banners_category_homepage", banners_category, timeout=600
