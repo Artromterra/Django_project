@@ -1,7 +1,8 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
-from .models import BannerProduct, BannerCategory
+from banners.models.banner_product import BannerProduct
+from banners.models.banner_category import BannerCategory
 
 
 # сброс кеша для баннеров продукта

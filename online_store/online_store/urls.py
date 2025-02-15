@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from banners.views import HomepageView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
     path('', HomepageView.as_view(), name='homepage'),

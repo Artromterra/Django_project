@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import BannerProduct, BannerCategory
+from banners.models.banner_product import BannerProduct
+from banners.models.banner_category import BannerCategory
 
 
 @admin.register(BannerProduct)

@@ -4,7 +4,8 @@ from typing import List, Optional
 from django.db.models.query import QuerySet
 from django.db.models import Min
 
-from banners.models import BannerProduct, BannerCategory
+from banners.models.banner_product import BannerProduct
+from banners.models.banner_category import BannerCategory
 
 
 @dataclass
