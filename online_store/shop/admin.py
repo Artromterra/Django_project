@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
+from .models.reviews import Review
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -10,12 +11,19 @@ def clear_category_menu_cache(modeladmin, request, queryset):
     cache.delete(cache_key)
     modeladmin.message_user(request, "Кеш меню категорий сброшен.")
 
+class ReviewInline(admin.TabularInline):
+    model = Review
+    extra = 1
+
+
 admin.site.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
+    inlines = [ReviewInline]
 
 class ProductInline(admin.StackedInline):
     model = ProductImage
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
