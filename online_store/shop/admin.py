@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
-<<<<<<< online_store/shop/admin.py
 from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 
