@@ -8,7 +8,7 @@ from shop.models.product import Product
 @receiver(post_save, sender=Product)
 @receiver(post_delete, sender=Product)
 def delete_images_cache(sender, instance, **kwargs):
-    """Удаляет кеш при изменении изображений продукта"""
+    """Удаляет кеш при изменении продукта"""
     product_pk = instance.pk
 
     cache_keys = [

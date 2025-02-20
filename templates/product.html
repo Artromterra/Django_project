@@ -8,25 +8,29 @@
             <div class="wrap">
                 <div class="Product">
                     <div class="ProductCard">
-                        <div class="ProductCard-look">
-                            <div class="ProductCard-photo">
-                                <img src="{{ images.0.url }}" alt="main_prod_img" />
+                        {% if images %}
+                            <div class="ProductCard-look">
+                                <div class="ProductCard-photo">
+                                    <img src="{{ images.0.url }}" alt="{{ image.description }}" />
+                                </div>
+                                <div class="ProductCard-picts">
+                                    {% for image in images %}
+                                        <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
+                                            <img src="{{ image.url }}" alt="{{ image.description }}">
+                                        </a>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div class="ProductCard-picts">
-                                {% for image in images %}
-                                    <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
-                                        <img src="{{ image.url }}" alt="prod_img">
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
+                        {% endif %}
                         <div class="ProductCard-desc">
                             <div class="ProductCard-header">
-                                <h2 class="ProductCard-title">{{ object.title|default:"Название" }}
+                                <h2 class="ProductCard-title">
+                                    {{ object.title|default:"Нет названия" }}
                                 </h2>
                                 <div class="ProductCard-info">
                                     <div class="ProductCard-cost">
-                                        <div class="ProductCard-price">{{ object.price|default:"Цена" }}
+                                        <div class="ProductCard-price">
+                                            {{ object.price|default:"Нет цены" }}
                                         </div>
                                     </div>
                                 </div>
@@ -36,15 +40,13 @@
                                     <ul>
                                         {% for feature in features|slice:":3" %}
                                             <li>
-                                                {{ feature.text }}
+                                                {{ feature.value }}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 {% else %}
                                     <ul>
-                                        <li>Особенность 1</li>
-                                        <li>Особенность 2</li>
-                                        <li>Особенность 3</li>
+                                        <li>Особенности отсутствуют</li>
                                     </ul>
                                 {% endif %}
                             </div>
@@ -83,12 +85,10 @@
                                     <strong class="ProductCard-tagsTitle">Тэги:</strong>
                                     {% if tags %}
                                         {% for tag in tags %}
-                                            <a href="{{ tag.url }}">{{ tag.name }}</a>,
+                                            <a href="#">{{ tag.name }}</a>,
                                         {% endfor %}
                                     {% else %}
-                                        <a href="#">Тег 1</a>,
-                                        <a href="#">Тег 2</a>,
-                                        <a href="#">Тег 3</a>
+                                        <a href="#">Теги отсутствуют</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -111,23 +111,20 @@
                         </div>
                         <div class="Tabs-wrap">
                             <div class="Tabs-block" id="description">
-                                <h2>{{ object.title|default:"Название" }}</h2>
-                                <p>{{ object.description|default:"Описание" }}</p>
+                                <h2>{{ object.title|default:"Нет названия" }}</h2>
+                                <p>{{ object.description|default:"Нет описания" }}</p>
                                 <img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png">
                                 {% if features %}
                                     <ul>
-                                        {% for feature in features|slice:":3" %}
+                                        {% for feature in features %}
                                             <li>
-                                                {{ feature.text }}
+                                                {{ feature.value }}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 {% else %}
                                     <ul>
-                                        <li>Особенность 1</li>
-                                        <li>Особенность 2</li>
-                                        <li>Особенность 3</li>
-                                        <li>И тд.</li>
+                                        <li>Особенности отсутствуют</li>
                                     </ul>
                                 {% endif %}
                                 <div class="clearfix">
@@ -142,13 +139,13 @@
                                         </tr>
                                         {% if properties %}
                                             {% for prop in properties %}
-                                                <td>{{ prop.name }}</td>
+                                                <td>{{ prop.title }}</td>
                                                 <td>{{ prop.value }}</td>
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td>Тип устройства</td>
-                                                <td>Ноутбук</td>
+                                                <td>Характеристик нет</td>
+                                                <td></td>
                                             </tr>
                                         {% endif %}
                                     </table>
