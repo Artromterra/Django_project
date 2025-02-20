@@ -1,6 +1,6 @@
 from django.db import models
 from .category import Category
-
+from .seller import Seller
 
 #Product main model
 class Product(models.Model):
@@ -20,6 +20,7 @@ class Product(models.Model):
 
     # DB relatives
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products")
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='products')
 
 # Product image
 def product_images_directory_path(instance: "ProductImage", filename: str) -> str:

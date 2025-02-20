@@ -3,6 +3,7 @@ from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
 from .models.product_properties import ProductProperties,Property, PropertyValue
+from .models.seller import Seller
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -12,9 +13,24 @@ def clear_category_menu_cache(modeladmin, request, queryset):
     modeladmin.message_user(request, "Кеш меню категорий сброшен.")
 
 
-admin.site.register(Product)
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
+
+    list_display = ('title', 'seller', 'price', 'is_active')
+    list_filter = ('seller', 'is_active')
+    search_fields = ('title', 'seller__name')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(seller__user=request.user)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "seller" and not request.user.is_superuser:
+            kwargs["queryset"] = Seller.objects.filter(user=request.user)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class ProductInline(admin.StackedInline):
@@ -47,3 +63,9 @@ class PropertyAdmin(admin.ModelAdmin):
 class PropertyValueAdmin(admin.ModelAdmin):
     list_display = ("id", "value")
     search_fields = ("value",)
+
+
+@admin.register(Seller)
+class SellerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'phone', 'email')
+    search_fields = ('name', 'email')
