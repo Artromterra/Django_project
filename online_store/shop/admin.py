@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
-from .models.product_properties import ProductProperties, ProductPropertiesValues
+from .models.product_properties import ProductProperties,Property, PropertyValue
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -11,12 +11,15 @@ def clear_category_menu_cache(modeladmin, request, queryset):
     cache.delete(cache_key)
     modeladmin.message_user(request, "Кеш меню категорий сброшен.")
 
+
 admin.site.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
 
+
 class ProductInline(admin.StackedInline):
     model = ProductImage
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -25,20 +28,22 @@ class CategoryAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
 
 
-class ProductPropertiesValuesAdmin(admin.StackedInline):
-    model = ProductPropertiesValues
-
-
-class ProductPropertiesValuesInline(admin.TabularInline):
-    model = ProductProperties.values.through
-    extra = 1
-
 @admin.register(ProductProperties)
 class ProductPropertiesAdmin(admin.ModelAdmin):
-    list_display = ("title", )
-    actions = [clear_category_menu_cache]
-    inlines = [ProductPropertiesValuesInline]
+    list_display = ("id", "property", "value", "get_products")
+    search_fields = ("property__name", "value__value")
 
-@admin.register(ProductPropertiesValues)
-class ProductPropertiesValuesAdmin(admin.ModelAdmin):
-    list_display = ("value",)
+    def get_products(self, obj):
+        return ", ".join([p.name for p in obj.product.all()])
+    get_products.short_description = "Products"
+
+@admin.register(Property)
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = ("id", "name")
+    search_fields = ("name",)
+
+
+@admin.register(PropertyValue)
+class PropertyValueAdmin(admin.ModelAdmin):
+    list_display = ("id", "value")
+    search_fields = ("value",)
