@@ -42,7 +42,7 @@ class ProductProperties(models.Model):
                              db_index=True)
 
     # DB relatives
-    product = models.ManyToManyField(Product)
+    product = models.ManyToManyField(Product, related_name="product_properties")
     property = models.ForeignKey(Property,
                                     on_delete=models.CASCADE,
                                     related_name="product_properties",
