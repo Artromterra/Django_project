@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from django.urls import reverse_lazy
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -161,3 +161,28 @@ EMAIL_HOST_USER = 'your email'
 EMAIL_HOST_PASSWORD = 'your password'
 
 DEFAULT_LIMIT_REVIEWS = 5
+
+LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "debug").upper()
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "base": {
+            "format": "[%(levelname)s] [%(asctime)s] [%(name)s] %(funcName)s | %(message)s",
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "base",
+        },
+    },
+    "loggers": {
+        "view": {
+            "level": LOGLEVEL,
+            "handlers": ["console"],
+            "propagate": False,
+        },
+    },
+}
