@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
 
-from shop.models.properties import ProductProperties
+from shop.models.product_properties import ProductProperties
 
 
 @receiver(post_save, sender=ProductProperties)
@@ -12,7 +12,7 @@ def delete_images_cache(sender, instance, **kwargs):
     product_pk = instance.product_id
 
     cache_keys = [
-        f"properties_to_product_detail_{product_pk}",
+        f"product_detail_{product_pk}",
     ]
 
     cache.delete_many(cache_keys)
