@@ -11,10 +11,10 @@
                         {% if images %}
                             <div class="ProductCard-look">
                                 <div class="ProductCard-photo">
-                                    <img src="{{ images.0.url }}" alt="{{ image.description }}" />
+                                    <img src="{{ product.images.all.0.url }}" alt="{{ image.description }}" />
                                 </div>
                                 <div class="ProductCard-picts">
-                                    {% for image in images %}
+                                    {% for image in product.images.all %}
                                         <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
                                             <img src="{{ image.url }}" alt="{{ image.description }}">
                                         </a>
@@ -36,9 +36,9 @@
                                 </div>
                             </div>
                             <div class="ProductCard-text">
-                                {% if features %}
+                                {% if object.features.all %}
                                     <ul>
-                                        {% for feature in features|slice:":3" %}
+                                        {% for feature in object.features.all|slice:":3" %}
                                             <li>
                                                 {{ feature.value }}
                                             </li>
@@ -83,8 +83,8 @@
                             <div class="ProductCard-footer">
                                 <div class="ProductCard-tags">
                                     <strong class="ProductCard-tagsTitle">Тэги:</strong>
-                                    {% if tags %}
-                                        {% for tag in tags %}
+                                    {% if object.tags.all %}
+                                        {% for tag in object.tags.all %}
                                             <a href="#">{{ tag.name }}</a>,
                                         {% endfor %}
                                     {% else %}
@@ -114,9 +114,9 @@
                                 <h2>{{ object.title|default:"Нет названия" }}</h2>
                                 <p>{{ object.description|default:"Нет описания" }}</p>
                                 <img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png">
-                                {% if features %}
+                                {% if object.features.all %}
                                     <ul>
-                                        {% for feature in features %}
+                                        {% for feature in object.features.all %}
                                             <li>
                                                 {{ feature.value }}
                                             </li>
@@ -137,8 +137,8 @@
                                             <th>Значение
                                             </th>
                                         </tr>
-                                        {% if properties %}
-                                            {% for prop in properties %}
+                                        {% if object.properties.all %}
+                                            {% for prop in object.properties.all %}
                                                 <td>{{ prop.title }}</td>
                                                 <td>{{ prop.value }}</td>
                                             {% endfor %}
