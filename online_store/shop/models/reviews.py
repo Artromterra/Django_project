@@ -1,6 +1,6 @@
 from django.db import models
 from .product import Product
-from online_store.profiles.models import User
+from profiles.models import User
 
 
 class Review(models.Model):
