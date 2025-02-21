@@ -10,4 +10,5 @@ app_name = "shop"
 urlpatterns = [
     path("check-frontend/", check_integration_with_frontend, name="check-frontend"),
     path("products/<int:pk>/", ProductDetailView.as_view(), name="products_detail"),
+    # path("product-properties/<int:product_id>/", product_properties, name="product-characterictic")
 ]

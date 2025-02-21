@@ -1,12 +1,14 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.forms.models import model_to_dict
 
 from services.product_service import ProductService
 from services.product_feature_service import ProductFeatureService
 from services.product_image_service import ProductImageService
 from services.product_properties_service import ProductPropertiesService
 from services.product_tag_service import ProductTagService
+from .models.product import Product
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -43,3 +45,11 @@ class ProductDetailView(View):
             "tags": tags,
         }
         return render(request, self.template_name, context)
+
+
+# def product_properties(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#     properties = model_to_dict(product)  # Преобразуем объект в словарь
+#     return render(request,
+#                   'product_properties_template.html',
+#                   {'product': product, 'properties': properties})
