@@ -1,38 +1,54 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
     <div class="Middle Middle_top">
         <div class="Section">
             <div class="wrap">
                 <div class="Product">
                     <div class="ProductCard">
-                        <div class="ProductCard-look">
-                            <div class="ProductCard-photo">
-                                <img src="assets/img/content/home/bigGoods.png" alt="bigGoods.png" />
+                        {% if images %}
+                            <div class="ProductCard-look">
+                                <div class="ProductCard-photo">
+                                    <img src="{{ product.images.all.0.url }}" alt="{{ image.description }}" />
+                                </div>
+                                <div class="ProductCard-picts">
+                                    {% for image in product.images.all %}
+                                        <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
+                                            <img src="{{ image.url }}" alt="{{ image.description }}">
+                                        </a>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div class="ProductCard-picts"><a class="ProductCard-pict ProductCard-pict_ACTIVE" href="assets/img/content/home/bigGoods.png"><img src="assets/img/content/home/bigGoods.png" alt="bigGoods.png" /></a><a class="ProductCard-pict" href="assets/img/content/home/slider.png"><img src="assets/img/content/home/slider.png" alt="slider.png" /></a><a class="ProductCard-pict" href="assets/img/content/home/videoca.png"><img src="assets/img/content/home/videoca.png" alt="videoca.png" /></a>
-                            </div>
-                        </div>
+                        {% endif %}
                         <div class="ProductCard-desc">
                             <div class="ProductCard-header">
-                                <h2 class="ProductCard-title">Barand New Phone Smart Busines
+                                <h2 class="ProductCard-title">
+                                    {{ object.title|default:"Нет названия" }}
                                 </h2>
                                 <div class="ProductCard-info">
                                     <div class="ProductCard-cost">
-                                        <div class="ProductCard-price">$55.00
+                                        <div class="ProductCard-price">
+                                            {{ object.price|default:"Нет цены" }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="ProductCard-text">
-                                <ul>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod
-                                    </li>
-                                    <li>tempor incididunt ut labore et dolore magna aliqua. Lorem
-                                    </li>
-                                    <li>ipsum dolor sit ameabore et dolore magna aliqua. Lorem ipsum
-                                    </li>
-                                </ul>
+                                {% if object.features.all %}
+                                    <ul>
+                                        {% for feature in object.features.all|slice:":3" %}
+                                            <li>
+                                                {{ feature.value }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <ul>
+                                        <li>Особенности отсутствуют</li>
+                                    </ul>
+                                {% endif %}
                             </div>
                             <div class="ProductCard-cart">
                                 <div class="ProductCard-cartElement ProductCard-cartElement_amount">
@@ -46,7 +62,7 @@
                                 </div>
                                 <div class="ProductCard-cartElement">
                                     <a class="btn btn_primary" href="#modal_open">
-                                        <img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" />
+                                        <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
                                         <span class="btn-content">Купить</span>
                                     </a>
                                 </div>
@@ -66,8 +82,14 @@
                             </div>
                             <div class="ProductCard-footer">
                                 <div class="ProductCard-tags">
-                                    <strong class="ProductCard-tagsTitle">Тэги:
-                                    </strong><a href="#">Аксессуары</a>,<a href="#">Дизайн</a>,<a href="#">Игры</a>
+                                    <strong class="ProductCard-tagsTitle">Тэги:</strong>
+                                    {% if object.tags.all %}
+                                        {% for tag in object.tags.all %}
+                                            <a href="#">{{ tag.name }}</a>,
+                                        {% endfor %}
+                                    {% else %}
+                                        <a href="#">Теги отсутствуют</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -89,26 +111,22 @@
                         </div>
                         <div class="Tabs-wrap">
                             <div class="Tabs-block" id="description">
-                                <h2>Megano Store Hystory
-                                </h2>
-                                <p>Lorem ipsum dolor sit amet, consectetuer&#32;
-                                    <strong>adipiscing
-                                    </strong>&#32;elit doli. Aenean commodo ligula eget dolor. Aenean massa.&#32;<a href="#">Cumtipsu</a>&#32;sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
-                                </p><img class="pict pict_right" src="assets/img/content/home/bigGoods.png" alt="bigGoods.png" />
-                                <ul>
-                                    <li>Lorem ipsum dolor sit amet, consectetuer
-                                    </li>
-                                    <li>adipiscing elit doli.&#32;<em>Aenean</em>&#32;commodo ligula
-                                    </li>
-                                    <li>eget dolor. Aenean massa. Cumtipsu sociis
-                                    </li>
-                                    <li>natoque penatibus et magnis dis parturient
-                                    </li>
-                                    <li>montesti, nascetur ridiculus mus. Donec
-                                    </li>
-                                    <li>quam felis, ultricies nec, pellentesque eutu
-                                    </li>
-                                </ul>
+                                <h2>{{ object.title|default:"Нет названия" }}</h2>
+                                <p>{{ object.description|default:"Нет описания" }}</p>
+                                <img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png">
+                                {% if object.features.all %}
+                                    <ul>
+                                        {% for feature in object.features.all %}
+                                            <li>
+                                                {{ feature.value }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <ul>
+                                        <li>Особенности отсутствуют</li>
+                                    </ul>
+                                {% endif %}
                                 <div class="clearfix">
                                 </div>
                                 <div class="table">
@@ -119,12 +137,17 @@
                                             <th>Значение
                                             </th>
                                         </tr>
-                                        <tr>
-                                            <td>Тип устройства
-                                            </td>
-                                            <td>Ноутбук
-                                            </td>
-                                        </tr>
+                                        {% if object.properties.all %}
+                                            {% for prop in object.properties.all %}
+                                                <td>{{ prop.property.name }}</td>
+                                                <td>{{ prop.value.value }}</td>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td>Характеристик нет</td>
+                                                <td></td>
+                                            </tr>
+                                        {% endif %}
                                     </table>
                                 </div>
                             </div>
