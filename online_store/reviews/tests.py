@@ -3,6 +3,7 @@ from typing import List
 
 from django.test import TestCase
 from django.urls import reverse
+from django.conf import settings
 import factory
 
 from profiles.models import User
@@ -83,3 +84,25 @@ class ReviewsListViewTest(TestCase):
                 transform=lambda review: review.pk,
             )
 
+    def test_getting_default_num_reviews(self):
+        """Test getting default num of reviews."""
+        for product in self.products:
+            url = "?".join((
+                reverse("reviews:reviews-list"),
+                f"product_id={product.pk}"
+            ))
+            response = self.client.get(url)
+
+            # num reviews less or equal default limit
+            self.assertLessEqual(
+                len(response.context["reviews"]),
+                settings.DEFAULT_LIMIT_REVIEWS
+            )
+
+            self.assertQuerySetEqual(
+                qs=(Review.objects.select_related("product")
+                    .filter(product__pk=product.pk).order_by("-created_at")
+                    .all()[:settings.DEFAULT_LIMIT_REVIEWS]),
+                values=sorted((s.pk for s in response.context["reviews"]), reverse=True),
+                transform=lambda review: review.pk,
+            )
