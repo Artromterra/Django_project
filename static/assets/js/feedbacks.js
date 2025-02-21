@@ -1,7 +1,7 @@
 $(document).ready(function (product_id) {
-    let list_reviews_url = $("#reviews").data("url")
-    let create_review_url = $("#review").data("url")
     let productId = $("#reviews").data("product-id");
+    let list_reviews_url = $("#reviews").data("list-reviews-url")
+    let create_review_url = $("#reviews").data("create-review-url")
     let init_limit = 5
     let limit = init_limit;
     let delta = 5;
@@ -41,18 +41,18 @@ $(document).ready(function (product_id) {
 
         // отправляем форму на сервер с помощью AJAX
         $.ajax({
-            url: 'your-server-endpoint',
+            url: create_review_url,
             type: 'POST',
             data: formData,
             success: function(response) {
                 // сбрасываем форму до дефолтного состояния
-                $('#myForm').trigger('reset');
+                $('#feedback-form').trigger('reset');
                 //грузим дефолтное количество отзывов
                 limit = init_limit;
                 loadReviews();
             },
             error: function(xhr, status, error) {
-                $('#response').html('Произошла ошибка: ' + error);
+                $('#response').html('Ошибка запроса: ' + error);
             }
         });
     };
