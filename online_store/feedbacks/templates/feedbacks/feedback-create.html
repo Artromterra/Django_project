@@ -1,3 +1,4 @@
+{% if request.user.is_authenticated %}
 <header class="Section-header Section-header_product">
     <h3 class="Section-title">Добавить отзыв
     </h3>
@@ -15,3 +16,4 @@
         </div>
     </form>
 </div>
+{% endif %}
