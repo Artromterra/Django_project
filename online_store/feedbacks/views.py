@@ -3,8 +3,9 @@ from datetime import datetime
 
 from django.views.generic import ListView, CreateView
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Feedback
+from .models.feedbacks import Feedback
 
 
 class FeedbacksListView(ListView):
@@ -25,7 +26,7 @@ class FeedbacksListView(ListView):
         return context
 
 
-class FeedbackCreateView(CreateView):
+class FeedbackCreateView(LoginRequiredMixin, CreateView):
     model = Feedback
     fields = ["comment"]
     template_name = "feedback-create.html"
