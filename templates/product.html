@@ -265,7 +265,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="Tabs-block" id="reviews" data-product-id="{{product.pk}}">
+                            <div class="Tabs-block" id="reviews" data-product-id="{{product.pk}}" data-list-reviews-url="{% url 'feedbacks:feedbacks-list' %}" data-create-review-url="{% url 'feedbacks:feedbacks-create' product_id={{product.pk}}%}">
                                 <script src="/static/assets/js/feedbacks.js"></script>
                             </div>
                         </div>
