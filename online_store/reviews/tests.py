@@ -34,14 +34,14 @@ class ReviewsListViewTest(TestCase):
     def setUp(self):
         """Set up."""
         self.products: List[Product] = [
-            ProductFactory.create() for _ in range(random.randint(1, 10))
+            ProductFactory.create() for _ in range(random.randint(1, 20))
         ]
         self.reviews: List[Review] = [
             ReviewFactory.create(
                 author=self.user,
                 product=random.choice(self.products)
             )
-            for _ in range(random.randint(10, 20))
+            for _ in range(random.randint(10, 100))
         ]
 
     def tearDown(self):
@@ -79,8 +79,8 @@ class ReviewsListViewTest(TestCase):
 
             self.assertQuerySetEqual(
                 qs=(Review.objects.select_related("product")
-                    .filter(product__pk=product.pk).order_by("pk").all()),
-                values=sorted((s.pk for s in response.context["reviews"])),
+                    .filter(product__pk=product.pk).order_by("-created_at").all()),
+                values=(s.pk for s in response.context["reviews"]),
                 transform=lambda review: review.pk,
             )
 
@@ -103,6 +103,34 @@ class ReviewsListViewTest(TestCase):
                 qs=(Review.objects.select_related("product")
                     .filter(product__pk=product.pk).order_by("-created_at")
                     .all()[:settings.DEFAULT_LIMIT_REVIEWS]),
-                values=sorted((s.pk for s in response.context["reviews"]), reverse=True),
+                values=(s.pk for s in response.context["reviews"]),
+                transform=lambda review: review.pk,
+            )
+
+    def test_getting_random_num_reviews(self):
+        """Test getting random num of reviews."""
+        for product in self.products:
+            random_limit: int = random.randint(0, 100)
+
+            url = "?".join((
+                reverse("reviews:reviews-list"),
+                "&".join((
+                    f"product_id={product.pk}",
+                    f"limit={random_limit}"
+                ))
+            ))
+            response = self.client.get(url)
+
+            # num reviews less or equal random limit
+            self.assertLessEqual(
+                len(response.context["reviews"]),
+                random_limit
+            )
+
+            self.assertQuerySetEqual(
+                qs=(Review.objects.select_related("product")
+                    .filter(product__pk=product.pk).order_by("-created_at")
+                    .all()[:random_limit]),
+                values=(s.pk for s in response.context["reviews"]),
                 transform=lambda review: review.pk,
             )
