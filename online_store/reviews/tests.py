@@ -63,3 +63,23 @@ class ReviewsListViewTest(TestCase):
                 Review.objects.select_related("product")
                 .filter(product__pk=product.pk).count()
             )
+
+    def test_getting_list_all_reviews(self):
+        """Test getting list of reviews with max limit."""
+        for product in self.products:
+            url = "?".join((
+                reverse("reviews:reviews-list"),
+                "&".join((
+                    f"product_id={product.pk}",
+                    f"limit={len(self.reviews)}"
+                ))
+            ))
+            response = self.client.get(url)
+
+            self.assertQuerySetEqual(
+                qs=(Review.objects.select_related("product")
+                    .filter(product__pk=product.pk).order_by("pk").all()),
+                values=sorted((s.pk for s in response.context["reviews"])),
+                transform=lambda review: review.pk,
+            )
+
