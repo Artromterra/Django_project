@@ -1,3 +1,65 @@
-from django.test import TestCase
+import random
+from typing import List
 
-# Create your tests here.
+from django.test import TestCase
+from django.urls import reverse
+import factory
+
+from profiles.models import User
+from shop.models.reviews import Review
+from shop.models.product import Product
+from shop.factories.reviews import ReviewFactory
+from shop.factories.products import ProductFactory
+
+
+class ReviewsListViewTest(TestCase):
+    """Test case class for testing ReviewsListView."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up class."""
+        cls.credentials = dict(
+            username="test",
+            password="test",
+            email=factory.Faker("email").evaluate(None, None, {"locale": "en_US"})
+        )
+        cls.user = User.objects.create_user(**cls.credentials)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down class."""
+        cls.user.delete()
+
+    def setUp(self):
+        """Set up."""
+        self.products: List[Product] = [
+            ProductFactory.create() for _ in range(random.randint(1, 10))
+        ]
+        self.reviews: List[Review] = [
+            ReviewFactory.create(
+                author=self.user,
+                product=random.choice(self.products)
+            )
+            for _ in range(random.randint(10, 20))
+        ]
+
+    def tearDown(self):
+        """Tear down."""
+        for product in self.products:
+            product.delete()
+        # the reviews are deleted in a cascade
+
+    def test_getting_num_reviews(self):
+        """Test getting total count of reviews."""
+        for product in self.products:
+            # check num_reviews from context
+            url = "?".join((
+                reverse("reviews:reviews-list"),
+                f"product_id={product.pk}"
+            ))
+            response = self.client.get(url)
+            self.assertEqual(
+                response.context["num_reviews"],
+                Review.objects.select_related("product")
+                .filter(product__pk=product.pk).count()
+            )
