@@ -19,6 +19,7 @@ class ReviewsListView(ListView):
 
     def get_queryset(self):
         limit = self.request.GET.get("limit", settings.DEFAULT_LIMIT_REVIEWS)
+        limit = int(limit)
         product_id = self.request.GET.get("product_id")
         return (Review.objects
                 .select_related("product").filter(product__pk=product_id)
