@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from django.core.cache import cache
 
 from dto.product_dto import ProductDetailDTO
-from services.product_service import ProductService
+from services.settings_service import SettingsService
 from .models.product import Product
 
 
@@ -20,13 +20,23 @@ class ProductDetailView(DetailView):
     model = Product
     context_object_name = "product"
 
-    def get_object(self):
-        product_service = ProductService(self.request.user)
-        product_pk = self.kwargs["pk"]
-        queryset = self.get_queryset()
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .prefetch_related("images", "features", "tags", "properties")
+        )
 
-        data = product_service.get_product_detail(product_pk, queryset)
-        return data
+    def get_object(self):
+        cache_key = f"product_detail_{self.kwargs["pk"]}"
+        cache_data = cache.get(cache_key)
+        if cache_data:
+            return cache_data
+
+        object = super().get_object()
+
+        cache.set(cache_key, object, SettingsService.get_cache_timeout())
+        return object
 
 
 # def product_properties(request, product_id):
