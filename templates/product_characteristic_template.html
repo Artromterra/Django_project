@@ -1,0 +1,13 @@
+<!--<h2>{{ product.title }}</h2>-->
+<!--<p>{{ product.description }}</p>-->
+<!--<h3>Характеристики:</h3>-->
+<div class="Tabs-block" id="addit">
+    {% for key, value in properties.items %}
+    <div class="Product-props">
+        <div class="Product-prop">
+            <strong>{{ key|title }}
+            </strong><span> {{ value }} </span>
+        </div>
+    </div>
+    {% endfor %}
+</div>

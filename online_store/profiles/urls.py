@@ -1,4 +1,19 @@
-from django.contrib import admin
 from django.urls import path
 
-urlpatterns = []
+from .views import (
+    RegisterView,
+    UserLoginView,
+    UserLogoutView,
+    UserEmailRecoveryPasswordView,
+    UserPasswordResetView,
+    UserPasswordResetDoneView,
+)
+
+urlpatterns = [
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('password-reset/', UserEmailRecoveryPasswordView.as_view(), name='password_reset'),
+    path('password-reset-done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', UserPasswordResetView.as_view(), name='password_reset_confirm'),
+]

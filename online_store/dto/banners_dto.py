@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from django.db.models.query import QuerySet
+from django.db.models import Min
 
-from banners.models import BannerProduct, BannerCategory
+from banners.models.banner_product import BannerProduct
+from banners.models.banner_category import BannerCategory
 
 
 @dataclass
@@ -13,6 +15,7 @@ class BannerProductDTO:
     url: str
     product_id: int
     product_title: str
+    product_description: str
 
     @classmethod
     def from_queryset(
@@ -25,6 +28,7 @@ class BannerProductDTO:
                 url=b.get_absolute_url,
                 product_id=b.product.id,
                 product_title=b.product.title,
+                product_description=b.product.description,
             )
             for b in queryset
         ]
@@ -37,18 +41,24 @@ class BannerCategoryDTO:
     url: str
     category_id: int
     category_name: str
+    min_product_price: Optional[float]
 
     @classmethod
     def from_queryset(
         cls, queryset: QuerySet[Optional[BannerCategory]]
     ) -> List["BannerCategoryDTO"]:
-        return [
-            cls(
-                id=b.id,
-                image=b.image.url,
-                url=b.get_absolute_url,
-                category_id=b.category.id,
-                category_name=b.category.name,
+        result = []
+        for b in queryset:
+            min_price = b.category.products.aggregate(Min('price'))['price__min']
+
+            result.append(
+                cls(
+                    id=b.id,
+                    image=b.image.url,
+                    url=b.get_absolute_url,
+                    category_id=b.category.id,
+                    category_name=b.category.name,
+                    min_product_price=min_price,
+                )
             )
-            for b in queryset
-        ]
+        return result
