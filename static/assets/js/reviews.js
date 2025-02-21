@@ -46,7 +46,7 @@ $(document).ready(function (product_id) {
             data: formData,
             success: function(response) {
                 // сбрасываем форму до дефолтного состояния
-                $('#feedback-form').trigger('reset');
+                $('#review-form').trigger('reset');
                 //грузим дефолтное количество отзывов
                 limit = init_limit;
                 loadReviews();

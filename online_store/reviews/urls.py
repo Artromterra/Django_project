@@ -1,11 +1,11 @@
 
 from django.urls import path
 
-from .views import FeedbacksListView, FeedbackCreateView
+from .views import ReviewsListView, ReviewsCreateView
 
-app_name = "feedbacks"
+app_name = "reviews"
 
 urlpatterns = [
-    path("feedbacks/", FeedbacksListView.as_view(), name="feedbacks-list"),
-    path("feedback/new/", FeedbackCreateView.as_view(), name="feedbacks-new"),
+    path("reviews/", ReviewsListView.as_view(), name="reviews-list"),
+    path("reviews/new/", ReviewsCreateView.as_view(), name="reviews-new"),
 ]
