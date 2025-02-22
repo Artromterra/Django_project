@@ -25,6 +25,7 @@ urlpatterns = [
     path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
     path('', HomepageView.as_view(), name='homepage'),
+    path('reviews/', include('reviews.urls'), name='reviews')
 ]
 
 if settings.DEBUG:
