@@ -1,6 +1,7 @@
 """The module responsible for working with log files."""
 
 from typing import List, Tuple
+import re
 
 
 def get_logs_with_levels_from_file(levels: Tuple[str, ...], log_file: str) -> List[str]:
@@ -13,10 +14,20 @@ def get_logs_with_levels_from_file(levels: Tuple[str, ...], log_file: str) -> Li
     """
     logs: List[str] = list()
     with open(log_file, "r", encoding="utf-8") as file:
+        suitable_log: bool = False
+
         for line in file:
-            for level in levels:
-                if level in line:
+            match = re.match(r"\[(.*?)].*", line)
+
+            if match:
+                # if line starts with [<LOGLEVEL>]
+                if match.group(1) in levels:
+                    suitable_log = True
                     logs.append(line)
-                    break
+                else:
+                    suitable_log = False
+            elif suitable_log:
+                # if line doesn't start with [<LOGLEVEL>]
+                logs[-1] += "\n" + line
 
     return logs
