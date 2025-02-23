@@ -2,24 +2,16 @@
 
 from typing import Dict, Any, List, Set
 from logging import getLogger
-from logging.handlers import TimedRotatingFileHandler
-import shutil
-import os
 
 from celery import shared_task, chain, group
 
 from utils.xlsx import xlsx_reader
-from utils.email import send_email
-from utils.logs import get_logs_with_levels_from_file
+from utils.email import send_email, compile_report
+from utils.files import move_file_depends_on_import_result
 
 from .models.product import Product
 
 logger = getLogger("celery")
-
-REPORT_SUBJECT: str = "Import was {status}."
-SUCCESS_REPORT_TEXT: str = "Import file {file_path} was successful."
-FAILURE_REPORT_TEXT: str = ("Uncritical errors occurred during import file {file_path}.\n"
-                            "Logs with errors:\n{error_logs}")
 
 
 @shared_task
@@ -62,14 +54,9 @@ def move_file(was_successful: bool, file_path: str, success_dir: str, failure_di
     :return: True, if moving was successful, else False
     """
     try:
-        _, filename = os.path.split(file_path)
-
-        if was_successful:
-            target_path: str = os.path.join(success_dir, filename)
-        else:
-            target_path = os.path.join(failure_dir, filename)
-
-        shutil.move(file_path, target_path)
+        target_path: str = move_file_depends_on_import_result(
+            was_successful, file_path, success_dir, failure_dir
+        )
     except Exception as exc:
         logger.exception(exc)
         return False
@@ -90,25 +77,9 @@ def report_about_import(
     :param file_path: Import file path.
     :param log_file_path: File path with logs about import.
     """
-    if was_successful:
-        email_subject: str = REPORT_SUBJECT.format(status="successful")
-        email_text: str = SUCCESS_REPORT_TEXT.format(file_path=file_path)
-    else:
-        email_subject = REPORT_SUBJECT.format(status="unsuccessful")
-
-        # print all logs from buffer to file
-        for handler in logger.handlers:
-            if isinstance(handler, TimedRotatingFileHandler):
-                handler.flush()
-                break
-
-        email_text = FAILURE_REPORT_TEXT.format(
-            file_path=file_path,
-            error_logs=get_logs_with_levels_from_file(
-                ("WARNING", "EXCEPTION", "ERROR"),
-                log_file_path
-            )
-        )
+    email_subject, email_text = compile_report(
+        was_successful, file_path, log_file_path
+    )
 
     try:
         send_email(admin_email, email_subject, email_text)
