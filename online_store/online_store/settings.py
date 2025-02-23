@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,15 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*=-!s%)9*qwolmf+wkljh&gs50_dk*xfy8$a)@85x^g!qt6+p@'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = [
-    "0.0.0.0",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -156,14 +156,15 @@ CACHES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.getenv("SMTP_PORT", 587))
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your email'
-EMAIL_HOST_PASSWORD = 'your password'
+EMAIL_HOST_USER = os.getenv("EMAIL", "your email")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD", 'your password')
 
 DEFAULT_LIMIT_REVIEWS = 5
 
+# logging
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "debug").upper()
 LOGGING = {
     "version": 1,
@@ -179,12 +180,31 @@ LOGGING = {
             "level": "DEBUG",
             "formatter": "base",
         },
+        "file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "base",
+            "filename": "server_logfile.log",
+            "backupCount": 3,
+            "when": "d",
+            "interval": 10,
+            "encoding": "utf-8",
+        },
     },
     "loggers": {
         "view": {
             "level": LOGLEVEL,
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "propagate": False,
         },
     },
 }
+
+# celery
+CELERY_ACCEPT_CONTENT = os.getenv("CELERY_ACCEPT_CONTENT", "json").split(",")
+CELERY_RESULT_ACCEPT_CONTENT = os.getenv("CELERY_RESULT_ACCEPT_CONTENT", "json").split(",")
+CELERY_TASK_TIME_LIMIT = int(os.getenv("CELERY_TASK_TIME_LIMIT", 300))
+CELERY_TASK_SOFT_TIME_LIMIT = int(os.getenv("CELERY_TASK_SOFT_TIME_LIMIT", 120))
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost")
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost")
+CELERY_CONCURRENCY = int(os.getenv("CELERY_CONCURRENCY", 4))
