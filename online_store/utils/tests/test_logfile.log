@@ -1,0 +1,765 @@
+[INFO] [2025-02-23 18:25:32,038] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,038] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,039] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,039] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,039] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,039] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,043] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,043] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,043] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,043] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,044] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,044] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,044] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,045] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,046] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,046] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,046] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,046] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,046] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,047] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,048] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,049] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,050] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,051] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,052] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,052] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,052] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,052] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,052] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,053] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,054] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,055] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,056] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,057] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,058] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,059] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,059] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,059] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,059] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,059] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,060] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,061] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,062] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,062] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,062] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,062] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,062] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,063] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,063] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,063] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,063] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,063] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,064] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,065] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,065] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,065] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,065] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,065] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,066] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,067] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,068] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,069] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,070] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,071] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,072] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,073] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,074] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,075] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,075] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,075] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,075] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,075] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,076] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,077] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,077] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,077] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,077] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,077] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,078] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,079] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,080] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,080] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,080] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,080] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,080] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,081] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,081] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,081] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,081] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,082] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,083] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+[ERROR] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,084] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[DEBUG] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,085] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,086] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,086] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,086] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,086] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,086] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+[INFO] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,087] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,088] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,088] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,088] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,088] [main.tests] setUp | test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[DEBUG] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+test_log_msg
+[WARNING] [2025-02-23 18:25:32,089] [main.tests] setUp | test_log_msg
+[WARNING] [2025-02-23 18:25:32,090] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[INFO] [2025-02-23 18:25:32,090] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,090] [main.tests] setUp | test_log_msg
+test_log_msg
+test_log_msg
+[ERROR] [2025-02-23 18:25:32,090] [main.tests] setUp | test_log_msg
