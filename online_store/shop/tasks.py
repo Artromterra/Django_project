@@ -2,16 +2,24 @@
 
 from typing import Dict, Any, List, Set
 from logging import getLogger
+from logging.handlers import TimedRotatingFileHandler
 import shutil
 import os
 
 from celery import shared_task, chain, group
 
 from utils.xlsx import xlsx_reader
+from utils.email import send_email
+from utils.logs import get_logs_with_levels_from_file
 
 from .models.product import Product
 
 logger = getLogger("celery")
+
+REPORT_SUBJECT: str = "Import was {status}."
+SUCCESS_REPORT_TEXT: str = "Import file {file_path} was successful."
+FAILURE_REPORT_TEXT: str = ("Uncritical errors occurred during import file {file_path}.\n"
+                            "Logs with errors:\n{error_logs}")
 
 
 @shared_task
@@ -43,7 +51,7 @@ def import_was_successful(import_results: List[bool]) -> bool:
 
 
 @shared_task
-def move_file(was_successful: bool, file_path: str, success_dir: str, failure_dir: str) -> None:
+def move_file(was_successful: bool, file_path: str, success_dir: str, failure_dir: str) -> bool:
     """
     Transfer the file depending on the success of the import.
 
@@ -51,6 +59,7 @@ def move_file(was_successful: bool, file_path: str, success_dir: str, failure_di
     :param file_path: Import file path.
     :param success_dir: The directory to move the import file to in case of success.
     :param failure_dir: The directory to move the import file to in case of failure.
+    :return: True, if moving was successful, else False
     """
     try:
         _, filename = os.path.split(file_path)
@@ -63,17 +72,56 @@ def move_file(was_successful: bool, file_path: str, success_dir: str, failure_di
         shutil.move(file_path, target_path)
     except Exception as exc:
         logger.exception(exc)
+        return False
     else:
-        logger.info("Move import file to %s", target_path)
+        logger.info("Import file %s was moved.", target_path)
+        return True
 
 
 @shared_task
-def report_about_import() -> None:
-    pass
+def report_about_import(
+        was_successful: bool, admin_email: str, file_path: str, log_file_path: str
+) -> bool:
+    """
+    Report about import process result.
+
+    :param was_successful: True, if import was successful, else False.
+    :param admin_email: Email address where to send the message with the report.
+    :param file_path: Import file path.
+    :param log_file_path: File path with logs about import.
+    """
+    if was_successful:
+        email_subject: str = REPORT_SUBJECT.format(status="successful")
+        email_text: str = SUCCESS_REPORT_TEXT.format(file_path=file_path)
+    else:
+        email_subject = REPORT_SUBJECT.format(status="unsuccessful")
+
+        # print all logs from buffer to file
+        for handler in logger.handlers:
+            if isinstance(handler, TimedRotatingFileHandler):
+                handler.flush()
+                break
+
+        email_text = FAILURE_REPORT_TEXT.format(
+            file_path=file_path,
+            error_logs=get_logs_with_levels_from_file(
+                ("WARNING", "EXCEPTION", "ERROR"),
+                log_file_path
+            )
+        )
+
+    try:
+        send_email(admin_email, email_subject, email_text)
+    except Exception as exc:
+        logger.error(exc)
+        return False
+    else:
+        logger.info("Report about import has been sent.")
+        return True
 
 
 @shared_task
-def import_products(file_path: str, success_dir: str, failure_dir: str) -> bool:
+def import_products(file_path: str, success_dir: str, failure_dir: str) -> Dict[str, bool]:
     group_from_dict_to_model = group(
         product_from_dict.s(product_dict)
         for product_dict in xlsx_reader(file_path)
@@ -84,8 +132,15 @@ def import_products(file_path: str, success_dir: str, failure_dir: str) -> bool:
         report_about_import.s(),
     )
 
-    chain(
+    import_process = chain(
         group_from_dict_to_model,
         import_was_successful.s(),
         group_move_and_send_email
     ).apply_async()
+    moving_file, reporting = import_process.get()
+
+    return {
+        "importing": import_process.parent.get(),
+        "moving_file": moving_file,
+        "reporting": reporting
+    }
