@@ -1,13 +1,17 @@
 """The module responsible for sending emails."""
 
+from logging.handlers import TimedRotatingFileHandler
 from email.message import EmailMessage
 from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
 from logging import getLogger
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from django.conf import settings
+
+
+from .logs import get_logs_with_levels_from_file
 
 logger = getLogger("main.utils.email")
 
@@ -54,3 +58,45 @@ def send_email(to: str, subject: str, text: str, attach_files: Optional[List[str
         logger.exception("Error when sending an email. exc=%s", str(exc))
     else:
         logger.info("The email was sent successfully.")
+
+
+REPORT_SUBJECT: str = "Import was {status}."
+SUCCESS_REPORT_TEXT: str = "Import file {file_path} was successful."
+FAILURE_REPORT_TEXT: str = ("Uncritical errors occurred during import file {file_path}.\n"
+                            "Logs with errors:\n{error_logs}")
+
+
+def compile_report(
+        was_successful: bool,
+        file_path: str,
+        log_file_path: str
+) -> Tuple[str, str]:
+    """
+    Collect the subject and email text depending on the success of the import.
+
+    :param was_successful: True, if import was successful, else False.
+    :param file_path: Import file path.
+    :param log_file_path: Log file path.
+    :return: Email subject and email text.
+    """
+    if was_successful:
+        email_subject: str = REPORT_SUBJECT.format(status="successful")
+        email_text: str = SUCCESS_REPORT_TEXT.format(file_path=file_path)
+    else:
+        email_subject = REPORT_SUBJECT.format(status="unsuccessful")
+
+        # print all logs from buffer to file
+        for handler in logger.handlers:
+            if isinstance(handler, TimedRotatingFileHandler):
+                handler.flush()
+                break
+
+        email_text = FAILURE_REPORT_TEXT.format(
+            file_path=file_path,
+            error_logs=get_logs_with_levels_from_file(
+                ("WARNING", "ERROR"),
+                log_file_path
+            )
+        )
+
+    return email_subject, email_text
