@@ -177,12 +177,12 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": LOGLEVEL,
             "formatter": "base",
         },
         "file": {
             "class": "logging.handlers.TimedRotatingFileHandler",
-            "level": "INFO",
+            "level": LOGLEVEL,
             "formatter": "base",
             "filename": "server_logfile.log",
             "backupCount": 3,
@@ -192,7 +192,7 @@ LOGGING = {
         },
     },
     "loggers": {
-        "view": {
+        "main": {
             "level": LOGLEVEL,
             "handlers": ["console", "file"],
             "propagate": False,
