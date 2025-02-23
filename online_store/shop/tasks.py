@@ -122,16 +122,35 @@ def report_about_import(
 
 @shared_task
 def import_products(file_path: str, success_dir: str, failure_dir: str) -> Dict[str, bool]:
+    """
+    Import products from Excel file.
+
+    A task consists of a chain of tasks.
+    The first task in the chain is a group of tasks for creating models from Excel rows.
+    The next task is to verify the success of the import.
+    If all lines were imported without errors, the task returns True.
+    Further along the chain, a group of tasks is performed,
+    consisting of 2 tasks - sending the report and moving the import file.
+
+    :param file_path: Import file path.
+    :param success_dir: The directory where you want to move the files of the successful import.
+    :param failure_dir: The directory where you want to move the import files with errors.
+    :return: Dictionary in the form of
+    {"importing": True, "moving_file": True, "reporting": True}
+    """
+    # 1 link - first group
     group_from_dict_to_model = group(
         product_from_dict.s(product_dict)
         for product_dict in xlsx_reader(file_path)
     )
 
+    # 2 link - task
     group_move_and_send_email = group(
         move_file.s(file_path, success_dir, failure_dir),
         report_about_import.s(),
     )
 
+    # 3 link - second group
     import_process = chain(
         group_from_dict_to_model,
         import_was_successful.s(),
