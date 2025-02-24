@@ -6,7 +6,9 @@ from django.core.cache import cache
 
 from dto.product_dto import ProductDetailDTO
 from services.settings_service import SettingsService
+from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
+from profiles.models import User
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -24,10 +26,17 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "properties")
+            .prefetch_related("images", "features", "tags", "product_properties")
         )
 
     def get_object(self):
+        # класс для обработки и действий над просмотренными продуктами
+        viewed_products = ViewHistoryProductsService(
+            user=User.objects.get(pk=self.request.user.pk),
+            product=Product.objects.get(pk=self.kwargs["pk"]),
+        )
+        viewed_products.add_viewed_products()
+
         cache_key = f"product_detail_{self.kwargs["pk"]}"
         cache_data = cache.get(cache_key)
         if cache_data:
