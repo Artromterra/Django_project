@@ -12,6 +12,10 @@ class ViewHistoryProductsService:
         self.product = product
 
     def add_viewed_products(self):
+        """
+        добавление просмотренных товаров текущим пользователем в БД
+        :return: ViewedProducts
+        """
         obj, created = ViewedProducts.objects.update_or_create(
             viewed_by_user=self.user,
             product=self.product,
@@ -21,6 +25,10 @@ class ViewHistoryProductsService:
         return obj
 
     def remove_viewed_products(self):
+        """
+        удаление просмотренного продукта текущим пользователем из БД
+        :return: None
+        """
         obj = ViewedProducts.objects.filter(
             viewed_by_user=self.user,
             product=self.product,
@@ -29,6 +37,10 @@ class ViewHistoryProductsService:
             obj.delete()
 
     def is_product_in_list(self):
+        """
+        проверка существования просмотренного продукта текущим пользователем в БД
+        :return: Boolean
+        """
         obj = ViewedProducts.objects.filter(
             viewed_by_user=self.user,
             product=self.product,
@@ -38,6 +50,11 @@ class ViewHistoryProductsService:
         return False
 
     def get_viewed_products(self, number_of_products: Optional[int] = None):
+        """
+        создание кверисета продуктов просмотренных текущим пользователем
+        :param number_of_products: int параметр для вывода количества просмотренных товаров
+        :return: QuerySet[ViewedProducts]
+        """
         queryset = ViewedProducts.objects.filter(
             viewed_by_user=self.user,
         ).select_related(

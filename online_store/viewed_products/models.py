@@ -5,7 +5,9 @@ from shop.models import Product
 
 
 class ViewedProducts(models.Model):
-
+    """
+    модель истории просмотра продуктов пользователем
+    """
     viewed_at = models.DateTimeField('viewing time', auto_now_add=True)
     viewed_by_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='viewed_products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='viewed_products')
