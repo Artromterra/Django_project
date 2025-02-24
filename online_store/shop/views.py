@@ -29,14 +29,19 @@ class ProductDetailView(DetailView):
             .prefetch_related("images", "features", "tags", "product_properties")
         )
 
-    def get_object(self):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        obj = super().get(request, *args, **kwargs)
         # класс для обработки и действий над просмотренными продуктами
-        viewed_products = ViewHistoryProductsService(
-            user=User.objects.get(pk=self.request.user.pk),
-            product=Product.objects.get(pk=self.kwargs["pk"]),
-        )
-        viewed_products.add_viewed_products()
+        user = self.request.user
+        if user.is_authenticated:
+            viewed_products = ViewHistoryProductsService(
+                user=User.objects.get(pk=user.pk),
+                product=Product.objects.get(pk=self.kwargs["pk"]),
+            )
+            viewed_products.add_viewed_products()
+        return obj
 
+    def get_object(self, *args, **kwargs):
         cache_key = f"product_detail_{self.kwargs["pk"]}"
         cache_data = cache.get(cache_key)
         if cache_data:
