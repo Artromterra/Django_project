@@ -14,7 +14,6 @@ from .models.product import Product
 logger = getLogger("celery")
 
 
-@shared_task
 def product_from_dict(product_data: Dict[str, Any]) -> bool:
     """
     Create the product from dict.
@@ -30,7 +29,6 @@ def product_from_dict(product_data: Dict[str, Any]) -> bool:
         return True
 
 
-@shared_task
 def import_was_successful(import_results: List[bool]) -> bool:
     """Return True if import was successful, else False."""
     import_results_set: Set[bool] = set(import_results)
@@ -42,7 +40,6 @@ def import_was_successful(import_results: List[bool]) -> bool:
     return False
 
 
-@shared_task
 def move_file(was_successful: bool, file_path: str, success_dir: str, failure_dir: str) -> bool:
     """
     Transfer the file depending on the success of the import.
@@ -65,7 +62,6 @@ def move_file(was_successful: bool, file_path: str, success_dir: str, failure_di
         return True
 
 
-@shared_task
 def report_about_import(
         was_successful: bool, admin_email: str, file_path: str, log_file_path: str
 ) -> bool:
@@ -111,20 +107,20 @@ def import_products(file_path: str, success_dir: str, failure_dir: str) -> Dict[
     """
     # 1 link - first group
     group_from_dict_to_model = group(
-        product_from_dict.s(product_dict)
+        shared_task(product_from_dict).s(product_dict)
         for product_dict in xlsx_reader(file_path)
     )
 
     # 2 link - task
     group_move_and_send_email = group(
-        move_file.s(file_path, success_dir, failure_dir),
-        report_about_import.s(),
+        shared_task(move_file).s(file_path, success_dir, failure_dir),
+        shared_task(report_about_import).s(),
     )
 
     # 3 link - second group
     import_process = chain(
         group_from_dict_to_model,
-        import_was_successful.s(),
+        shared_task(import_was_successful).s(),
         group_move_and_send_email
     ).apply_async()
     moving_file, reporting = import_process.get()
