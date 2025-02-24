@@ -17,12 +17,17 @@ def xlsx_reader(filename: str) -> Generator[Dict[str, Any], None, None]:
     """
     wb: Workbook = load_workbook(filename, read_only=True)
     ws: Worksheet = wb.active
-    first_row = next(ws.rows)
 
-    for row in ws.rows:
+    ws_iter = ws.iter_rows()
+    print(f"{str(ws_iter)=}")
+    headers = next(ws_iter)
+    print(f"{str(headers)=}")
+
+    for row in ws_iter:
+        print(f"{str(row)=}")
         yield {
             header.value: cell.value
-            for header in first_row
             for cell in row
+            for header in headers
         }
 
