@@ -6,9 +6,9 @@ from viewed_products.models import ViewedProducts
 
 class ViewedProductsAdmin(admin.TabularInline):
     model = ViewedProducts
-    list_display = ('product', 'viewed_at')
-    ordering = ('-viewed_at', )
-    readonly_fields = ('viewed_at', )
+    # list_display = ('product', 'viewed_at')
+    readonly_fields = ('viewed_at', 'product')
+    ordering = ('-viewed_at',)
     extra = 0
 
 @admin.register(User)
