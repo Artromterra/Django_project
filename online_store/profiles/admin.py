@@ -4,10 +4,11 @@ from .models import User
 from viewed_products.models import ViewedProducts
 
 
-class ViewedProductsAdmin(admin.StackedInline):
+class ViewedProductsAdmin(admin.TabularInline):
     model = ViewedProducts
-    list_display = ('viewed_at', 'product')
+    list_display = ('product', 'viewed_at')
     ordering = ('-viewed_at', )
+    readonly_fields = ('viewed_at', )
     extra = 0
 
 @admin.register(User)
