@@ -39,7 +39,7 @@ class ProductDetailView(DetailView):
                 user=user.id,
                 product=self.object.id,
             )
-            viewed_products.add_viewed_products()
+            viewed_products.remove_viewed_products()
         return obj
 
     def get_object(self, *args, **kwargs):
