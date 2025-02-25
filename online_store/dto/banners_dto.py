@@ -12,7 +12,7 @@ from banners.models.banner_category import BannerCategory
 class BannerProductDTO:
     id: int
     image: str
-    url: str
+    # url: str
     product_id: int
     product_title: str
     product_description: str
@@ -25,7 +25,8 @@ class BannerProductDTO:
             cls(
                 id=b.id,
                 image=b.image.url,
-                url=b.get_absolute_url,
+                # :TODO закоментировано, так как не определен абсолютный url в модели BannerProduct
+                # url=b.get_absolute_url,
                 product_id=b.product.id,
                 product_title=b.product.title,
                 product_description=b.product.description,
@@ -38,7 +39,7 @@ class BannerProductDTO:
 class BannerCategoryDTO:
     id: int
     image: str
-    url: str
+    # url: str
     category_id: int
     category_name: str
     min_product_price: Optional[float]
@@ -55,7 +56,8 @@ class BannerCategoryDTO:
                 cls(
                     id=b.id,
                     image=b.image.url,
-                    url=b.get_absolute_url,
+                    # :TODO закоментировано, так как не определен абсолютный url в модели BannerCategory
+                    # url=b.get_absolute_url,
                     category_id=b.category.id,
                     category_name=b.category.name,
                     min_product_price=min_price,

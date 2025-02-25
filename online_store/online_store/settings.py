@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'banners.apps.BannersConfig',
     'reviews.apps.ReviewsConfig',
+    'viewed_products.apps.ViewedProductsConfig',
 ]
 
 MIDDLEWARE = [

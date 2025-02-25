@@ -4,9 +4,12 @@ from django.views.generic import DetailView
 from django.forms.models import model_to_dict
 from django.core.cache import cache
 
+
 from dto.product_dto import ProductDetailDTO
 from services.settings_service import SettingsService
+from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
+from profiles.models import User
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -24,10 +27,22 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "properties")
+            .prefetch_related("images", "features", "tags", "product_properties")
         )
 
-    def get_object(self):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        obj = super().get(request, *args, **kwargs)
+        # класс для обработки и действий над просмотренными продуктами
+        user = self.request.user
+        if user.is_authenticated:
+            viewed_products = ViewHistoryProductsService(
+                user=user.id,
+                product=self.object.id,
+            )
+            viewed_products.add_viewed_products()
+        return obj
+
+    def get_object(self, *args, **kwargs):
         cache_key = f"product_detail_{self.kwargs["pk"]}"
         cache_data = cache.get(cache_key)
         if cache_data:
