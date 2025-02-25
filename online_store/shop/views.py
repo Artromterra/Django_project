@@ -4,6 +4,7 @@ from django.views.generic import DetailView
 from django.forms.models import model_to_dict
 from django.core.cache import cache
 
+
 from dto.product_dto import ProductDetailDTO
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
@@ -35,10 +36,10 @@ class ProductDetailView(DetailView):
         user = self.request.user
         if user.is_authenticated:
             viewed_products = ViewHistoryProductsService(
-                user=User.objects.get(pk=user.pk),
-                product=Product.objects.get(pk=self.kwargs["pk"]),
+                user=user.id,
+                product=self.object.id,
             )
-            viewed_products.add_viewed_products()
+            viewed_products.remove_viewed_products()
         return obj
 
     def get_object(self, *args, **kwargs):
