@@ -11,3 +11,8 @@ dependencies = [
     "pillow>=11.1.0",
     "requests>=2.32.3",
 ]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+]

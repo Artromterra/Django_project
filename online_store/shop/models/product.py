@@ -2,7 +2,7 @@ from django.db import models
 from .category import Category
 from .seller import Seller
 
-#Product main model
+# Product main model
 class Product(models.Model):
     class Meta:
         verbose_name = "Product"
@@ -37,3 +37,23 @@ class ProductImage(models.Model):
 
     # DB relatives
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+
+
+class ProductFeature(models.Model):
+    # DB fields
+    value = models.CharField(max_length=300, null=False, blank=True)
+
+    # DB relatives
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="features"
+    )
+
+
+class ProductTag(models.Model):
+    # DB fields
+    name = models.CharField(max_length=50, null=False, blank=True)
+
+    # DB relatives
+    products = models.ManyToManyField(
+        Product, related_name="tags"
+    )

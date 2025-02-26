@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from django.urls import reverse_lazy
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'django_cleanup',
     'banners.apps.BannersConfig',
+    'reviews.apps.ReviewsConfig',
+    'viewed_products.apps.ViewedProductsConfig',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +65,10 @@ ROOT_URLCONF = 'online_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / ".." / "templates"],
+        'DIRS': [
+            BASE_DIR / ".." / "templates",
+            BASE_DIR / "reviews" / "templates" / "reviews",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,3 +160,30 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your email'
 EMAIL_HOST_PASSWORD = 'your password'
+
+DEFAULT_LIMIT_REVIEWS = 5
+
+LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "debug").upper()
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "base": {
+            "format": "[%(levelname)s] [%(asctime)s] [%(name)s] %(funcName)s | %(message)s",
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "base",
+        },
+    },
+    "loggers": {
+        "view": {
+            "level": LOGLEVEL,
+            "handlers": ["console"],
+            "propagate": False,
+        },
+    },
+}

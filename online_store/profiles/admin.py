@@ -1,7 +1,15 @@
 from django.contrib import admin
 
 from .models import User
+from viewed_products.models import ViewedProducts
 
+
+class ViewedProductsAdmin(admin.TabularInline):
+    model = ViewedProducts
+    # list_display = ('product', 'viewed_at')
+    readonly_fields = ('viewed_at', 'product')
+    ordering = ('-viewed_at',)
+    extra = 0
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -19,3 +27,5 @@ class UserAdmin(admin.ModelAdmin):
     readonly_fields = 'image_preview',
     search_fields = 'username', 'email'
     ordering = 'id',
+
+    inlines = (ViewedProductsAdmin,)

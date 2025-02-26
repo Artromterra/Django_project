@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
+from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 from .models.seller import Seller
 
@@ -13,9 +14,15 @@ def clear_category_menu_cache(modeladmin, request, queryset):
     modeladmin.message_user(request, "Кеш меню категорий сброшен.")
 
 
-@admin.register(Product)
+class ReviewInline(admin.TabularInline):
+    model = Review
+    extra = 1
+
+
+admin.site.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
+    inlines = [ReviewInline]
 
     list_display = ('title', 'seller', 'price', 'is_active')
     list_filter = ('seller', 'is_active')
@@ -52,6 +59,7 @@ class ProductPropertiesAdmin(admin.ModelAdmin):
     def get_products(self, obj):
         return ", ".join([p.name for p in obj.product.all()])
     get_products.short_description = "Products"
+
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
