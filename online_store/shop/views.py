@@ -27,7 +27,7 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "product_properties")
+            .prefetch_related("images", "features", "tags", "product_properties", "product_sellers")
         )
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:

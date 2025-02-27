@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.core.cache import cache
-from .models.product import Product, ProductImage
+from .models.product import Product, ProductImage, ProductSeller
 from .models.category import Category
 from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
@@ -18,30 +18,34 @@ class ReviewInline(admin.TabularInline):
     model = Review
     extra = 1
 
+class ProductSellerInline(admin.TabularInline):
+    model = ProductSeller
+    extra = 1
 
-admin.site.register(Product)
+class ImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
+
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = [clear_category_menu_cache]
-    inlines = [ReviewInline]
+    inlines = [ReviewInline, ProductSellerInline, ImageInline]
 
-    list_display = ('title', 'seller', 'price', 'is_active')
-    list_filter = ('seller', 'is_active')
-    search_fields = ('title', 'seller__name')
+    list_display = ('title', 'price', 'is_active')
+    list_filter = ('sellers', 'is_active')
+    search_fields = ('title', 'sellers__name')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(seller__user=request.user)
+        return qs.filter(sellers__user=request.user)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "seller" and not request.user.is_superuser:
+        if db_field.name == "sellers" and not request.user.is_superuser:
             kwargs["queryset"] = Seller.objects.filter(user=request.user)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-class ProductInline(admin.StackedInline):
-    model = ProductImage
 
 
 @admin.register(Category)
@@ -73,7 +77,13 @@ class PropertyValueAdmin(admin.ModelAdmin):
     search_fields = ("value",)
 
 
+class SellerProductInline(admin.TabularInline):
+    model = Product.sellers.through
+    extra = 1
+
+
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone', 'email')
     search_fields = ('name', 'email')
+    inlines = [SellerProductInline]
