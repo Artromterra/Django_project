@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.views import LogoutView
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .forms import (
     RegisterForm,
@@ -15,6 +17,9 @@ from .forms import (
     UserEmailRecoveryPasswordForm,
     UserSetNewPasswordForm,
 )
+
+from .models import Account, User
+
 
 app_name = 'profiles'
 
@@ -37,6 +42,9 @@ class RegisterView(FormView):
         user.username = username
         user.email = email
         user.save()
+
+        Account.objects.create(user=user)
+
         management.call_command('customer_permissions', user.id)
 
         return response
@@ -94,3 +102,16 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
     промежуточное представление для отображения процесса смены пароля
     """
     template_name = 'password_reset_done.html'
+
+
+@login_required
+def user_account_view(request):
+    user = request.user
+    account = user.account
+    context = {
+        "avatar": user.avatar.url if user.avatar else None,
+        "first_name": account.first_name,
+        "last_name": account.last_name,
+        "patronymic": account.patronymic,
+    }
+    return render(request, "account.html", context)
