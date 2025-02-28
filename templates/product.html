@@ -11,12 +11,12 @@
             {% if product.images %}
               <div class="ProductCard-look">
                 <div class="ProductCard-photo">
-                  {% with object.images.all|first as image %}
+                  {% with product.images.all|first as image %}
                   <img src="/media/{{ image.image }}" alt="{{ image.description }}" />
                   {% endwith %}
                 </div>
                 <div class="ProductCard-picts">
-                  {% for image in object.images.all %}
+                  {% for image in product.images.all %}
                     <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
                       <img src="/media/{{ image.image }}" alt="{{ image.description }}">
                     </a>
