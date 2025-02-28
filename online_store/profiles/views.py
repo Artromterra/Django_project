@@ -101,14 +101,7 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
     """
     template_name = 'password_reset_done.html'
 
-    @login_required
-    def user_account_view(request):
-        user = request.user
-        account = user.account
-        context = {
-            "avatar": user.avatar.url if user.avatar else None,
-            "first_name": account.first_name,
-            "last_name": account.last_name,
-            "patronymic": account.patronymic,
-        }
-        return render(request, "account.html", context)
+
+@login_required
+def user_account_view(request):
+    return render(request, "account.html")
