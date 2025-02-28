@@ -6,10 +6,10 @@ from django.contrib.auth.views import (
 from django.core import management
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from django.contrib.auth.views import LogoutView
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from .forms import (
     RegisterForm,
@@ -102,6 +102,5 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'password_reset_done.html'
 
 
-@login_required
-def user_account_view(request):
-    return render(request, "account.html")
+class UserAccountView(LoginRequiredMixin, TemplateView):
+    template_name = "account.html"
