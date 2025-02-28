@@ -72,3 +72,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.avatar:
             return mark_safe(f'<img src="{self.avatar.url}" width="50" height="50" />')
         return 'No avatar'
+
+
+class Account(models.Model):
+
+    # DB Fields
+    # ФИО
+    first_name = models.CharField(max_length= 50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    patronymic = models.CharField(max_length=50, null=True, blank=True)
+
+    # DB Relations
+    # Связь аккаунта с пользовалелем
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # последний заказ из истории заказов
+    last_order = models.ForeignKey("Order", on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)
+
+class Order(models.Model):
+    # заглушка
+    last_order = models.CharField(max_length= 50, null=True, blank=True)
