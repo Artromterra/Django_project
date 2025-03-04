@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Comparison
+from .models import ComparisonItem
 
-admin.site.register(Comparison)
+admin.site.register(ComparisonItem)
