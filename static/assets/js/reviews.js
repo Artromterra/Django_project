@@ -1,26 +1,39 @@
 $(document).ready(function (product_id) {
     let productId = $("#reviews").data("product-id");
+    productId = parseInt(productId, 10);
+    console.log("Product id:", productId)
     let list_reviews_url = $("#reviews").data("list-reviews-url")
+    console.log("List reviews url:", list_reviews_url)
     let create_review_url = $("#reviews").data("create-review-url")
+    console.log("New review url:", create_review_url)
     let init_limit = 5
     let limit = init_limit;
     let delta = 5;
 
-    function loadFeedbacks() {
+    function loadReviews() {
         // отправляем с помощью AJAX запрос на сервер для получения списка отзывов
         $.ajax({
             url: list_reviews_url,
             type: "GET",
-            data: { limit: limit, product_id: product_id },
-            dataType: "json",
+            data: { limit: limit, product_id: productId },
+            dataType: "html",
             success: function (response) {
-                let reviewsList = $("#reviews");
+                // Создаем временный контейнер для разбора HTML
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = response; // Вставляем HTML в контейнер
+
+                // Находим все элементы списка отзывов
+                let reviews = tempDiv.querySelectorAll("#review-list-ul li");
+                console.log("Number of reviews:", reviews.length);
+
+                console.log("Limit:", limit)
+                let reviewsList = $("#reviews-list-container");
 
                 // заменяем html на полученный от сервера
-                reviewsList.html(response.html);
+                reviewsList.html(response);
 
                 // если количество отзывов меньше limit - загружены все отзывы, => убираем кнопку Показать еще
-                if ($(response.html).length < limit) {
+                if (reviews.length < limit) {
                     $("#load-reviews").hide();
                 }
 
@@ -28,16 +41,34 @@ $(document).ready(function (product_id) {
                 limit += delta;
             },
             error: function (xhr, status, error) {
+                console.error("Server response:", xhr.responseText);
+                console.error("Ошибка запроса:", status, error);
+            }
+        });
+        // Отправляем ajax для получения формы для создания отзыва
+        $.ajax({
+            url: create_review_url,
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                let reviewForm = $("#reviews-new-container");
+
+                // перед этим заменили на список отзывов, теперь нужно просто добавить форму
+                reviewForm.html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Server response:", xhr.responseText);
                 console.error("Ошибка запроса:", status, error);
             }
         });
     };
 
-    function createFeedback() {
+    function createReview(event) {
         // Предотвращаем обновление страницы при отправки формы
         event.preventDefault();
 
-        var formData = $(this).serialize();
+        let formData = $(this).serialize();
+        formData += "&product_id=" + productId;
 
         // отправляем форму на сервер с помощью AJAX
         $.ajax({
@@ -61,8 +92,15 @@ $(document).ready(function (product_id) {
     loadReviews();
 
     // При нажатии кнопки Показать еще загружаем увеличенное количество отзывов
-    $("#load-reviews").click(loadReviews);
+    // $("#load-reviews").click(loadReviews);
+    // Привязываем обработчик события через делегирование
+    $(document).on('click', '#load-reviews', function () {
+        loadReviews();
+    });
 
     // При нажатии кнопки Добавить отзыв - отправляем форму на сервер и грузим отзывы
-    $('#review-form').on('submit', createFeedback);
+    // Привязываем обработчик события через делегирование
+    $(document).on('submit', '#review-form', function (event) {
+        createReview.call(this, event);
+    });
 });
