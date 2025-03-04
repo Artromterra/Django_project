@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.safestring import mark_safe
@@ -43,6 +44,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True,
         blank=True,
+        validators=[
+            RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
+        ]
     )
     is_active = models.BooleanField('is active', default=False)
     is_staff = models.BooleanField('is staff', default=False)

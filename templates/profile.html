@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
     <div class="Middle Middle_top">
 
         <div class="Section Section_column Section_columnLeft">
@@ -45,19 +48,24 @@
                                     <div class="form-group">
                                         <label class="form-label" for="name">ФИО
                                         </label>
-                                        <input class="form-input" id="name" name="name" type="text" value="" data-validate="require" />
+                                        <input class="form-input" id="name" name="name" type="text" value="{{ first_name }} {{ last_name }} {{ patronymic }}" data-validate="require" />
                                     </div>
                                 </div>
                                 <div class="row-block">
                                     <div class="form-group">
                                         <label class="form-label" for="phone">Телефон
                                         </label>
-                                        <input class="form-input" id="phone" name="phone" type="text" value="+70000000000" />
+                                        <input class="form-input" id="phone" name="phone" type="text" value="{{ user.phone }}" />
+                                        <script>
+                                          $(document).ready(function(){
+                                            $('#phone').mask('+7 (___) ___-__-__');
+                                          });
+                                        </script>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="mail">E-mail
                                         </label>
-                                        <input class="form-input" id="mail" name="mail" type="text" value="send@test.test" data-validate="require" />
+                                        <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" data-validate="require" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="password">Пароль
