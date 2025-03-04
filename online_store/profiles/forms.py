@@ -107,3 +107,24 @@ class UserSetNewPasswordForm(SetPasswordForm):
         }),
         label='',
     )
+
+
+class ProfileForm(forms.ModelForm):
+    phone = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': '+7 (___) ___-__-__',
+        }),
+        label='Телефон'
+    )
+
+    class Meta:
+        model = User
+        fields = ['avatar', 'email', 'phone']
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        clean_phone = ''.join(filter(str.isdigit, phone))[-10:]  # Убираем всё, кроме цифр, берём последние 10
+        if len(clean_phone) != 10:
+            raise forms.ValidationError('Введите корректный номер (10 цифр)')
+        return clean_phone
