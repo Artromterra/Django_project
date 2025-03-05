@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, Account
 from viewed_products.models import ViewedProducts
 
 
@@ -21,11 +21,32 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'is_superuser',
         'is_active',
-        'image_preview'
+        'image_preview',
+        'phone'
     )
+    list_editable = (
+        'phone',
+    )
+
     list_display_links = 'id', 'username'
     readonly_fields = 'image_preview',
     search_fields = 'username', 'email'
     ordering = 'id',
 
     inlines = (ViewedProductsAdmin,)
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    model = Account, User
+
+    list_display = (
+        'user',
+        'first_name',
+        'last_name',
+        'patronymic',
+    )
+    list_editable = (
+        'first_name',
+        'last_name',
+        'patronymic',
+    )
