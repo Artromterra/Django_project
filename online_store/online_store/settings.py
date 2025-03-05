@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'banners.apps.BannersConfig',
     'reviews.apps.ReviewsConfig',
+    'comparison.apps.ComparisonConfig',
     'viewed_products.apps.ViewedProductsConfig',
 ]
 

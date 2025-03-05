@@ -25,7 +25,8 @@ urlpatterns = [
     path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
     path('', HomepageView.as_view(), name='homepage'),
-    path('reviews/', include('reviews.urls'), name='reviews')
+    path('reviews/', include('reviews.urls'), name='reviews'),
+    path('comparison/', include('comparison.urls'), name='comparison')
 ]
 
 if settings.DEBUG:
