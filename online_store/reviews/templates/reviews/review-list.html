@@ -2,7 +2,7 @@
     <h3 class="Section-title">{{ num_reviews }} Отзыв(-а, -ов)</h3>
 </header>
 <div class="Comments">
-    <ul>
+    <ul id="review-list-ul">
         {% for review in reviews %}
         <li>
             <div class="Comment">
@@ -16,11 +16,11 @@
                 <div class="Comment-column">
                     <header class="Comment-header">
                         <div>
-                            <strong class="Comment-title">{{ review.user.username }}
-                            </strong><span class="Comment-date">{{review.created_at|date:"F j&#32;&#32;/&#32;&#32;o&#32;&#32;/&#32;&#32;H:i"}}</span>
+                            <strong class="Comment-title">{{ review.author.username }}
+                            </strong><span class="Comment-date">{{review.created_at|date:"F j  /  o  /  H:i"}}</span>
                         </div>
                     </header>
-                    <div class="Comment-content">{{feedback.comment}}
+                    <div class="Comment-content">{{review.content}}
                     </div>
                 </div>
             </div>
