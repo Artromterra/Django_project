@@ -1,132 +1,85 @@
-"""The module responsible for Celery tasks related to the django app."""
+"""The module responsible for celery tasks."""
+from typing import Optional, List
+import os
 
-from typing import Dict, Any, List, Set
-from logging import getLogger
+from celery import shared_task
 
-from celery import shared_task, chain, group
-
-from utils.xlsx import xlsx_reader
-from utils.email import send_email, compile_report
-from utils.files import move_file_depends_on_import_result
-
-from .models.product import Product
-
-logger = getLogger("celery")
-
-
-def product_from_dict(product_data: Dict[str, Any]) -> bool:
-    """
-    Create the product from dict.
-
-    If import was successful return True, else False.
-    """
-    try:
-        Product.objects.update_or_create(**product_data)
-    except Exception as exc:
-        logger.exception(exc)
-        return False
-    else:
-        return True
-
-
-def import_was_successful(import_results: List[bool]) -> bool:
-    """Return True if import was successful, else False."""
-    import_results_set: Set[bool] = set(import_results)
-    if import_results_set is {True}:
-        logger.info("Import was successful.")
-        return True
-
-    logger.warning("Import was with failures.")
-    return False
-
-
-def move_file(was_successful: bool, file_path: str, success_dir: str, failure_dir: str) -> bool:
-    """
-    Transfer the file depending on the success of the import.
-
-    :param was_successful: True, if all rows from xlsx file were converted to Product models.
-    :param file_path: Import file path.
-    :param success_dir: The directory to move the import file to in case of success.
-    :param failure_dir: The directory to move the import file to in case of failure.
-    :return: True, if moving was successful, else False
-    """
-    try:
-        target_path: str = move_file_depends_on_import_result(
-            was_successful, file_path, success_dir, failure_dir
-        )
-    except Exception as exc:
-        logger.exception(exc)
-        return False
-    else:
-        logger.info("Import file %s was moved.", target_path)
-        return True
-
-
-def report_about_import(
-        was_successful: bool, admin_email: str, file_path: str, log_file_path: str
-) -> bool:
-    """
-    Report about import process result.
-
-    :param was_successful: True, if import was successful, else False.
-    :param admin_email: Email address where to send the message with the report.
-    :param file_path: Import file path.
-    :param log_file_path: File path with logs about import.
-    """
-    email_subject, email_text = compile_report(
-        was_successful, file_path, log_file_path
-    )
-
-    try:
-        send_email(admin_email, email_subject, email_text)
-    except Exception as exc:
-        logger.error(exc)
-        return False
-    else:
-        logger.info("Report about import has been sent.")
-        return True
+from services.importing.manager import ImportManager
+from services.importing.importers.importer_factory import ImporterFactory
+from services.importing.reporters.email_reporter import EmailReporter
 
 
 @shared_task
-def import_products(file_path: str, success_dir: str, failure_dir: str) -> Dict[str, bool]:
+def import_from_file(
+        filepath: str,
+        success_dir: str,
+        failure_dir: str,
+        emails: Optional[List[str]] = None
+):
     """
-    Import products from Excel file.
+    Import data from a file.
 
-    A task consists of a chain of tasks.
-    The first task in the chain is a group of tasks for creating models from Excel rows.
-    The next task is to verify the success of the import.
-    If all lines were imported without errors, the task returns True.
-    Further along the chain, a group of tasks is performed,
-    consisting of 2 tasks - sending the report and moving the import file.
-
-    :param file_path: Import file path.
-    :param success_dir: The directory where you want to move the files of the successful import.
-    :param failure_dir: The directory where you want to move the import files with errors.
-    :return: Dictionary in the form of
-    {"importing": True, "moving_file": True, "reporting": True}
+    :param filepath: Import file.
+    :param success_dir: The directory where the files of successful imports will be stored.
+    :param failure_dir: The directory where the import files with errors will be stored.
+    :param emails: The email list where the import reports will be sent.
+    If None or an empty list is passed,
+    reports will be sent to the emails specified in the ADMIN_EMAILS in the .env file.
     """
-    # 1 link - first group
-    group_from_dict_to_model = group(
-        shared_task(product_from_dict).s(product_dict)
-        for product_dict in xlsx_reader(file_path)
+    importer_factory = ImporterFactory()
+    email_reporter = EmailReporter(emails)
+    import_manager = ImportManager(
+        import_file=filepath,
+        importer_factory=importer_factory,
+        reporter=email_reporter,
+        success_dir=success_dir,
+        failure_dir=failure_dir
     )
 
-    # 2 link - task
-    group_move_and_send_email = group(
-        shared_task(move_file).s(file_path, success_dir, failure_dir),
-        shared_task(report_about_import).s(),
-    )
+    import_manager.run_import()
 
-    # 3 link - second group
-    import_process = chain(
-        group_from_dict_to_model,
-        shared_task(import_was_successful).s(),
-        group_move_and_send_email
-    ).apply_async()
-    moving_file, reporting = import_process.get()
 
-    return {
-        "importing": import_process.parent.get(),
-        "moving_file": moving_file,
-        "reporting": reporting
-    }
+@shared_task
+def import_data_from_files(
+        dir_with_import_files: str,
+        success_dir: str,
+        failure_dir: str,
+        import_filenames: Optional[List[str]] = None,
+        emails: Optional[List[str]] = None
+):
+    """
+    Create tasks for importing data from files.
+
+    If multiple import files are transferred, importing from each file will occur asynchronously.
+
+    :param dir_with_import_files: The directory where the import files are stored.
+    :param success_dir: The directory where the files of successful imports will be stored.
+    :param failure_dir: The directory where the import files with errors will be stored.
+    :param import_filenames: The names of the import files.
+    If None or an empty list is passed,
+    data will be imported from all files in the directory dir_with_import_files.
+    If a non-empty list is passed, data will be imported only from these files.
+    The names of the import files will be combined with the directory path.
+
+    :param emails: The email list where the import reports will be sent.
+    If None or an empty list is passed,
+    reports will be sent to the emails specified in the ADMIN_EMAILS in the .env file.
+    """
+    if not import_filenames:
+        filenames: List[str] = os.listdir(dir_with_import_files)
+        filepaths: List[str] = [
+            os.path.join(dir_with_import_files, filename)
+            for filename in filenames
+        ]
+    else:
+        filepaths: List[str] = [
+            os.path.join(dir_with_import_files, filename)
+            for filename in import_filenames
+        ]
+    for filepath in filepaths:
+        import_from_file.apply_async(
+            filepath=filepath,
+            success_dir=success_dir,
+            failure_dir=failure_dir,
+            emails=emails
+        )
