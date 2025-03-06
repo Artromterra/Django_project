@@ -162,6 +162,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL", "your email")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD", 'your password')
 
+ADMIN_EMAILS = os.getenv("ADMIN_EMAILS", "").split(",")
+
 DEFAULT_LIMIT_REVIEWS = 5
 
 # logging
@@ -172,7 +174,7 @@ LOGGING = {
     "formatters": {
         "base": {
             "format": "[%(levelname)s] [%(asctime)s] [%(name)s] %(funcName)s | %(message)s",
-        }
+        },
     },
     "handlers": {
         "console": {
@@ -190,6 +192,12 @@ LOGGING = {
             "interval": 10,
             "encoding": "utf-8",
         },
+        "memory": {
+            "class": "logging.handlers.MemoryHandler",
+            "level": "INFO",
+            "capacity": 100,
+            "target": "file"
+        }
     },
     "loggers": {
         "main": {
@@ -197,6 +205,11 @@ LOGGING = {
             "handlers": ["console", "file"],
             "propagate": False,
         },
+        "celery": {
+            "level": LOGLEVEL,
+            "handlers": ["memory", "file", "console"],
+            "propagate": False
+        }
     },
 }
 
