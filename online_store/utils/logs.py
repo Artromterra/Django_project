@@ -1,33 +1,45 @@
-"""The module responsible for working with log files."""
+"""The module responsible for working with logs."""
+from typing import Optional, List, Set, Literal
+from uuid import UUID
+from logging import getLogger
+from logging.handlers import MemoryHandler
 
-from typing import List, Tuple
-import re
+
+def generate_unique_logger_name(parent_logger_name: Optional[str] = None) -> str:
+    """Generate unique logger name for celery"""
+    return f"{parent_logger_name}.{str(UUID())}"
 
 
-def get_logs_with_levels_from_file(levels: Tuple[str, ...], log_file: str) -> List[str]:
-    """
-    Return the list of logs with the specified levels.
+def get_memory_handler_from_logger(logger_name: str) -> MemoryHandler:
+    """Return MemoryHandler from logger with logger_name."""
+    logger = getLogger(logger_name)
+    for handler in logger.handlers:
+        if isinstance(handler, MemoryHandler):
+            return handler
+    else:
+        raise ValueError("Logger doesn't have MemoryHandler.")
 
-    :param levels: Tuple of levels logs.
-    :param log_file: Log file path.
-    :return: List of logs with these levels.
-    """
-    logs: List[str] = list()
-    with open(log_file, "r", encoding="utf-8") as file:
-        suitable_log: bool = False
 
-        for line in file:
-            match = re.match(r"\[(.*?)].*", line)
+def get_logs_with_levels_from_memory_handler(
+    logger_name: str,
+    levels: Set[Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]]
+) -> List[str]:
+    """Get logs with levels from MemoryHandler."""
+    memory_handler: MemoryHandler = get_memory_handler_from_logger(logger_name)
+    formatter = memory_handler.formatter
+    logs = memory_handler.buffer
+    return [
+        formatter.format(log)
+        for log in logs if log.levelname in levels
+    ]
 
-            if match:
-                # if line starts with [<LOGLEVEL>]
-                if match.group(1) in levels:
-                    suitable_log = True
-                    logs.append(line)
-                else:
-                    suitable_log = False
-            elif suitable_log:
-                # if line doesn't start with [<LOGLEVEL>]
-                logs[-1] += "\n" + line
 
-    return logs
+def save_logs_from_buffer_to_file(filepath: str, logger_name: str) -> None:
+    """Save logs from MemoryHandler buffer to file."""
+    logs: List[str] = get_logs_with_levels_from_memory_handler(
+        logger_name=logger_name,
+        levels={"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"},
+    )
+
+    with open(filepath, "w", encoding="utf-8") as logfile:
+        logfile.write("\n".join(logs))
