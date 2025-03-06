@@ -42,8 +42,8 @@ class ProductDetailView(DetailView):
         user = self.request.user
         if user.is_authenticated:
             viewed_products = ViewHistoryProductsService(
-                user=user.id,
-                product=self.object.id,
+                user=user,
+                product=self.object,
             )
             viewed_products.add_viewed_products()
         return obj
