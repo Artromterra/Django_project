@@ -1,27 +1,36 @@
 """The module responsible for testing the module email.py."""
+from unittest.mock import patch, MagicMock
+
 from django.test import TestCase
 from django.conf import settings
 
-from ..email import compile_report, SUCCESS_REPORT_TEXT, REPORT_SUBJECT
+from ..emails_utils import send_email
 
 
-class TestReportText(TestCase):
-
+class SendEmailTestCase(TestCase):
     def setUp(self):
-        self.file_path = "example.xlsx"
-        self.log_file_path = settings.BASE_DIR / "utils" / "tests" / "test_logfile.log"
+        self.attachments = [str(settings.BASE_DIR / "utils" / "tests" / "attachment.txt")]
 
-    def test_compiling_report_with_successful_import(self):
-        """Test compiling report in case successful import."""
-        subject, text = compile_report(True, self.file_path, self.log_file_path)
-        self.assertEqual(subject, REPORT_SUBJECT.format(status="successful"))
-        self.assertEqual(text, SUCCESS_REPORT_TEXT.format(file_path=self.file_path))
+    @patch("utils.emails_utils.EmailMessage")
+    def test_send_email(self, mock_email_message: MagicMock):
+        mock_email_instance = mock_email_message.return_value
+        mock_email_instance.send.return_value = None
 
-    def test_compiling_report_with_unsuccessful_import(self):
-        """Test compiling report in case unsuccessful import."""
-        subject, text = compile_report(False, self.file_path, self.log_file_path)
-        self.assertEqual(subject, REPORT_SUBJECT.format(status="unsuccessful"))
-        self.assertIn("ERROR", text)
-        self.assertIn("WARNING", text)
-        self.assertNotIn("DEBUG", text)
-        self.assertNotIn("INFO", text)
+        to = ["email1@test.com", "email2@test.com"]
+        subject = "Test Subject"
+        text = "Test Body"
+        attach_files = self.attachments
+
+        send_email(to=to, subject=subject, text=text, attach_files=attach_files)
+        print(mock_email_message.call_args)
+
+        mock_email_message.assert_called_once_with(
+            subject=subject,
+            body=text,
+            from_email=settings.EMAIL_HOST_USER,
+            to=to,
+        )
+        for attach in self.attachments:
+            mock_email_instance.attach_file.assert_any_call(attach)
+
+        mock_email_instance.send.assert_called_once()
