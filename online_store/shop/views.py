@@ -6,7 +6,6 @@ from django.db.models import Count
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
-from services.product_list_service import sort_list_products_dto
 
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
