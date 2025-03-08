@@ -166,6 +166,11 @@ ADMIN_EMAILS = os.getenv("ADMIN_EMAILS", "").split(",")
 
 DEFAULT_LIMIT_REVIEWS = 5
 
+# redis
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_LOGS_DB = int(os.getenv("REDIS_LOGS_DB", 0))  # db for celery logs
+
 # logging
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "debug").upper()
 LOGGING = {
@@ -192,12 +197,6 @@ LOGGING = {
             "interval": 10,
             "encoding": "utf-8",
         },
-        "memory": {
-            "class": "logging.handlers.MemoryHandler",
-            "level": "INFO",
-            "capacity": 100,
-            "target": "file"
-        }
     },
     "loggers": {
         "main": {
@@ -205,9 +204,9 @@ LOGGING = {
             "handlers": ["console", "file"],
             "propagate": False,
         },
-        "celery": {
+        "tasks": {
             "level": LOGLEVEL,
-            "handlers": ["memory", "file", "console"],
+            "handlers": ["console", "file"],
             "propagate": False
         }
     },
@@ -221,3 +220,8 @@ CELERY_TASK_SOFT_TIME_LIMIT = int(os.getenv("CELERY_TASK_SOFT_TIME_LIMIT", 120))
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost")
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost")
 CELERY_CONCURRENCY = int(os.getenv("CELERY_CONCURRENCY", 4))
+
+# import_data command settings
+DIR_WITH_IMPORT_FILES = os.getenv("DIR_WITH_IMPORT_FILES", str(BASE_DIR / ".." / "import_files"))
+DIR_WITH_SUCCESSFUL_IMPORTS = os.getenv("DIR_WITH_SUCCESSFUL_IMPORTS", str(BASE_DIR / ".." / "successful_imports"))
+DIR_WITH_IMPORTS_WITH_ERRORS = os.getenv("DIR_WITH_IMPORTS_WITH_ERRORS", str(BASE_DIR / ".." / "imports_with_errors"))
