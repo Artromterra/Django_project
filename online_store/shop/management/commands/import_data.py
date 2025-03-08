@@ -1,7 +1,9 @@
 """The module responsible for the django command import_data."""
-from typing import List
+
+import os
 
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 from shop.tasks import import_data_from_files
 from online_store.celery import app
@@ -12,26 +14,27 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--dir_with_import_files",
+            "-i", "--imports-dir",
             type=str,
-            required=True,
+            required=False,
             help="The directory where the import files are stored."
         )
         parser.add_argument(
-            "--success_dir",
+            "-s", "--success-dir",
             type=str,
-            required=True,
+            required=False,
             help="The directory where the files of successful imports will be stored."
         )
         parser.add_argument(
-            "--failure_dir",
+            "-f", "--failure-dir",
             type=str,
-            required=True,
+            required=False,
             help="The directory where the import files with errors will be stored."
         )
         parser.add_argument(
-            "--import_filenames",
-            type=List[str],
+            "--filenames",
+            nargs="+",
+            type=str,
             required=False,
             help="""
             The names of the import files.
@@ -42,8 +45,9 @@ class Command(BaseCommand):
             """
         )
         parser.add_argument(
-            "--emails",
-            type=List[str],
+            "-e", "--emails",
+            nargs="+",
+            type=str,
             required=False,
             help="""
             The email list where the import reports will be sent.
@@ -78,6 +82,12 @@ class Command(BaseCommand):
                     return True
         return False
 
+    @classmethod
+    def __create_dir_if_not_exists(cls, dir_: str) -> None:
+        if not os.path.exists(dir_):
+            os.makedirs(dir_)
+
+
     def handle(self, *args, **options):
         # Check that celery is not performing any tasks.
         if (self.__are_there_any_reserved_importing_tasks() or
@@ -90,16 +100,25 @@ class Command(BaseCommand):
             return
 
         # Run import data from files task.
-        dir_with_import_files = options["dir_with_import_files"]
-        success_dir = options["success_dir"]
-        failure_dir = options["failure_dir"]
-        import_filenames = options.get("import_filenames")
+        dir_with_import_files = options.get("imports-dir", settings.DIR_WITH_IMPORT_FILES)
+        self.stdout.write(f"Dir with import files: {dir_with_import_files}\n")
+
+        success_dir = options.get("success-dir", settings.DIR_WITH_SUCCESSFUL_IMPORTS)
+        self.__create_dir_if_not_exists(success_dir)
+        self.stdout.write(f"Dir with successful import files: {success_dir}\n")
+
+        failure_dir = options.get("failure-dir", settings.DIR_WITH_IMPORTS_WITH_ERRORS)
+        self.__create_dir_if_not_exists(failure_dir)
+        self.stdout.write(f"Dir with import files with errors: {failure_dir}\n")
+
+        import_filenames = options.get("filenames")
+        self.stdout.write(f"Import files: {import_filenames}\n")
+
         emails = options.get("emails")
+        self.stdout.write(f"Emails: {emails}\n")
 
         import_data_from_files.apply_async(
-            dir_with_import_files=dir_with_import_files,
-            success_dir=success_dir,
-            failure_dir=failure_dir,
+            args=[dir_with_import_files, success_dir, failure_dir],
             import_filenames=import_filenames,
             emails=emails,
         )
