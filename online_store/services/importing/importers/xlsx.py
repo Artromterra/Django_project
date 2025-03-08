@@ -9,6 +9,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 from services.importing.importers.base import BaseImporter
 from services.importing.excs import NotFoundData, NotFoundField
+from utils.logs.loggers.separator import SeparatorLogger
 
 
 class XLSXImporter(BaseImporter):
@@ -26,15 +27,15 @@ class XLSXImporter(BaseImporter):
     are interpreted as an empty string.
     """
 
-    def __init__(self, filename: str, logger_name: str = "main.services.importing.importers"):
+    def __init__(self, filename: str, separator_logger: SeparatorLogger):
         """
         Init class.
 
         :param filename: Import file (abs path)
-        :param logger_name: The name of the logger.
+        :param separator_logger: Separator logger.
         It is necessary to create separate lags when importing multiple files in parallel.
         """
-        super().__init__(filename, logger_name)
+        super().__init__(filename, separator_logger)
         self.__wb: Workbook = load_workbook(filename, read_only=True)
 
         self.import_params["Product"].update(sheet="products")

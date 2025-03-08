@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Generator, Dict, Any
 from logging import getLogger
 
+from utils.logs.loggers.separator import SeparatorLogger
+
 
 class BaseImporter(ABC):
     """The base class responsible for importing entities from a file."""
@@ -18,13 +20,13 @@ class BaseImporter(ABC):
                 "short_description",
                 "price",
                 "is_active",
-                "category",
+                "category_id",
             }),
         },
         "Seller": {
             "fields": frozenset({
                 "pk",
-                "user",
+                "user_id",
                 "name",
                 "description",
                 "image",
@@ -36,17 +38,17 @@ class BaseImporter(ABC):
         "ProductSeller": {
             "fields": frozenset({
                 "pk",
-                "product",
-                "seller",
+                "product_id",
+                "seller_id",
                 "price",
                 "amount",
             }),
         }
     }
 
-    def __init__(self, filename: str, logger_name: str = "main.services.importing.importers"):
+    def __init__(self, filename: str, separator_logger: SeparatorLogger):
         self.filename = filename
-        self.logger = getLogger(logger_name)
+        self.logger = separator_logger.adapter
 
     @abstractmethod
     def import_categories(self) -> Generator[Dict[str, Any], None, None]:
