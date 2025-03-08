@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.core.cache import cache
 from .models.product import Product, ProductImage
 from .models.category import Category
@@ -18,10 +18,17 @@ class ReviewInline(admin.TabularInline):
     extra = 1
 
 
-admin.site.register(Product)
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    actions = [clear_category_menu_cache]
+    actions = [clear_category_menu_cache, "clear_cache"]
     inlines = [ReviewInline]
+
+    @admin.action(description="Сбросить кеш каталога")
+    def clear_cache(self, request, queryset):
+        cache.delete("catalog_cache")
+        self.message_user(
+            request, "Кеш каталога успешно сброшен.", messages.SUCCESS
+        )
 
 
 class ProductInline(admin.StackedInline):

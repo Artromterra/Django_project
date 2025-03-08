@@ -17,6 +17,7 @@ class Product(models.Model):
     short_description = models.CharField(blank=False, max_length=100)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # DB relatives
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products")
