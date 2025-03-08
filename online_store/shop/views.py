@@ -2,6 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 from django.core.cache import cache
+from django.db.models import Count
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
@@ -27,7 +28,13 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "product_properties", "product_sellers")
+            .prefetch_related(
+                "images",
+                "features",
+                "tags",
+                "product_properties",
+                "product_sellers",
+            )
         )
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -66,23 +73,36 @@ class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
     context_object_name = "products"
+    sort_query_list = [
+        "orders",
+        "-orders",
+        "price",
+        "-price",
+        "reviews",
+        "-reviews",
+        "created_at",
+        "-created_at",
+    ]
 
     def get_context_data(self, **kwargs):
         sort_query = self.request.GET.get("sort", "-orders")
 
-        cache_key = "products_list"
+        if sort_query not in self.sort_query_list:
+            sort_query = "-orders"
+
+        cache_key = f"products_list_sort_{sort_query}"
         cache_data = cache.get(cache_key)
         if cache_data:
-            products_dto_sorted = sort_list_products_dto(
-                products_list_dto=cache_data, sort_query=sort_query
-            )
-            return {self.context_object_name: products_dto_sorted}
+            return {self.context_object_name: cache_data}
 
-        products = Product.objects.filter(is_active=True).all()
+        products = (
+            Product.objects.filter(is_active=True)
+            .annotate(orders_count=Count("orders"))
+            .annotate(reviews_count=Count("reviews"))
+            .order_by(sort_query)
+            .all()
+        )
         products_dto = ProductListDTO.from_objects(products)
         cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
-        products_dto_sorted = sort_list_products_dto(
-            products_list_dto=products_dto, sort_query=sort_query
-        )
-        return {self.context_object_name: products_dto_sorted}
+        return {self.context_object_name: products_dto}

@@ -13,8 +13,8 @@ class ProductListDTO:
     title: str
     price: float
     categories: str
-    orders: int
-    reviews: int
+    orders_count: int
+    reviews_count: int
     created_at: datetime
     image_url: Optional[str] = None
 
@@ -27,9 +27,6 @@ class ProductListDTO:
             title=object.title,
             price=object.price,
             categories=cls.get_categories(object),
-            orders=object.orders.count(),
-            reviews=object.reviews.count(),
-            created_at=object.created_at,
             image_url=(
                 object.images.first().image.url
                 if object.images.exists()

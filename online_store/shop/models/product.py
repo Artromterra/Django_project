@@ -24,6 +24,12 @@ class Product(models.Model):
     sellers = models.ManyToManyField('Seller', through='ProductSeller', related_name="products")
 
 
+# Тестовая заглушка для реализации сортировки продуктов по количеству заказов
+class Order(models.Model):
+    title = models.CharField(max_length=100)
+    prodcuts = models.ManyToManyField("Product", related_name="orders")
+
+
 class ProductSeller(models.Model):
     class Meta:
         verbose_name = "Product Seller"
