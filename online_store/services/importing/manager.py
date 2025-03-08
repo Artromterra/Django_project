@@ -2,13 +2,14 @@
 import os
 import shutil
 from logging import getLogger
+from uuid import uuid4
 
 from shop.models import Product
 from shop.models.category import Category
 from shop.models.seller import Seller
 from shop.models.product import ProductSeller
 from services.importing.importers.importer_factory import ImporterFactory
-from utils.logs import generate_unique_logger_name, get_memory_handler_from_logger
+from utils.logs.loggers.separator import SeparatorLogger
 
 from .reporters.base import BaseReporter
 
@@ -31,6 +32,7 @@ class ImportManager(object):
             reporter: BaseReporter,
             success_dir: str,
             failure_dir: str,
+            separator_logger: SeparatorLogger
     ):
         """
         Init class.
@@ -42,14 +44,16 @@ class ImportManager(object):
         if there were no errors in the process.
         :param failure_dir: The directory to which the import files will be moved
         if there was at least one error in the process.
+        :param separator_logger: Separator logger.
         """
         if os.path.exists(import_file) and os.path.isfile(import_file):
             self.__import_file = import_file
         else:
             raise ValueError("Import file not exists or is not file.")
 
-        self.__logger_name = generate_unique_logger_name(parent_logger_name="celery")
-        self.__logger = getLogger(self.__logger_name)
+        self.__unique_logging_id: str = str(uuid4())
+        self.__separator_logger = separator_logger
+        self.__logger = separator_logger.adapter
 
         self.__importer_factory = importer_factory
 
@@ -67,7 +71,7 @@ class ImportManager(object):
     def __import_from_file(self) -> bool:
         """Import data from file."""
         self.__logger.info("Start importing from %s", self.__import_file)
-        importer = self.__importer_factory(self.__import_file, self.__logger_name)
+        importer = self.__importer_factory(self.__import_file, self.__separator_logger)
         success: bool = True
 
         # import categories
@@ -136,7 +140,7 @@ class ImportManager(object):
         if success:
             self.__reporter.report_about_success(self.__import_file)
         else:
-            self.__reporter.report_about_failure(self.__import_file, logger_name=self.__logger_name)
+            self.__reporter.report_about_failure(self.__import_file)
 
     def run_import(self) -> None:
         """Import data from file."""
@@ -147,6 +151,6 @@ class ImportManager(object):
         except Exception as exc:
             self.__logger.error("Unexpected error.\n%s", str(exc))
         finally:
-            # close MemoryHandler
-            memory_handler = get_memory_handler_from_logger(self.__logger_name)
-            memory_handler.close()
+            # clear separate handler
+            separate_handler = self.__separator_logger.handler
+            separate_handler.extract(self.__separator_logger.unique_id)

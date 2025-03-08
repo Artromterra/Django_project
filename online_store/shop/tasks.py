@@ -3,10 +3,13 @@ from typing import Optional, List
 import os
 
 from celery import shared_task
+from django.conf import settings
 
 from services.importing.manager import ImportManager
 from services.importing.importers.importer_factory import ImporterFactory
 from services.importing.reporters.email_reporter import EmailReporter
+from utils.logs.loggers.separator import SeparatorLogger
+from utils.logs.handlers.redis_separator import RedisHandler
 
 
 @shared_task
@@ -26,14 +29,24 @@ def import_from_file(
     If None or an empty list is passed,
     reports will be sent to the emails specified in the ADMIN_EMAILS in the .env file.
     """
+    handler = RedisHandler(
+        redis_kwargs={
+            "host": settings.REDIS_HOST,
+            "port": settings.REDIS_PORT,
+            "db": settings.REDIS_LOGS_DB,
+        }
+    )
+    handler.setLevel("INFO")
+    separator_logger = SeparatorLogger("tasks", handler)
     importer_factory = ImporterFactory()
-    email_reporter = EmailReporter(emails)
+    email_reporter = EmailReporter(separator_logger, emails)
     import_manager = ImportManager(
         import_file=filepath,
         importer_factory=importer_factory,
         reporter=email_reporter,
         success_dir=success_dir,
-        failure_dir=failure_dir
+        failure_dir=failure_dir,
+        separator_logger=separator_logger,
     )
 
     import_manager.run_import()
@@ -78,8 +91,6 @@ def import_data_from_files(
         ]
     for filepath in filepaths:
         import_from_file.apply_async(
-            filepath=filepath,
-            success_dir=success_dir,
-            failure_dir=failure_dir,
+            args=[filepath, success_dir, failure_dir],
             emails=emails
         )
