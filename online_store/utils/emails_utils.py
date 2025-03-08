@@ -25,10 +25,15 @@ def send_email(to: List[str], subject: str, text: str, attach_files: Optional[Li
             from_email=settings.EMAIL_HOST_USER,
             to=to,
         )
-        for file in attach_files:
-            email.attach_file(file)
-        email.send()
+        if attach_files:
+            for file in attach_files:
+                if file is not None:
+                    logger.debug("Attachment: %s", file)
+                    email.attach_file(file)
+            email.send()
     except Exception as exc:
-        logger.exception("Error when sending an email. exc=%s", str(exc))
+        logger.error("Error when sending an email. exc=%s", str(exc))
     else:
         logger.info("The email was sent successfully.")
+    finally:
+        logger.debug("Finally...")
