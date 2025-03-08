@@ -6,15 +6,19 @@ from django.contrib.auth.views import (
 from django.core import management
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from django.contrib.auth.views import LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+
 
 from .forms import (
     RegisterForm,
     LoginForm,
     UserEmailRecoveryPasswordForm,
-    UserSetNewPasswordForm,
+    UserSetNewPasswordForm, ProfileForm,
 )
+from .models import Account, User
 
 app_name = 'profiles'
 
@@ -37,6 +41,9 @@ class RegisterView(FormView):
         user.username = username
         user.email = email
         user.save()
+
+        Account.objects.create(user=user)
+
         management.call_command('customer_permissions', user.id)
 
         return response
@@ -94,3 +101,44 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
     промежуточное представление для отображения процесса смены пароля
     """
     template_name = 'password_reset_done.html'
+
+
+class UserAccountView(LoginRequiredMixin, TemplateView):
+    template_name = "account.html"
+
+
+class ProfileUpdateView(LoginRequiredMixin, FormView):
+    template_name = 'profile.html'
+    form_class = ProfileForm
+    success_url = reverse_lazy('profiles:profile')
+
+    def get_initial(self):
+        user = self.request.user
+        account = get_object_or_404(Account, user=user)  # Получаем аккаунт пользователя
+        return {
+            'email': user.email,
+            'phone': user.phone,
+            'avatar': user.avatar,
+            'first_name': account.first_name,
+            'last_name': account.last_name,
+            'patronymic': account.patronymic,
+        }
+
+    def form_valid(self, form):
+        user = self.request.user
+        user.email = form.cleaned_data['email']
+        user.phone = form.cleaned_data['phone']
+        if form.cleaned_data['avatar']:
+            user.avatar = form.cleaned_data['avatar']
+        user.save()
+
+        account = get_object_or_404(Account, user=user)
+        account.first_name = form.cleaned_data['first_name']
+        account.last_name = form.cleaned_data['last_name']
+        account.patronymic = form.cleaned_data['patronymic']
+        account.save()
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

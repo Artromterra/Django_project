@@ -1,13 +1,14 @@
-from typing import Optional
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.views.generic import DetailView, ListView
-from django.forms.models import model_to_dict
 from django.core.cache import cache
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 from services.product_list_service import sort_list_products_dto
+
+from services.settings_service import SettingsService
+from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
 
 
@@ -26,10 +27,22 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "properties")
+            .prefetch_related("images", "features", "tags", "product_properties", "product_sellers")
         )
 
-    def get_object(self):
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        obj = super().get(request, *args, **kwargs)
+        # класс для обработки и действий над просмотренными продуктами
+        user = self.request.user
+        if user.is_authenticated:
+            viewed_products = ViewHistoryProductsService(
+                user=user.id,
+                product=self.object.id,
+            )
+            viewed_products.add_viewed_products()
+        return obj
+
+    def get_object(self, *args, **kwargs):
         cache_key = f"product_detail_{self.kwargs["pk"]}"
         cache_data = cache.get(cache_key)
         if cache_data:

@@ -4,6 +4,7 @@ from datetime import datetime
 from logging import getLogger
 
 from django.views.generic import ListView, CreateView
+from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -26,10 +27,11 @@ class ReviewsListView(ListView):
         logger.debug("Limit is %d", limit)
 
         product_id = self.request.GET.get("product_id")
+        product_id = int(product_id)
         logger.debug("Product pk is %d", product_id)
         return (Review.objects
                 .select_related("product").filter(product__pk=product_id)
-                .select_related("author").order_by("-created_at").all()[:limit])
+                .select_related("author").order_by("-created_at")[:limit])
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,9 +50,12 @@ class ReviewsCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         product_id = self.request.GET.get("product_id")
+        product_id = int(product_id)
         logger.debug("Product pk is %d", product_id)
 
         form.instance.product = Product.objects.get(pk=product_id)
-        form.instance.user = self.request.user
+        form.instance.author = self.request.user
         form.instance.pub_date = datetime.now()
-        return super().form_valid(form)
+        form.save()
+
+        return JsonResponse({"message": "Отзыв успешно создан!"})

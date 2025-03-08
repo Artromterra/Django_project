@@ -288,8 +288,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="Tabs-block" id="reviews" data-product-id="{{product.pk}}" data-list-reviews-url="{% url 'reviews:reviews-list' %}" data-create-review-url="{% url 'reviews:reviews-new' product_id={{product.pk}}%}">
-                                <script src="/static/assets/js/reviews.js"></script>
+                            <div class="Tabs-block" id="reviews" data-product-id="{{product.pk}}" data-list-reviews-url="{% url 'reviews:reviews-list' %}?product_id={{product.pk}}" data-create-review-url="{% url 'reviews:reviews-new' %}?product_id={{product.pk}}">
+                                <div id="reviews-list-container"></div>
+                                <div id="reviews-new-container"></div>
                             </div>
                         </div>
                     </div>
@@ -298,4 +299,18 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts-after-footer %}
+        <!--+Middle-->
+    <!--    +div.-top-->
+    <!--        +breadcrumbs('Главная','Портфолио')-->
+    <!--    +Article('portfolio')-->
+    <!---->
+    <script src="/static/assets/plg/jQuery/jquery-3.5.0.min.js"></script>
+    <script src="/static/assets/plg/form/jquery.form.js"></script>
+    <script src="/static/assets/plg/form/jquery.maskedinput.min.js"></script>
+    <script src="/static/assets/plg/range/ion.rangeSlider.min.js"></script>
+    <script src="/static/assets/plg/Slider/slick.min.js"></script>
+    <script src="/static/assets/js/scripts.js"></script>
+    <script src="/static/assets/js/reviews.js"></script>
 {% endblock %}

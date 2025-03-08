@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.safestring import mark_safe
@@ -43,6 +44,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True,
         blank=True,
+        validators=[
+            RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
+        ]
     )
     is_active = models.BooleanField('is active', default=False)
     is_staff = models.BooleanField('is staff', default=False)
@@ -72,3 +76,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.avatar:
             return mark_safe(f'<img src="{self.avatar.url}" width="50" height="50" />')
         return 'No avatar'
+
+
+class Account(models.Model):
+
+    # DB Fields
+    # ФИО
+    first_name = models.CharField(max_length= 50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    patronymic = models.CharField(max_length=50, null=True, blank=True)
+
+    # DB Relations
+    # Связь аккаунта с пользовалелем
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # последний заказ из истории заказов
+    last_order = models.ForeignKey("Order", on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)
+
+class Order(models.Model):
+    # заглушка
+    last_order = models.CharField(max_length= 50, null=True, blank=True)
