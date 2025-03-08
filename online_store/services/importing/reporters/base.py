@@ -16,6 +16,6 @@ class BaseReporter(ABC):
         pass
 
     @abstractmethod
-    def report_about_failure(self, import_file: str, **kwargs):
+    def report_about_failure(self, import_file: str):
         """Report about unsuccessful import"""
         pass
