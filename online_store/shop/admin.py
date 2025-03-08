@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.core.cache import cache
 from .models.product import Product, ProductImage, ProductSeller
 from .models.category import Category
@@ -29,12 +29,19 @@ class ImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    actions = [clear_category_menu_cache]
+    actions = [clear_category_menu_cache, "clear_cache"]
     inlines = [ReviewInline, ProductSellerInline, ImageInline]
 
     list_display = ('title', 'price', 'is_active')
     list_filter = ('sellers', 'is_active')
     search_fields = ('title', 'sellers__name')
+    
+    @admin.action(description="Сбросить кеш каталога")
+    def clear_cache(self, request, queryset):
+        cache.delete("catalog_cache")
+        self.message_user(
+            request, "Кеш каталога успешно сброшен.", messages.SUCCESS
+        )
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

@@ -13,6 +13,7 @@ def delete_images_cache(sender, instance, **kwargs):
 
     cache_keys = [
         f"product_detail_{product_pk}",
+        "products_list",
     ]
 
     cache.delete_many(cache_keys)

@@ -1,15 +1,15 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
-from django.forms.models import model_to_dict
+from django.shortcuts import render
+from django.views.generic import DetailView, ListView
 from django.core.cache import cache
+from django.db.models import Count
 
+from dto.product_list_dto import ProductListDTO
+from services.settings_service import SettingsService
 
-from dto.product_dto import ProductDetailDTO
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
-from profiles.models import User
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -27,7 +27,13 @@ class ProductDetailView(DetailView):
         return (
             super()
             .get_queryset()
-            .prefetch_related("images", "features", "tags", "product_properties", "product_sellers")
+            .prefetch_related(
+                "images",
+                "features",
+                "tags",
+                "product_properties",
+                "product_sellers",
+            )
         )
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
@@ -60,3 +66,42 @@ class ProductDetailView(DetailView):
 #     return render(request,
 #                   'product_properties_template.html',
 #                   {'product': product, 'properties': properties})
+
+
+class ProductListView(ListView):
+    template_name = "catalog.html"
+    model = Product
+    context_object_name = "products"
+    sort_query_list = [
+        "orders",
+        "-orders",
+        "price",
+        "-price",
+        "reviews",
+        "-reviews",
+        "created_at",
+        "-created_at",
+    ]
+
+    def get_context_data(self, **kwargs):
+        sort_query = self.request.GET.get("sort", "-orders")
+
+        if sort_query not in self.sort_query_list:
+            sort_query = "-orders"
+
+        cache_key = f"products_list_sort_{sort_query}"
+        cache_data = cache.get(cache_key)
+        if cache_data:
+            return {self.context_object_name: cache_data}
+
+        products = (
+            Product.objects.filter(is_active=True)
+            .annotate(orders_count=Count("orders"))
+            .annotate(reviews_count=Count("reviews"))
+            .order_by(sort_query)
+            .all()
+        )
+        products_dto = ProductListDTO.from_objects(products)
+        cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
+
+        return {self.context_object_name: products_dto}
