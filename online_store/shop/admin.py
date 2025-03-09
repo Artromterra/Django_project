@@ -5,6 +5,7 @@ from .models.category import Category
 from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 from .models.seller import Seller
+from .models.cart import Cart,CartItem
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -94,3 +95,24 @@ class SellerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone', 'email')
     search_fields = ('name', 'email')
     inlines = [SellerProductInline]
+
+
+class CartItemInline(admin.TabularInline):
+    model = CartItem
+    extra = 1
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username',)
+    inlines = [CartItemInline]
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'product', 'selected_seller', 'quantity', 'get_final_price')
+    list_filter = ('selected_seller',)
+    search_fields = ('product__title', 'cart__user__username')
+
+
+
