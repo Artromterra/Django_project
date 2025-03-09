@@ -1,6 +1,7 @@
 import random
 from typing import List
 from logging import getLogger
+from unicodedata import category
 
 from django.test import TestCase
 from django.urls import reverse
@@ -11,8 +12,11 @@ import factory
 from profiles.models import User
 from shop.models.reviews import Review
 from shop.models.product import Product
+from shop.models.category import Category
 from shop.factories.reviews import ReviewFactory
 from shop.factories.products import ProductFactory
+from shop.factories.categories import CategoryFactory
+from profiles.factories import UserFactory
 
 logger = getLogger(__name__)
 
@@ -23,12 +27,7 @@ class ReviewsListViewTest(TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up class."""
-        cls.credentials = dict(
-            username="test",
-            password="test",
-            email=factory.Faker("email").evaluate(None, None, {"locale": "en_US"})
-        )
-        cls.user = User.objects.create_user(**cls.credentials)
+        cls.user = UserFactory.create()
 
     @classmethod
     def tearDownClass(cls):
@@ -37,8 +36,12 @@ class ReviewsListViewTest(TestCase):
 
     def setUp(self):
         """Set up."""
+        self.categories: List[Category] = [
+            CategoryFactory.create() for _ in range(random.randint(1, 20))
+        ]
         self.products: List[Product] = [
-            ProductFactory.create() for _ in range(random.randint(1, 20))
+            ProductFactory.create(category=random.choice(self.categories))
+            for _ in range(random.randint(1, 20))
         ]
         self.reviews: List[Review] = [
             ReviewFactory.create(
@@ -50,6 +53,8 @@ class ReviewsListViewTest(TestCase):
 
     def tearDown(self):
         """Tear down."""
+        for category_ in self.categories:
+            category_.delete()
         for product in self.products:
             product.delete()
         # the reviews are deleted in a cascade
@@ -158,7 +163,8 @@ class ReviewCreateViewTest(TestCase):
 
     def setUp(self):
         self.client.force_login(self.user)
-        self.product = ProductFactory.create()
+        self.category = CategoryFactory.create()
+        self.product = ProductFactory.create(category=self.category)
         self.review_data = ReviewFactory.build(
             author=self.user,
             product=self.product
@@ -174,7 +180,10 @@ class ReviewCreateViewTest(TestCase):
         self.review = None
 
     def tearDown(self):
-        self.product.delete()
+        if self.category:
+            self.category.delete()
+        if self.product:
+            self.product.delete()
 
     def test_create_review(self):
         """Test creating a new review."""
