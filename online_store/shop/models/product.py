@@ -26,9 +26,9 @@ class Product(models.Model):
 
 
 # Тестовая заглушка для реализации сортировки продуктов по количеству заказов
-class Order(models.Model):
-    title = models.CharField(max_length=100)
-    prodcuts = models.ManyToManyField("Product", related_name="orders")
+# class Order(models.Model):
+#     title = models.CharField(max_length=100)
+#     prodcuts = models.ManyToManyField("Product", related_name="orders")
 
 
 class ProductSeller(models.Model):

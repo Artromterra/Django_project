@@ -69,8 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username', 'password']
 
     def __str__(self):
-        return (' {}, email: {}'.
-                format(self.username, self.email))
+        return 'Пользователь: {}'.format(self.username)
 
     def image_preview(self):
         if self.avatar:
@@ -78,6 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return 'No avatar'
 
 
+from shop.models.order import Order
 class Account(models.Model):
 
     # DB Fields
@@ -90,8 +90,4 @@ class Account(models.Model):
     # Связь аккаунта с пользовалелем
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # последний заказ из истории заказов
-    last_order = models.ForeignKey("Order", on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)
-
-class Order(models.Model):
-    # заглушка
-    last_order = models.CharField(max_length= 50, null=True, blank=True)
+    last_order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)

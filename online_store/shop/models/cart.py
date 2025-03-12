@@ -1,16 +1,41 @@
 from django.db import models
-from django.contrib.auth.models import User
+from profiles.models import User
 from .product import Product, ProductSeller
 from .seller import Seller
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='cart',
+    )
+    session_key = models.CharField(max_length=40, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        if self.user:
+            return f'Корзина № {self.pk} Пользователь {self.user.username}'
+        return f'Anonymous {self.session_key}'
+
+
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    selected_seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name='cart_items',
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='cart_product_items',
+    )
+    selected_seller = models.ForeignKey(
+        Seller,
+        on_delete=models.CASCADE,
+        related_name='cart_selected_seller',
+    )
     quantity = models.PositiveIntegerField(default=1)
 
     def get_final_price(self):

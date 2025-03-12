@@ -1,5 +1,7 @@
 from django.contrib import admin, messages
 from django.core.cache import cache
+
+from .models.order import Order
 from .models.product import Product, ProductImage, ProductSeller
 from .models.category import Category
 from .models.reviews import Review
@@ -115,4 +117,14 @@ class CartItemAdmin(admin.ModelAdmin):
     search_fields = ('product__title', 'cart__user__username')
 
 
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'product_in_cart', 'created_at')
+    search_fields = ('cart__user__username',)
 
+    def product_in_cart(self, obj):
+        prod_list = []
+        products = obj.cart.cart_items.all()
+        for product in products:
+            prod_list.append(product.product.title)
+        return prod_list
