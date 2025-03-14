@@ -1,10 +1,13 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.core.cache import cache
+
+from .models.order import Order
 from .models.product import Product, ProductImage, ProductSeller
 from .models.category import Category
 from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 from .models.seller import Seller
+from .models.cart import Cart,CartItem
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -29,12 +32,19 @@ class ImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    actions = [clear_category_menu_cache]
+    actions = [clear_category_menu_cache, "clear_cache"]
     inlines = [ReviewInline, ProductSellerInline, ImageInline]
 
     list_display = ('title', 'price', 'is_active')
     list_filter = ('sellers', 'is_active')
     search_fields = ('title', 'sellers__name')
+    
+    @admin.action(description="Сбросить кеш каталога")
+    def clear_cache(self, request, queryset):
+        cache.delete("catalog_cache")
+        self.message_user(
+            request, "Кеш каталога успешно сброшен.", messages.SUCCESS
+        )
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -87,3 +97,34 @@ class SellerAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone', 'email')
     search_fields = ('name', 'email')
     inlines = [SellerProductInline]
+
+
+class CartItemInline(admin.TabularInline):
+    model = CartItem
+    extra = 1
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username',)
+    inlines = [CartItemInline]
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'product', 'selected_seller', 'quantity', 'get_final_price')
+    list_filter = ('selected_seller',)
+    search_fields = ('product__title', 'cart__user__username')
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'product_in_cart', 'created_at')
+    search_fields = ('cart__user__username',)
+
+    def product_in_cart(self, obj):
+        prod_list = []
+        products = obj.cart.cart_items.all()
+        for product in products:
+            prod_list.append(product.product.title)
+        return prod_list
