@@ -5,22 +5,24 @@ from django.contrib.auth.views import (
 )
 from django.core import management
 from django.contrib.auth import authenticate, login
-from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import FormView, TemplateView, UpdateView
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
-
 
 from .forms import (
     RegisterForm,
     LoginForm,
     UserEmailRecoveryPasswordForm,
-    UserSetNewPasswordForm, ProfileForm,
+    UserSetNewPasswordForm,
+    ProfileUserUpdateForm,
+    ProfileAccountUpdateForm,
 )
 from .models import Account, User
 
+
 app_name = 'profiles'
+
 
 class RegisterView(FormView):
     """
@@ -106,39 +108,46 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
 class UserAccountView(LoginRequiredMixin, TemplateView):
     template_name = "account.html"
 
+class UserProfileView(LoginRequiredMixin, TemplateView):
+    template_name = "profile.html"
 
-class ProfileUpdateView(LoginRequiredMixin, FormView):
+class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    View для редактирования профиля
+    """
+    model = User
     template_name = 'profile.html'
-    form_class = ProfileForm
-    success_url = reverse_lazy('profiles:profile')
+    form_class = ProfileUserUpdateForm
+    http_method_names = ['get', 'post', 'put', 'patch']
 
-    def get_initial(self):
-        user = self.request.user
-        account = get_object_or_404(Account, user=user)  # Получаем аккаунт пользователя
-        return {
-            'email': user.email,
-            'phone': user.phone,
-            'avatar': user.avatar,
-            'first_name': account.first_name,
-            'last_name': account.last_name,
-            'patronymic': account.patronymic,
-        }
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Редактирование профиля пользователя: {self.request.user.username}'
+
+        if self.request.POST:
+            context['account_form'] = ProfileAccountUpdateForm(self.request.POST, instance=self.request.user.account)
+        else:
+            context['account_form'] = ProfileAccountUpdateForm(instance=self.request.user.account)
+
+        return context
 
     def form_valid(self, form):
-        user = self.request.user
-        user.email = form.cleaned_data['email']
-        user.phone = form.cleaned_data['phone']
-        if form.cleaned_data['avatar']:
-            user.avatar = form.cleaned_data['avatar']
+        user = form.save(commit=False)
         user.save()
+        account_form = ProfileAccountUpdateForm(self.request.POST, instance=self.request.user.account)
 
-        account = get_object_or_404(Account, user=user)
-        account.first_name = form.cleaned_data['first_name']
-        account.last_name = form.cleaned_data['last_name']
-        account.patronymic = form.cleaned_data['patronymic']
-        account.save()
+        print(self.request.POST)
+        if account_form.is_valid():
+            print("Форма аккаунта валидна")
+            account_form.save()
+        else:
+            print(f"Ошибка в форме аккаунта: {account_form.errors.as_json()}")
+
 
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
+    def get_success_url(self):
+        return reverse('profiles:user_profile_view')

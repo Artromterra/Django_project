@@ -95,3 +95,4 @@ class Account(models.Model):
 class Order(models.Model):
     # заглушка
     last_order = models.CharField(max_length= 50, null=True, blank=True)
+
