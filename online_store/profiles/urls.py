@@ -8,7 +8,8 @@ from .views import (
     UserPasswordResetView,
     UserPasswordResetDoneView,
     UserAccountView,
-    ProfileUpdateView,
+    UserProfileView,
+    UserProfileUpdateView,
 )
 
 urlpatterns = [
@@ -19,5 +20,6 @@ urlpatterns = [
     path('password-reset-done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', UserPasswordResetView.as_view(), name='password_reset_confirm'),
     path('account/', UserAccountView.as_view(), name='user_account_view'),
-    path('profile/', ProfileUpdateView.as_view(), name='profile_update_view')
+    path('profile/update/', UserProfileUpdateView.as_view(), name='user_profile_update_view'),
+    path('profile/', UserProfileView.as_view(), name='user_profile_view'),
 ]

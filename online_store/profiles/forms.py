@@ -1,7 +1,10 @@
+import re
+
 from django import forms
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.utils.text import phone2numeric
 
-from .models import User
+from .models import User, Account
 
 class RegisterForm(forms.ModelForm):
     """
@@ -109,22 +112,41 @@ class UserSetNewPasswordForm(SetPasswordForm):
     )
 
 
-class ProfileForm(forms.ModelForm):
-    phone = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'class': 'form-input',
-            'placeholder': '+7 (___) ___-__-__',
-        }),
-        label='Телефон'
-    )
+class ProfileUserUpdateForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False)
+    phone = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    new_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+
 
     class Meta:
         model = User
-        fields = ['avatar', 'email', 'phone']
+        fields = ['avatar',
+                  'phone',
+                  'email']
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        clean_phone = ''.join(filter(str.isdigit, phone))[-10:]  # Убираем всё, кроме цифр, берём последние 10
-        if len(clean_phone) != 10:
-            raise forms.ValidationError('Введите корректный номер (10 цифр)')
-        return clean_phone
+
+        # Убираем все нецифровые символы
+        digits_only = re.sub(r'\D', '', phone)
+
+        # Проверяем, что длина номера ровно 11 символов (с кодом страны)
+        if len(digits_only) != 11 or not digits_only.startswith("7"):
+            raise forms.ValidationError("Введите корректный номер телефона.")
+
+        # Возвращаем только 10 цифр без 7-ки (для базы данных)
+        return digits_only[1:]
+
+class ProfileAccountUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length= 50)
+    last_name = forms.CharField(max_length=50)
+    patronymic = forms.CharField(max_length=50)
+
+    class Meta:
+        model = Account
+        fields = ['first_name',
+                  'last_name',
+                  'patronymic',
+                  ]
