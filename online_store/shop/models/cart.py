@@ -3,7 +3,17 @@ from profiles.models import User
 from .product import Product, ProductSeller
 from .seller import Seller
 
+
 class Cart(models.Model):
+    """
+    Корзина продуктов пользователя
+
+    Arguments:
+        user (User): внешний ключ - пользователь, которому принадлежит корзина
+        session_key (str): ключ сессии
+        created_at (datetime): дата создания корзины
+        cart_items (List[CartItem]): все продукты, которые находятся в карточке
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -21,6 +31,15 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
+    """
+    Карточка товара
+
+    Arguments:
+        cart (Cart): внешний ключ - корзина, к которой принадлежит товар
+        product (Product): внешний ключ - продукт
+        selected_seller (Seller): внешний ключ - продавец
+        quantity (int): количество товара в корзине
+    """
     cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List, Optional
-from datetime import datetime
 
 from django.db.models.query import QuerySet
 
@@ -13,9 +12,6 @@ class ProductListDTO:
     title: str
     price: float
     categories: str
-    orders_count: int
-    reviews_count: int
-    created_at: datetime
     image_url: Optional[str] = None
 
     @classmethod
@@ -28,7 +24,7 @@ class ProductListDTO:
             price=object.price,
             categories=cls.get_categories(object),
             image_url=(
-                object.images.first().image.url
+                object.images.first().image.url  # type: ignore
                 if object.images.exists()
                 else None
             ),
@@ -36,12 +32,12 @@ class ProductListDTO:
 
     @classmethod
     def from_objects(
-        cls, queryset: QuerySet[Optional[Product]]
+        cls, queryset: QuerySet[Product]
     ) -> List["ProductListDTO"]:
         return [cls.from_object(obj) for obj in queryset]
 
     @classmethod
-    def get_categories(object: Product) -> str:
+    def get_categories(cls, object: Product) -> str:
         """Категории в формате 'категория / категория / категория'"""
         end_category = object.category
         categories_list = [end_category.name]

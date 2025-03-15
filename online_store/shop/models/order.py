@@ -4,6 +4,17 @@ from .cart import Cart
 
 
 class Order(models.Model):
+    """
+    Заказ пользователя
+
+    Arguments:
+        city (str): город доставки
+        address (str): адрес доставки
+        express_delivery (bool): экспресс доставка
+        payment_method (str): способ оплаты (онлайн картой или со случайного чужого счёта)
+        created_at (datetime): дата создания заказа
+        cart (Cart): внешний ключ - корзина, которая была использована для создания заказа
+    """
     class Meta:
         ordering = ('-created_at',)
         verbose_name = 'Order'

@@ -7,7 +7,6 @@ from django.db.models import Count
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 
-from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
 
@@ -71,23 +70,23 @@ class ProductDetailView(DetailView):
 class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
-    context_object_name = "products"
+    context_object_name: str = "products"
     sort_query_list = [
-        "orders",
-        "-orders",
+        "carts_count",
+        "-carts_count",
         "price",
         "-price",
-        "reviews",
-        "-reviews",
+        "reviews_count",
+        "-reviews_count",
         "created_at",
         "-created_at",
     ]
 
     def get_context_data(self, **kwargs):
-        sort_query = self.request.GET.get("sort", "-orders")
+        sort_query = self.request.GET.get("sort", "-carts_count")
 
         if sort_query not in self.sort_query_list:
-            sort_query = "-orders"
+            sort_query = "-carts_count"
 
         cache_key = f"products_list_sort_{sort_query}"
         cache_data = cache.get(cache_key)
@@ -96,12 +95,54 @@ class ProductListView(ListView):
 
         products = (
             Product.objects.filter(is_active=True)
-            .annotate(orders_count=Count("orders"))
+            .annotate(carts_count=Count("cart_product_items"))
             .annotate(reviews_count=Count("reviews"))
             .order_by(sort_query)
             .all()
         )
-        products_dto = ProductListDTO.from_objects(products)
+        products_dto = ProductListDTO.from_objects(products)  # type: ignore
         cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
         return {self.context_object_name: products_dto}
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """
+        Обработка POST-запроса для фильтрации товаров на странице каталога.
+
+        Порядок работы:
+        1. Получаем текстовый фильтр из POST-запроса и применяем его к модели Product.
+        2. Проверяем фильтр по цене и, если он присутствует, добавляем условия к запросу.
+        3. Проверяем наличие чекбоксов для фильтрации по доступности и бесплатной доставке.
+        4. Превращаем отфильтрованные объекты в ProductListDTO.
+        5. Формируем контекст для рендеринга страницы каталога товаров,
+            включая параметры фильтрации.
+        6. Возвращаем отрендеренную страницу с отфильтрованными продуктами.
+        """
+        text_filter = request.POST.get("title")
+        query = Product.objects.filter(title__icontains=text_filter)
+
+        price_filter = request.POST.get("price")
+        if price_filter:
+            min_price, max_price = map(float, price_filter.split(";"))
+            query = query.filter(price__range=(min_price, max_price))
+        else:
+            min_price, max_price = 0, None
+
+        available_only_filter = request.POST.get("available_only") == "on"
+        if available_only_filter:
+            query = query.filter(is_active=True)
+
+        free_shipping_filter = request.POST.get("free_shipping") == "on"
+        if free_shipping_filter:
+            query = query.filter(product_sellers__free_shipping=True)
+
+        products_dto = ProductListDTO.from_objects(query)
+        context = {
+            "min_price": min_price,
+            "max_price": max_price,
+            "text_filter": text_filter,
+            "available_only": available_only_filter,
+            "free_shipping": free_shipping_filter,
+            self.context_object_name: products_dto,
+        }
+        return render(request, "catalog.html", context)
