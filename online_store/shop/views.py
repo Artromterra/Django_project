@@ -1,8 +1,12 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.core.cache import cache
 from django.db.models import Count
+from django.views.generic.edit import FormView, FormMixin
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
@@ -10,6 +14,7 @@ from services.settings_service import SettingsService
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
+from .forms import OrderUserForm
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -105,3 +110,40 @@ class ProductListView(ListView):
         cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
         return {self.context_object_name: products_dto}
+
+
+class OrderUserFormView(FormView, FormMixin):
+    template_name = "order.html"
+    form_class = OrderUserForm
+    success_url = reverse_lazy("profiles:login")
+
+    def get_initial(self):
+        """
+        метод добавления данных зарегистрированного пользователя в форму при инициализации
+        :return: dict словарь данных пользователя
+        """
+        user = self.request.user
+        if user.is_authenticated:
+            initial = {
+                'username': user.username,
+                'email': user.email,
+                'phone': user.phone,
+            }
+            return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.save(commit=False)
+        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        phone = form.cleaned_data['phone']
+        password_confirm = form.cleaned_data['password_confirm']
+        form.clean()
+        user.set_password(password_confirm)
+        user.is_active = True
+        user.username = username
+        user.email = email
+        user.phone = phone
+        user.save()
+
+        return response
