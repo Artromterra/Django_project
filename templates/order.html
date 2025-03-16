@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
   <div class="Middle Middle_top">
     <div class="Section Section_column Section_columnRight Section_columnWide Order">
       <div class="wrap">
@@ -256,4 +260,11 @@
       </div>
     </div>
   </div>
+
+<script>
+$(function(){
+  $("#id_phone").mask("+7(999) 999-99-99");
+});
+</script>
+
 {% endblock %}
