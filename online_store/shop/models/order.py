@@ -9,6 +9,13 @@ class Order(models.Model):
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
+    REGULAR_DELIVERY = 'RD'
+    EXPRESS_DELIVERY = 'ED'
+    DELIVERY_CHOICES = {
+        REGULAR_DELIVERY: 'Обычная доставка',
+        EXPRESS_DELIVERY: 'Экспресс доставка',
+    }
+
     SELF_CARD = 'SC'
     RANDOM_CARD = 'RC'
     CARD_CHOICES = {
@@ -18,7 +25,12 @@ class Order(models.Model):
 
     city = models.CharField('City', max_length=100)
     address = models.CharField('Address', max_length=500)
-    express_delivery = models.BooleanField('Express Delivery', default=False)
+    delivery = models.CharField(
+        'Delivery',
+        max_length=2,
+        choices=DELIVERY_CHOICES,
+        default=REGULAR_DELIVERY,
+    )
     payment_method = models.CharField(
         'Payment Method',
         max_length=2,

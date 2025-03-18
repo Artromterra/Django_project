@@ -40,13 +40,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     phone = models.CharField(
         'phone number',
-        max_length=15,
+        max_length=17,
         unique=True,
         null=True,
         blank=True,
-        validators=[
-            RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
-        ]
+        # validators=[
+        #     RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
+        # ]
     )
     is_active = models.BooleanField('is active', default=False)
     is_staff = models.BooleanField('is staff', default=False)
@@ -88,6 +88,6 @@ class Account(models.Model):
 
     # DB Relations
     # Связь аккаунта с пользовалелем
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
     # последний заказ из истории заказов
     last_order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)

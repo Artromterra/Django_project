@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Section Section_column Section_columnRight Section_columnWide Order">
+      <div class="wrap">
+
+        {% include 'order_selector.html' %}
+
+        <div class="Section-content">
+          <form class="form" action="#" method="post">
+            {% csrf_token %}
+            <div class="Order-block Order-block_OPEN">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">Шаг 3. Способ оплаты</h2>
+              </header>
+              <div class="form-group">
+                <div>
+                  {{ form.payment_method }}
+                </div>
+              </div>
+              <div class="Order-footer">
+                <a class="btn btn_success" href="{% url 'shop:order_confirm' pk=order_id %}">Дальше</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

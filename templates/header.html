@@ -83,7 +83,7 @@
             <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
           </button>
           <div class="dropdown-content">
-            <a class="dropdown-content-a" href="{% url 'profiles:profile_update_view' %}">Личный кабинет</a>
+            <a class="dropdown-content-a" href="{% url 'profiles:user_account_view' %}">Личный кабинет</a>
             {% if user.is_superuser %}
               <a class="dropdown-content-a" href="{% url 'admin:index' %}">Административный раздел</a>
             {% endif %}

@@ -2,20 +2,22 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import (
-    check_integration_with_frontend,
     ProductDetailView,
     ProductListView,
-    OrderUserFormView
+    OrderUserView,
+    OrderDeliveryView,
+    OrderPayView,
+    OrderConfirmView,
 )
 
 app_name = "shop"
 
-# TODO: Remove the check_integration_with_frontend view function
-#  - it is needed to check integration with the base frontend
 urlpatterns = [
-    path("check-frontend/", check_integration_with_frontend, name="check-frontend"),
     path("products/", ProductListView.as_view(), name="products_list"),
     path("products/<int:pk>/", ProductDetailView.as_view(), name="products_detail"),
-    path("order/", OrderUserFormView.as_view(), name="order"),
+    path("order/<int:pk>", OrderUserView.as_view(), name="order_user"),
+    path("order-delivery/<int:pk>", OrderDeliveryView.as_view(), name="order_delivery"),
+    path("order-pay/<int:pk>", OrderPayView.as_view(), name="order_pay"),
+    path("order-confirm/<int:pk>", OrderConfirmView.as_view(), name="order_confirm"),
     # path("product-properties/<int:product_id>/", product_properties, name="product-characterictic")
 ]
