@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.shortcuts import render, redirect
+from django.views.generic import DetailView, ListView, View
 from django.core.cache import cache
 from django.db.models import Count
 
@@ -10,6 +10,10 @@ from services.settings_service import SettingsService
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
 from .models.product import Product
+from django.contrib.auth.mixins import LoginRequiredMixin
+import random
+from .models.cart import CartItem, Cart
+from .models.seller import Seller
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -105,3 +109,61 @@ class ProductListView(ListView):
         cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
         return {self.context_object_name: products_dto}
+
+
+class CartView(LoginRequiredMixin, View):
+    def get(self, request):
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        total_price = sum(
+            item.get_final_price() * item.quantity
+            for item in cart_items
+        )
+
+        context = {
+            'cart_items': cart_items,
+            'total_price': total_price
+        }
+        return render(request, 'cart.html', context)
+
+
+class AddToCartView(LoginRequiredMixin, View):
+    def post(self, request, product_id):
+        product = Product.objects.get(id=product_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+
+        sellers = Seller.objects.filter(sellerproduct__product=product)
+        selected_seller = random.choice(sellers) if sellers else None
+
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={'selected_seller': selected_seller}
+        )
+
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        return redirect('cart')
+
+
+class UpdateCartItemView(LoginRequiredMixin, View):
+    def post(self, request, item_id):
+        cart_item = CartItem.objects.get(id=item_id)
+        action = request.POST.get('action')
+
+        if action == 'update_quantity':
+            quantity = int(request.POST.get('quantity', 1))
+            cart_item.quantity = max(1, quantity)
+        elif action == 'update_seller':
+            seller_id = request.POST.get('seller_id')
+            cart_item.selected_seller = Seller.objects.get(id=seller_id)
+        elif action == 'delete':
+            cart_item.delete()
+            return redirect('cart')
+
+        cart_item.save()
+        return redirect('cart')
