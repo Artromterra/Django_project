@@ -111,11 +111,11 @@ class OrderPayForm(forms.ModelForm):
 
     CHOICES = {
         'SC': 'Онлайн картой',
-        'RD': 'Онлайн со случайного чужого счета'
+        'RC': 'Онлайн со случайного чужого счета'
     }
     payment_method = forms.ChoiceField(
         widget=forms.RadioSelect(attrs={
-            'onchange': 'submit();',
-        }),
+                'onchange': 'submit();',
+            }),
         choices=CHOICES,
     )

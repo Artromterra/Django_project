@@ -50,3 +50,6 @@ class CartItem(models.Model):
 
     def get_available_sellers(self):
         return Seller.objects.filter(product_sellers__product=self.product)
+
+    def __str__(self):
+        return f'{self.cart.pk} {self.product.title} {self.selected_seller.name}'

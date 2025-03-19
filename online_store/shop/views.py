@@ -15,9 +15,9 @@ from services.settings_service import SettingsService
 
 from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
-from .models.cart import Cart
+from .models.cart import Cart, CartItem
 from .models.order import Order
-from .models.product import Product
+from .models.product import Product, ProductSeller
 from .forms import OrderUserForm, OrderDeliveryForm, OrderPayForm
 from profiles.models import Account, User
 
@@ -144,40 +144,36 @@ class OrderUserView(FormView, FormMixin):
         """
         context = super().get_context_data(**kwargs)
         pk = self.kwargs.get("pk")
-        order_id = Order.objects.get(cart=pk).pk
+        order_id = Order.objects.get(cart_id=pk).pk
         context["order_id"] = order_id
         context["cart_id"] = pk
         return context
 
     def form_valid(self, form):
-        user = self.request.user
-        if not user.is_authenticated:
-            user = form.save(commit=False)
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password_confirm = form.cleaned_data['password_confirm']
-            form.clean()
-            phone = form.cleaned_data['phone']
-            user.set_password(password_confirm)
-            user.is_active = True
-            user.username = username
-            user.email = email
-            user.phone = phone
-            user.save()
-            self.pk = user.pk
-            account = Account.objects.create(user=user)
-            account.save()
+        user = form.save(commit=False)
+        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        password_confirm = form.cleaned_data['password_confirm']
+        form.clean()
+        phone = form.cleaned_data['phone']
+        user.set_password(password_confirm)
+        user.is_active = True
+        user.username = username
+        user.email = email
+        user.phone = phone
+        user.save()
+        self.pk = user.pk
+        account = Account.objects.create(user=user)
+        account.save()
         return super(OrderUserView, self).form_valid(form)
 
-    def post(self, request, *args, **kwargs):
+
+    def get_success_url(self, *args, **kwargs):
         pk = self.kwargs.get('pk')
         cart_obj = Cart.objects.get(pk=pk)
         cart_obj.user_id = self.pk
         cart_obj.save()
         obj, created = Order.objects.get_or_create(cart=cart_obj)
-        return super(OrderUserView, self).post(request, *args, **kwargs)
-
-    def get_success_url(self, *args, **kwargs):
         return reverse_lazy("profiles:login")
 
 class OrderDeliveryView(UpdateView):
@@ -188,8 +184,8 @@ class OrderDeliveryView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         order_pk = self.kwargs.get("pk")
-        cart_id = Order.objects.get(pk=order_pk).cart_id
-        context["cart_id"] = cart_id
+        cart = Order.objects.get(pk=order_pk).cart.pk
+        context["cart_id"] = cart
         context["order_id"] = order_pk
         return context
 
@@ -213,7 +209,7 @@ class OrderPayView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         order_pk = self.kwargs.get("pk")
-        cart_id = Order.objects.get(pk=order_pk).cart_id
+        cart_id = Order.objects.get(pk=order_pk).cart.pk
         context["cart_id"] = cart_id
         context["order_id"] = order_pk
         return context
@@ -234,8 +230,22 @@ class OrderConfirmView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         order_pk = self.kwargs.get("pk")
-        cart_id = Order.objects.get(pk=order_pk).cart_id
-        context["cart_id"] = cart_id
+        order= Order.objects.get(pk=order_pk)
+        user = User.objects.get(pk=self.request.user.pk)
+        cart = CartItem.objects.select_related(
+            "product",
+            "cart",
+            "selected_seller"
+        ).filter(cart_id=order.cart.pk)
+        total = 0
+        for item in cart:
+            total += item.get_final_price() * item.quantity
+
+        context['cart'] = cart
+        context["user"] = user
+        context["order"] = order
+        context["cart_id"] = order.cart.pk
         context["order_id"] = order_pk
+        context['total'] = total
         return context
 

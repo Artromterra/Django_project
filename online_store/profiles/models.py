@@ -88,6 +88,18 @@ class Account(models.Model):
 
     # DB Relations
     # Связь аккаунта с пользовалелем
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='account'
+    )
     # последний заказ из истории заказов
-    last_order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="account_last_order", null=True, blank=True)
+    last_order = models.ForeignKey(
+        Order, on_delete=models.PROTECT,
+        related_name="account_last_order",
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} {self.patronymic}'

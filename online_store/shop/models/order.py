@@ -42,4 +42,6 @@ class Order(models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='order')
 
     def __str__(self):
-        return f'Заказ № {self.pk}, пользователь {self.cart.user.username}'
+        if self.cart.user is not None:
+            return f'Заказ № {self.pk}, пользователь {self.cart.user.username}'
+        return f'Заказ № {self.pk}, пользователь Anonymous'
