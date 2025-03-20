@@ -150,11 +150,6 @@ class OrderUserView(FormView):
         cart.save()
         return super().get(request, *args, **kwargs)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     pk = self.kwargs.get("pk")
-    #     context["cart_id"] = pk
-    #     return context
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -173,16 +168,6 @@ class OrderUserView(FormView):
         account = Account.objects.create(user=user)
         account.save()
         return super(OrderUserView, self).form_valid(form)
-
-    # def post(self, request, *args, **kwargs):
-    #     self.session['cart_id'] = self.kwargs.get('pk')
-    #     self.session['delivery_page'] = False
-    #     self.session['pay_page'] = False
-    #     session_key = self.session.session_key
-    #     cart = Cart.objects.get(pk=self.kwargs.get("pk"))
-    #     cart.session_key = session_key
-    #     cart.save()
-    #     return super().post(request, *args, **kwargs)
 
 
     def get_success_url(self, *args, **kwargs):
@@ -204,11 +189,6 @@ class OrderDeliveryView(FormView):
     def get(self, request, *args, **kwargs):
         self.cart_id = request.session.get('cart_id')
         return super().get(request, *args, **kwargs)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["cart_id"] = self.cart_id
-    #     return context
 
     def form_valid(self, form):
         self.session['delivery'] = form.cleaned_data['delivery']
@@ -244,11 +224,6 @@ class OrderPayView(FormView):
     def get(self, request, *args, **kwargs):
         self.cart_id = request.session.get('cart_id')
         return super().get(request, *args, **kwargs)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["cart_id"] = self.cart_id
-    #     return context
 
     def form_valid(self, form):
         self.obj.payment_method = form.cleaned_data['payment_method']
@@ -313,4 +288,3 @@ class OrderConfirmView(TemplateView):
         context["cart_id"] = order.cart.pk
         context['total'] = total
         return context
-
