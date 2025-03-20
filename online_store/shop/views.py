@@ -282,13 +282,14 @@ class OrderConfirmView(TemplateView):
             "cart",
             "selected_seller"
         ).filter(cart_id=order.cart.pk)
-        total = 0
-        for item in cart:
-            total += item.get_final_price() * item.quantity
 
-        context['cart'] = cart
-        context["user"] = user
-        context["order"] = order
-        context["cart_id"] = order.cart.pk
-        context['total'] = total
+        total = sum(item.get_final_price() * item.quantity for item in cart)
+
+        context = {
+            'cart': cart,
+            'total': total,
+            "user": user,
+            "order": order,
+            "cart_id": order.cart.pk
+        }
         return context
