@@ -7,13 +7,15 @@ from django.views.generic import DetailView, ListView
 from django.core.cache import cache
 from django.db.models import Count
 from django.views.generic import UpdateView
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView, FormMixin, CreateView
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
+from django.shortcuts import get_object_or_404
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 
-from services.settings_service import SettingsService
 from services.view_history_products_service import ViewHistoryProductsService
 from .models.cart import Cart, CartItem
 from .models.order import Order
@@ -111,13 +113,14 @@ class ProductListView(ListView):
         return {self.context_object_name: products_dto}
 
 
-class OrderUserView(FormView, FormMixin):
+class OrderUserView(FormView):
     template_name = "order_user.html"
     form_class = OrderUserForm
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.pk = None
+        # self.session = SessionStore()
 
     def get_initial(self):
         """
@@ -125,6 +128,8 @@ class OrderUserView(FormView, FormMixin):
         :return: dict словарь данных пользователя
         """
         user = self.request.user
+        pk = self.kwargs.get("pk")
+        cart = get_object_or_404(Cart, pk=pk)
         if user.is_authenticated:
             account = Account.objects.get(user=user.pk)
             fio = account.last_name + ' ' + account.first_name + ' ' + account.patronymic
@@ -135,19 +140,21 @@ class OrderUserView(FormView, FormMixin):
             }
             return initial
 
-    def get_context_data(self, **kwargs):
-        """
-        Переопределен контекст для добавления id order и cart в шаблон выбора
-        прогресса заполнения для его корректной работы
-        :param kwargs:
-        :return: dict
-        """
-        context = super().get_context_data(**kwargs)
-        pk = self.kwargs.get("pk")
-        order_id = Order.objects.get(cart_id=pk).pk
-        context["order_id"] = order_id
-        context["cart_id"] = pk
-        return context
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        request.session['cart_id'] = self.kwargs.get('pk')
+        request.session['delivery_page'] = False
+        request.session['pay_page'] = False
+        session_key = request.session.session_key
+        cart = Cart.objects.get(pk=self.kwargs.get("pk"))
+        cart.session_key = session_key
+        cart.save()
+        return super().get(request, *args, **kwargs)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     pk = self.kwargs.get("pk")
+    #     context["cart_id"] = pk
+    #     return context
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -167,69 +174,128 @@ class OrderUserView(FormView, FormMixin):
         account.save()
         return super(OrderUserView, self).form_valid(form)
 
+    # def post(self, request, *args, **kwargs):
+    #     self.session['cart_id'] = self.kwargs.get('pk')
+    #     self.session['delivery_page'] = False
+    #     self.session['pay_page'] = False
+    #     session_key = self.session.session_key
+    #     cart = Cart.objects.get(pk=self.kwargs.get("pk"))
+    #     cart.session_key = session_key
+    #     cart.save()
+    #     return super().post(request, *args, **kwargs)
+
 
     def get_success_url(self, *args, **kwargs):
         pk = self.kwargs.get('pk')
         cart_obj = Cart.objects.get(pk=pk)
         cart_obj.user_id = self.pk
         cart_obj.save()
-        obj, created = Order.objects.get_or_create(cart=cart_obj)
         return reverse_lazy("profiles:login")
 
-class OrderDeliveryView(UpdateView):
-    model = Order
+class OrderDeliveryView(FormView):
     template_name = 'order_delivery_page.html'
     form_class = OrderDeliveryForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        order_pk = self.kwargs.get("pk")
-        cart = Order.objects.get(pk=order_pk).cart.pk
-        context["cart_id"] = cart
-        context["order_id"] = order_pk
-        return context
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+        self.cart_id = None
+
+    def get(self, request, *args, **kwargs):
+        self.cart_id = request.session.get('cart_id')
+        return super().get(request, *args, **kwargs)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["cart_id"] = self.cart_id
+    #     return context
 
     def form_valid(self, form):
-        form.instance.delivery = form.cleaned_data['delivery']
-        form.instance.city = form.cleaned_data['city']
-        form.instance.address = form.cleaned_data['address']
-        form.instance.save()
+        self.session['delivery'] = form.cleaned_data['delivery']
+        self.session['city'] = form.cleaned_data['city']
+        self.session['address'] = form.cleaned_data['address']
+        self.session['delivery_page'] = True
         return super().form_valid(form)
 
+    def post(self, request, *args, **kwargs):
+        self.session = request.session
+        sk = self.session.session_key
+        self.cart_id = request.session.get('cart_id')
+        return super().post(request, *args, **kwargs)
+
     def get_success_url(self, *args, **kwargs):
-        order_pk = self.kwargs.get("pk")
-        return reverse_lazy('shop:order_pay', kwargs={'pk': order_pk})
+        if self.session.get('delivery_page'):
+            return reverse_lazy('shop:order_pay')
+        else:
+            return reverse_lazy('shop:order_delivery')
 
 
-class OrderPayView(UpdateView):
-    model = Order
+class OrderPayView(FormView):
+    # model = Order
     template_name = 'order_pay.html'
     form_class = OrderPayForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        order_pk = self.kwargs.get("pk")
-        cart_id = Order.objects.get(pk=order_pk).cart.pk
-        context["cart_id"] = cart_id
-        context["order_id"] = order_pk
-        return context
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+        self.obj = None
+        self.cart_id = None
+
+    def get(self, request, *args, **kwargs):
+        self.cart_id = request.session.get('cart_id')
+        return super().get(request, *args, **kwargs)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["cart_id"] = self.cart_id
+    #     return context
 
     def form_valid(self, form):
-        form.instance.payment_method = form.cleaned_data['payment_method']
-        form.instance.save()
+        self.obj.payment_method = form.cleaned_data['payment_method']
+        self.obj.save()
+        self.session['pay_page'] = True
+        self.session['order_id'] = self.obj.pk
         return super().form_valid(form)
 
+    def post(self, request, *args, **kwargs):
+        self.session = request.session
+        sk = self.session.session_key
+        session = Session.objects.get(session_key=sk)
+        data = session.get_decoded()
+        self.obj, created = Order.objects.get_or_create(
+            city=data['city'],
+            address=data['address'],
+            delivery=data['delivery'],
+            cart_id=data['cart_id'],
+        )
+        return super().post(request, *args, **kwargs)
+
     def get_success_url(self, *args, **kwargs):
-        order_pk = self.kwargs.get("pk")
-        return reverse_lazy('shop:order_confirm', kwargs={'pk': order_pk})
+        if self.session.get('pay_page'):
+            return reverse_lazy('shop:order_confirm')
+        elif not self.session.get('delivery_page'):
+            return reverse_lazy('shop:order_delivery')
+        else:
+            return reverse_lazy(
+                'shop:order_user',
+                kwargs={'pk': self.session.get('cart_id')}
+            )
 
 
 class OrderConfirmView(TemplateView):
     template_name = 'order_confirm.html'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+
+    def get(self, request, *args, **kwargs):
+        self.session = request.session
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        order_pk = self.kwargs.get("pk")
+        order_pk = self.session.get('order_id')
         order= Order.objects.get(pk=order_pk)
         user = User.objects.get(pk=self.request.user.pk)
         cart = CartItem.objects.select_related(
@@ -245,7 +311,6 @@ class OrderConfirmView(TemplateView):
         context["user"] = user
         context["order"] = order
         context["cart_id"] = order.cart.pk
-        context["order_id"] = order_pk
         context['total'] = total
         return context
 
