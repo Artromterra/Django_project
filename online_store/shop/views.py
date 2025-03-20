@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls.base import reverse_lazy
@@ -237,12 +238,15 @@ class OrderPayView(FormView):
         sk = self.session.session_key
         session = Session.objects.get(session_key=sk)
         data = session.get_decoded()
-        self.obj, created = Order.objects.get_or_create(
-            city=data['city'],
-            address=data['address'],
-            delivery=data['delivery'],
-            cart_id=data['cart_id'],
-        )
+        try:
+            self.obj, created = Order.objects.get_or_create(
+                city=data['city'],
+                address=data['address'],
+                delivery=data['delivery'],
+                cart_id=data['cart_id'],
+            )
+        except IntegrityError:
+            raise ValidationError('Такой ордер уже существует')
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
