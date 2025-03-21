@@ -216,7 +216,6 @@ class OrderDeliveryView(FormView):
 
     def post(self, request, *args, **kwargs):
         self.session = request.session
-    #     self.cart_id = request.session.get('cart_id')
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -225,10 +224,8 @@ class OrderDeliveryView(FormView):
 
 
 class OrderPayView(FormView):
-    # model = Order
     template_name = 'order_pay.html'
     form_class = OrderPayForm
-    # success_url = 'shop:order_confirm'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -272,7 +269,6 @@ class OrderPayView(FormView):
                 address=self.session.get('address'),
                 delivery=self.session.get('delivery'),
             )
-            # return redirect('shop:order_confirm')
         else:
             self.obj, created = Order.objects.get_or_create(
                 city=data['city'],
