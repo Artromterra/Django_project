@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.core.cache import cache
+from django.urls import path
 
 from .models.order import Order
 from .models.product import Product, ProductImage, ProductSeller
@@ -8,6 +9,7 @@ from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 from .models.seller import Seller
 from .models.cart import Cart,CartItem
+from .views import load_new_import_file, import_from_files_page
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -128,3 +130,18 @@ class OrderAdmin(admin.ModelAdmin):
         for product in products:
             prod_list.append(product.product.title)
         return prod_list
+
+
+original_get_urls = admin.site.get_urls
+
+
+def custom_get_urls():
+    custom_urls = [
+        path("shop/importing/", admin.site.admin_view(import_from_files_page), name="importing"),
+        path("shop/importing/new_import_file", admin.site.admin_view(load_new_import_file), name="new_import_file"),
+    ]
+    return custom_urls + original_get_urls()
+
+
+admin_site = admin.site
+admin_site.get_urls = custom_get_urls
