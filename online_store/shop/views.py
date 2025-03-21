@@ -1,8 +1,14 @@
-from django.http import HttpRequest, HttpResponse
+import os
+from typing import List
+from logging import getLogger
+
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView, View
 from django.core.cache import cache
 from django.db.models import Count
+from django.conf import settings
+from django.contrib import messages
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
@@ -14,6 +20,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 from .models.cart import CartItem, Cart
 from .models.seller import Seller
+import utils.files
+import utils.celery_utils
+from .forms import ImportFilesForm, NewImportFileForm
+from .tasks import import_data_from_files
+
+logger = getLogger("main.shop.views")
 
 
 # TODO: Remove the check_integration_with_frontend view function
@@ -167,3 +179,76 @@ class UpdateCartItemView(LoginRequiredMixin, View):
 
         cart_item.save()
         return redirect('cart')
+
+
+def load_new_import_file(request: HttpRequest) -> HttpResponse:
+    """Process the download of a new import file."""
+    form = NewImportFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        logger.debug("Form with import files is valid.")
+        logger.debug("Form data: %s", str(form.cleaned_data))
+        import_file = form.cleaned_data["new_import_file"]
+        filename: str = import_file.name
+        logger.debug("Init filename: %s", filename)
+        unique_filename: str = utils.files.generate_unique_filename(filename)
+        logger.debug("Unique filename: %s", unique_filename)
+        file_path = os.path.join(settings.DIR_WITH_IMPORT_FILES, unique_filename)
+        logger.debug("Path loaded file: %s", file_path)
+
+        with open (file_path, "wb+") as uploaded_import_file:
+            for chunk in import_file.chunks():
+                uploaded_import_file.write(chunk)
+
+        return redirect("admin:importing")
+    else:
+        raise HttpResponseBadRequest
+
+
+def import_from_files_page(request: HttpRequest) -> HttpResponse:
+    """Return admin import page."""
+    import_files: List[str] = utils.files.get_files_in_dir(settings.DIR_WITH_IMPORT_FILES)
+    logger.debug(f"Import files: %s", str(import_files))
+    new_import_file_form = NewImportFileForm()
+    if request.method == "POST":
+        form = ImportFilesForm(request.POST)
+        form.fields["files"].choices = [(file, file) for file in import_files]
+
+        if form.is_valid():
+            logger.debug("Form with import files is valid.")
+            selected_import_files = form.cleaned_data["files"]
+            logger.error("Selected files: %s", str(selected_import_files))
+            email = form.cleaned_data.get("email")
+
+            action = request.POST.get("action")
+            if action == "delete":
+                filepaths = [
+                    str(os.path.join(settings.DIR_WITH_IMPORT_FILES, filename))
+                    for filename in selected_import_files
+                ]
+                utils.files.delete_files(filepaths)
+            elif action == "import":
+                utils.files.create_dir_if_not_exists(settings.DIR_WITH_SUCCESSFUL_IMPORTS)
+                utils.files.create_dir_if_not_exists(settings.DIR_WITH_IMPORTS_WITH_ERRORS)
+
+                import_data_from_files.apply_async(
+                    kwargs={
+                        "import_filenames": selected_import_files,
+                        "emails": [email] if email else None
+                    }
+                )
+            else:
+                messages.error(request, "Unknown action")
+            return redirect("admin:importing")
+    else:
+        if (utils.celery_utils.are_there_any_active_importing_tasks() or
+                utils.celery_utils.are_there_any_reserved_importing_tasks()):
+            return render(request, "admin/shop/import_running.html")
+        form = ImportFilesForm()
+        form.fields["files"].choices = [(file, file) for file in import_files]
+
+    context = {
+        "new_import_file_form": new_import_file_form,
+        "form": form,
+        "files": import_files,
+    }
+    return render(request, "admin/shop/import_page.html", context)
