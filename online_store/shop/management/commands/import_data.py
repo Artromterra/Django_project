@@ -1,12 +1,11 @@
 """The module responsible for the django command import_data."""
 
-import os
-
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from shop.tasks import import_data_from_files
-from online_store.celery import app
+from utils.celery_utils import are_there_any_reserved_importing_tasks, are_there_any_active_importing_tasks
+from utils.files import create_dir_if_not_exists
 
 
 class Command(BaseCommand):
@@ -56,42 +55,10 @@ class Command(BaseCommand):
             """
         )
 
-    @classmethod
-    def __are_there_any_active_importing_tasks(cls):
-        """Return True, if there are active importing tasks."""
-        inspector = app.control.inspect()
-        active_tasks = inspector.active()
-        if not active_tasks:
-            return False
-        for _, tasks in active_tasks.items():
-            for task in tasks:
-                if task["name"] == "shop.tasks.import_data_from_files":
-                    return True
-        return False
-
-    @classmethod
-    def __are_there_any_reserved_importing_tasks(cls):
-        """Return True, if there are reserved importing tasks."""
-        inspector = app.control.inspect()
-        reserved_tasks = inspector.reserved()
-        if not reserved_tasks:
-            return False
-        for _, tasks in reserved_tasks.items():
-            for task in tasks:
-                if task["name"] == "shop.tasks.import_data_from_files":
-                    return True
-        return False
-
-    @classmethod
-    def __create_dir_if_not_exists(cls, dir_: str) -> None:
-        if not os.path.exists(dir_):
-            os.makedirs(dir_)
-
-
     def handle(self, *args, **options):
         # Check that celery is not performing any tasks.
-        if (self.__are_there_any_reserved_importing_tasks() or
-                self.__are_there_any_reserved_importing_tasks()
+        if (are_there_any_reserved_importing_tasks() or
+                are_there_any_active_importing_tasks()
         ):
             self.stderr.write(
                 "There are currently reserved or active data import tasks. "
@@ -104,11 +71,11 @@ class Command(BaseCommand):
         self.stdout.write(f"Dir with import files: {dir_with_import_files}\n")
 
         success_dir = options.get("success-dir", settings.DIR_WITH_SUCCESSFUL_IMPORTS)
-        self.__create_dir_if_not_exists(success_dir)
+        create_dir_if_not_exists(success_dir)
         self.stdout.write(f"Dir with successful import files: {success_dir}\n")
 
         failure_dir = options.get("failure-dir", settings.DIR_WITH_IMPORTS_WITH_ERRORS)
-        self.__create_dir_if_not_exists(failure_dir)
+        create_dir_if_not_exists(failure_dir)
         self.stdout.write(f"Dir with import files with errors: {failure_dir}\n")
 
         import_filenames = options.get("filenames")
@@ -118,7 +85,11 @@ class Command(BaseCommand):
         self.stdout.write(f"Emails: {emails}\n")
 
         import_data_from_files.apply_async(
-            args=[dir_with_import_files, success_dir, failure_dir],
-            import_filenames=import_filenames,
-            emails=emails,
+            kwargs={
+                "dir_with_import_files": dir_with_import_files,
+                "success_dir": success_dir,
+                "failure_dir": failure_dir,
+                "import_filenames": import_filenames,
+                "emails": emails,
+            }
         )

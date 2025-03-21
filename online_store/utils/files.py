@@ -1,15 +1,39 @@
 
 import os
-from typing import List, Optional
+from typing import List
+from uuid import uuid4
+import re
+from logging import getLogger
 
-from django.conf import settings
+logger = getLogger("main.utils.files")
 
 
-def get_import_files(import_dir: Optional[str] = None) -> List[str]:
-    if not import_dir:
-        import_dir = settings.DIR_WITH_IMPORT_FILES
-    import_files = [
-        filepath for filepath in os.listdir(import_dir)
-        if os.path.isfile(filepath)
+def get_files_in_dir(target_dir: str) -> List[str]:
+    """Return list of file names in dir. Only files."""
+    files = [
+        file for file in os.listdir(target_dir)
+        if os.path.isfile(os.path.join(target_dir, file))
     ]
-    return import_files
+    return files
+
+
+def generate_unique_filename(filename: str) -> str:
+    """Add a random salt to the file name."""
+    logger.debug("filename: %s", filename)
+    match = re.search(r"(.*)\.(.*)?", filename)
+    if not match:
+        raise ValueError(f"Invalid filename (must be name.extension). {filename=}")
+    name = match.group(1)
+    logger.debug("name: %s", name)
+    extension = match.group(2)
+    logger.debug("extension: %s", extension)
+    salt = str(uuid4())
+    logger.debug("unique salt: %s", salt)
+    unique_filename: str = name + salt + "." + extension
+    logger.debug("unique filename: %s", unique_filename)
+    return unique_filename
+
+
+def create_dir_if_not_exists(dir_: str) -> None:
+    if not os.path.exists(dir_):
+        os.makedirs(dir_)
