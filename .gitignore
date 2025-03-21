@@ -138,3 +138,7 @@ dmypy.json
 
 # DB migrations
 migrations
+
+imports_with_errors
+successful_imports
+/media/import_files
