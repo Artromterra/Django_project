@@ -35,5 +35,12 @@ def generate_unique_filename(filename: str) -> str:
 
 
 def create_dir_if_not_exists(dir_: str) -> None:
+    """Create dir if not exists."""
     if not os.path.exists(dir_):
         os.makedirs(dir_)
+
+def delete_files(filepaths: List[str]) -> None:
+    """Delete files."""
+    for filepath in filepaths:
+        if os.path.exists(filepath):
+            os.remove(filepath)
