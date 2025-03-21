@@ -87,9 +87,12 @@
                     </strong><span class="Cart-price">{{ total }} руб.</span>
                   </div>
                   <div class="Cart-block">
-                    <button class="btn btn_primary btn_lg" type="submit">
-                      Оплатить
-                    </button>
+                    {% if order.payment_method == 'SC' %}
+{#                      TODO: изменить на корректные url#}
+                      <a class="btn btn_primary btn_lg" href="payment.html">Оплатить</a>
+                    {% else %}
+                      <a class="btn btn_primary btn_lg" href="paymentsomeone.html">Оплатить</a>
+                    {% endif %}
                   </div>
                 </div>
               </div>

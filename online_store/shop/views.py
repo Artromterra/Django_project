@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.core.cache import cache
@@ -121,7 +121,7 @@ class OrderUserView(FormView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.pk = None
-        # self.session = SessionStore()
+        self.session = None
 
     def get_initial(self):
         """
@@ -130,8 +130,11 @@ class OrderUserView(FormView):
         """
         user = self.request.user
         pk = self.kwargs.get("pk")
-        cart = get_object_or_404(Cart, pk=pk)
+        cart_queryset = Cart.objects.filter(pk=pk)
+        if not cart_queryset.exists():
+            return redirect('/')
         if user.is_authenticated:
+            self.session['user_page'] = True
             account = Account.objects.get(user=user.pk)
             fio = account.last_name + ' ' + account.first_name + ' ' + account.patronymic
             initial = {
@@ -142,13 +145,17 @@ class OrderUserView(FormView):
             return initial
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        request.session['cart_id'] = self.kwargs.get('pk')
-        request.session['delivery_page'] = False
-        request.session['pay_page'] = False
+        self.session = request.session
+        self.session['delivery_page'] = False
+        self.session['pay_page'] = False
+        self.session['cart_id'] = self.kwargs.get('pk')
         session_key = request.session.session_key
-        cart = Cart.objects.get(pk=self.kwargs.get("pk"))
-        cart.session_key = session_key
-        cart.save()
+        cart = Cart.objects.filter(pk=self.kwargs.get("pk"))
+        if not cart.exists():
+            return redirect('/')
+        else:
+            cart[0].session_key = session_key
+            cart[0].save()
         return super().get(request, *args, **kwargs)
 
 
@@ -168,19 +175,21 @@ class OrderUserView(FormView):
         self.pk = user.pk
         account = Account.objects.create(user=user)
         account.save()
+        self.session['user_page'] = True
         return super(OrderUserView, self).form_valid(form)
-
 
     def get_success_url(self, *args, **kwargs):
         pk = self.kwargs.get('pk')
         cart_obj = Cart.objects.get(pk=pk)
         cart_obj.user_id = self.pk
         cart_obj.save()
+        self.session['user_page'] = True
         return reverse_lazy("profiles:login")
 
 class OrderDeliveryView(FormView):
     template_name = 'order_delivery_page.html'
     form_class = OrderDeliveryForm
+    # success_url = 'shop:order_pay'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -189,6 +198,13 @@ class OrderDeliveryView(FormView):
 
     def get(self, request, *args, **kwargs):
         self.cart_id = request.session.get('cart_id')
+        if not request.session.has_key('delivery_page'):
+            # исправить на путь к корзине
+            return redirect('/')
+        if request.session.get('delivery_page') and not request.session.get('pay_page'):
+            return redirect(reverse_lazy('shop:order_pay'))
+        elif request.session.get('pay_page') and request.session.get('delivery_page'):
+            return redirect(reverse_lazy('shop:order_confirm'))
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -200,37 +216,48 @@ class OrderDeliveryView(FormView):
 
     def post(self, request, *args, **kwargs):
         self.session = request.session
-        sk = self.session.session_key
-        self.cart_id = request.session.get('cart_id')
+    #     self.cart_id = request.session.get('cart_id')
         return super().post(request, *args, **kwargs)
 
-    def get_success_url(self, *args, **kwargs):
-        if self.session.get('delivery_page'):
-            return reverse_lazy('shop:order_pay')
-        else:
-            return reverse_lazy('shop:order_delivery')
+    def get_success_url(self):
+        return reverse_lazy('shop:order_pay')
+
 
 
 class OrderPayView(FormView):
     # model = Order
     template_name = 'order_pay.html'
     form_class = OrderPayForm
+    # success_url = 'shop:order_confirm'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
         self.obj = None
-        self.cart_id = None
+        self.order_queryset = None
 
     def get(self, request, *args, **kwargs):
-        self.cart_id = request.session.get('cart_id')
+        if not request.session.has_key('delivery_page'):
+            # исправить на путь к корзине по желанию
+            return redirect('/')
+        if not request.session.get('delivery_page'):
+            return redirect('shop:order_delivery')
+        if request.session.get('pay_page'):
+            return redirect('shop:order_confirm')
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.obj.payment_method = form.cleaned_data['payment_method']
-        self.obj.save()
+        if self.obj:
+            self.obj.payment_method = form.cleaned_data['payment_method']
+            self.obj.save()
+            self.session['order_id'] = self.obj.pk
+        else:
+            self.order_queryset.update(payment_method=form.cleaned_data['payment_method'])
+            data = self.order_queryset.values_list()
+
+            self.session['order_id'] = self.order_queryset[0].pk
         self.session['pay_page'] = True
-        self.session['order_id'] = self.obj.pk
+
         return super().form_valid(form)
 
     def post(self, request, *args, **kwargs):
@@ -238,27 +265,25 @@ class OrderPayView(FormView):
         sk = self.session.session_key
         session = Session.objects.get(session_key=sk)
         data = session.get_decoded()
-        try:
+        self.order_queryset = Order.objects.filter(cart_id=self.session.get('cart_id'))
+        if self.order_queryset.exists():
+            self.order_queryset.update(
+                city=self.session.get('city'),
+                address=self.session.get('address'),
+                delivery=self.session.get('delivery'),
+            )
+            # return redirect('shop:order_confirm')
+        else:
             self.obj, created = Order.objects.get_or_create(
                 city=data['city'],
                 address=data['address'],
                 delivery=data['delivery'],
                 cart_id=data['cart_id'],
             )
-        except IntegrityError:
-            raise ValidationError('Такой ордер уже существует')
         return super().post(request, *args, **kwargs)
 
-    def get_success_url(self, *args, **kwargs):
-        if self.session.get('pay_page'):
-            return reverse_lazy('shop:order_confirm')
-        elif not self.session.get('delivery_page'):
-            return reverse_lazy('shop:order_delivery')
-        else:
-            return reverse_lazy(
-                'shop:order_user',
-                kwargs={'pk': self.session.get('cart_id')}
-            )
+    def get_success_url(self):
+        return reverse_lazy('shop:order_confirm')
 
 
 class OrderConfirmView(TemplateView):
@@ -269,8 +294,19 @@ class OrderConfirmView(TemplateView):
         self.session = None
 
     def get(self, request, *args, **kwargs):
+        """
+        проверка пользователя на наличие ранее пройденных шагов при оформлении заказа
+        """
         self.session = request.session
-        return super().get(request, *args, **kwargs)
+        s = Session.objects.get(session_key=self.session.session_key)
+        data = s.get_decoded()
+        if (request.session.has_key('delivery_page')
+            and request.session.has_key('pay_page')
+            and request.session.has_key('user_page')
+        ):
+            # исправить на путь к корзине по желанию
+            return super().get(request, *args, **kwargs)
+        return redirect('/')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -290,6 +326,5 @@ class OrderConfirmView(TemplateView):
             'total': total,
             "user": user,
             "order": order,
-            "cart_id": order.cart.pk
         }
         return context
