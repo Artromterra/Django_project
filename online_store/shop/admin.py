@@ -9,6 +9,7 @@ from .models.reviews import Review
 from .models.product_properties import ProductProperties,Property, PropertyValue
 from .models.seller import Seller
 from .models.cart import Cart,CartItem
+from .models.discount import Discount
 from .views import load_new_import_file, import_from_files_page
 
 
@@ -65,6 +66,13 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "icon_preview")
     readonly_fields = ("icon_preview",)
     actions = [clear_category_menu_cache]
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('name', 'discount_type', 'value', 'start_date', 'end_date', 'is_active')
+    list_filter = ('discount_type', 'is_active', 'start_date', 'end_date')
+    search_fields = ('name',)
+    filter_horizontal = ('products', 'categories')
 
 
 @admin.register(ProductProperties)
