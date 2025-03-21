@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Importing{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:app_list' app_label='shop' %}">Shop</a> &rsaquo;
+    <a href="#">Import</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Import data from files</h1>
+    <div class="content-main">
+        <h2>В данный момент происходит импортирование. Нельзя запускать параллельно несколько процессов импортирования. Подождите немного, обновите страницу и попробуйте снова.</h2>
+    </div>
+</div>
+{% endblock %}

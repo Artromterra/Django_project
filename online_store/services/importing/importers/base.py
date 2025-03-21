@@ -69,3 +69,8 @@ class BaseImporter(ABC):
     def import_products_sellers(self) -> Generator[Dict[str, Any], None, None]:
         """Import ProductSeller instances."""
         pass
+
+    @abstractmethod
+    def close(self):
+        """Close import file."""
+        pass

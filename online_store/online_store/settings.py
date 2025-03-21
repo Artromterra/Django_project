@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+from django.conf.global_settings import SERVER_EMAIL
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -158,7 +159,8 @@ CACHES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("SMTP_PORT", 587))
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "0") == "1"
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "1") == "1"
 EMAIL_HOST_USER = os.getenv("EMAIL", "your email")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD", 'your password')
 
@@ -222,6 +224,6 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost")
 CELERY_CONCURRENCY = int(os.getenv("CELERY_CONCURRENCY", 4))
 
 # import_data command settings
-DIR_WITH_IMPORT_FILES = os.getenv("DIR_WITH_IMPORT_FILES", str(BASE_DIR / ".." / "import_files"))
+DIR_WITH_IMPORT_FILES = os.getenv("DIR_WITH_IMPORT_FILES", str(BASE_DIR / ".." / "media" / "import_files"))
 DIR_WITH_SUCCESSFUL_IMPORTS = os.getenv("DIR_WITH_SUCCESSFUL_IMPORTS", str(BASE_DIR / ".." / "successful_imports"))
 DIR_WITH_IMPORTS_WITH_ERRORS = os.getenv("DIR_WITH_IMPORTS_WITH_ERRORS", str(BASE_DIR / ".." / "imports_with_errors"))
