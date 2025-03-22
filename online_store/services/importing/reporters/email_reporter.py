@@ -57,9 +57,9 @@ class EmailReporter(BaseReporter):
         separate_handler = self.__separator_logger.handler
         email_text = self.FAILURE_REPORT_TEXT.format(
             file_path=import_file,
-            error_logs=separate_handler.get_logs(
+            error_logs="<br>".join(separate_handler.get_logs(
                 unique_id=self.__separator_logger.unique_id,
-                levels={"WARNING", "ERROR", "CRITICAL"},
+                levels={"WARNING", "ERROR", "CRITICAL"}),
             )
         )
 

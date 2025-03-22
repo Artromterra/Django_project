@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Importing{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:app_list' app_label='shop' %}">Shop</a> &rsaquo;
+    <a href="#">Import</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Import data from files</h1>
+    <div class="content-main">
+        <form method="post" action="{% url 'admin:new_import_file' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ new_import_file_form.as_p }}
+            <button type="submit" class="button">Загрузить</button>
+        </form>
+        <form method="post" action="{% url 'admin:importing' %}">
+            {% csrf_token %}
+                {{ form.email.label_tag }} {{ form.email }}
+                <br><br>
+                <label>{{ form.files.label }}</label>
+                <ul>
+                    {% for value, label in form.files.field.choices %}
+                        <li>
+                            <input type="checkbox" name="{{ form.files.name }}" value="{{ value }}" id="id_files_{{ forloop.counter0 }}">
+                            <label for="id_files_{{ forloop.counter0 }}">
+                                <a href="/media/import_files/{{ value }}" target="_blank">{{ label }}</a>
+                            </label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            <button type="submit" name="action" value="import" class="button">Импортировать</button>
+            <button type="submit" name="action" value="delete" class="button">Удалить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

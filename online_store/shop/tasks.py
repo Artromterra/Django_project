@@ -1,6 +1,7 @@
 """The module responsible for celery tasks."""
 from typing import Optional, List
 import os
+from logging import getLogger
 
 from celery import shared_task
 from django.conf import settings
@@ -10,6 +11,8 @@ from services.importing.importers.importer_factory import ImporterFactory
 from services.importing.reporters.email_reporter import EmailReporter
 from utils.logs.loggers.separator import SeparatorLogger
 from utils.logs.handlers.redis_separator import RedisHandler
+
+logger = getLogger("main.shop.tasks")
 
 
 @shared_task
@@ -54,9 +57,9 @@ def import_from_file(
 
 @shared_task
 def import_data_from_files(
-        dir_with_import_files: str,
-        success_dir: str,
-        failure_dir: str,
+        dir_with_import_files: str = settings.DIR_WITH_IMPORT_FILES,
+        success_dir: str = settings.DIR_WITH_SUCCESSFUL_IMPORTS,
+        failure_dir: str = settings.DIR_WITH_IMPORTS_WITH_ERRORS,
         import_filenames: Optional[List[str]] = None,
         emails: Optional[List[str]] = None
 ):
@@ -78,6 +81,7 @@ def import_data_from_files(
     If None or an empty list is passed,
     reports will be sent to the emails specified in the ADMIN_EMAILS in the .env file.
     """
+    logger.debug("Import files names: %s", str(import_filenames))
     if not import_filenames:
         filenames: List[str] = os.listdir(dir_with_import_files)
         filepaths: List[str] = [
@@ -89,6 +93,7 @@ def import_data_from_files(
             os.path.join(dir_with_import_files, filename)
             for filename in import_filenames
         ]
+    logger.debug("Import files paths: %s", str(filepaths))
     for filepath in filepaths:
         import_from_file.apply_async(
             args=[filepath, success_dir, failure_dir],

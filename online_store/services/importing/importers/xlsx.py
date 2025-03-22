@@ -197,3 +197,6 @@ class XLSXImporter(BaseImporter):
             self.logger.warning("Can't import ProductSeller from %s\n%s", self.filename, str(exc))
         else:
             self.logger.info("The ProductSeller have been successfully imported.")
+
+    def close(self):
+        self.__wb.close()

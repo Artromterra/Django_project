@@ -119,6 +119,9 @@ class ImportManager(object):
                     str(exc)
                 )
                 success = False
+
+        # explicitly closing the import file
+        importer.close()
         return success
 
     def __move_file(self, success: bool) -> None:
