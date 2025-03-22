@@ -8,6 +8,7 @@ from .views import (
     OrderDeliveryView,
     OrderPayView,
     OrderConfirmView,
+    CartView,
 )
 
 app_name = "shop"
@@ -19,5 +20,5 @@ urlpatterns = [
     path("order-delivery/", OrderDeliveryView.as_view(), name="order_delivery"),
     path("order-pay/", OrderPayView.as_view(), name="order_pay"),
     path("order-confirm/", OrderConfirmView.as_view(), name="order_confirm"),
-    # path("product-properties/<int:product_id>/", product_properties, name="product-characterictic")
+    path('cart/', CartView.as_view(), name='cart'),
 ]
