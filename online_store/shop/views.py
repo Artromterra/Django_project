@@ -18,6 +18,8 @@ from django.contrib import messages
 
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
+from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
+
 from services.view_history_products_service import ViewHistoryProductsService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
@@ -91,40 +93,28 @@ class ProductDetailView(DetailView):
 class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
-    context_object_name = "products"
-    sort_query_list = [
-        "orders",
-        "-orders",
-        "price",
-        "-price",
-        "reviews",
-        "-reviews",
-        "created_at",
-        "-created_at",
-    ]
+    context_object_name: str = "products"
 
-    def get_context_data(self, **kwargs):
-        sort_query = self.request.GET.get("sort", "-orders")
+    def get_context_data(self, **kwargs) -> dict:
+        sort_query = self.request.GET.get("sort", "-carts_count")
+        return get_context_data_sort(self.context_object_name, sort_query)
 
-        if sort_query not in self.sort_query_list:
-            sort_query = "-orders"
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """
+        Обработка POST-запроса для фильтрации товаров на странице каталога.
 
-        cache_key = f"products_list_sort_{sort_query}"
-        cache_data = cache.get(cache_key)
-        if cache_data:
-            return {self.context_object_name: cache_data}
+        Порядок работы:
+        1. Получаем текстовый фильтр из POST-запроса и применяем его к модели Product.
+        2. Проверяем фильтр по цене и, если он присутствует, добавляем условия к запросу.
+        3. Проверяем наличие чекбоксов для фильтрации по доступности и бесплатной доставке.
+        4. Превращаем отфильтрованные объекты в ProductListDTO.
+        5. Формируем контекст для рендеринга страницы каталога товаров,
+            включая параметры фильтрации.
+        6. Возвращаем отрендеренную страницу с отфильтрованными продуктами.
+        """
+        context = get_context_data_filtered(self.context_object_name, request.POST)
+        return render(request, "catalog.html", context)
 
-        products = (
-            Product.objects.filter(is_active=True)
-            .annotate(orders_count=Count("orders"))
-            .annotate(reviews_count=Count("reviews"))
-            .order_by(sort_query)
-            .all()
-        )
-        products_dto = ProductListDTO.from_objects(products)
-        cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
-
-        return {self.context_object_name: products_dto}
 
 class CartView(LoginRequiredMixin, View):
     def get(self, request):

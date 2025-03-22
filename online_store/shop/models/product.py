@@ -1,6 +1,11 @@
 from django.db import models
+from django.db.models.query import QuerySet
+
+from decimal import Decimal
+
 from .category import Category
 from .seller import Seller
+
 
 # Product main model
 class Product(models.Model):
@@ -16,19 +21,15 @@ class Product(models.Model):
     description = models.TextField(blank=False, max_length=5000, db_index=True)
     short_description = models.CharField(blank=False, max_length=100)
     price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
-    discount = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal("0.00"))
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # DB relatives
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products")
     sellers = models.ManyToManyField('Seller', through='ProductSeller', related_name="products")
-
-
-# Тестовая заглушка для реализации сортировки продуктов по количеству заказов
-# class Order(models.Model):
-#     title = models.CharField(max_length=100)
-#     prodcuts = models.ManyToManyField("Product", related_name="orders")
+    images: models.Manager["ProductImage"]
+    product_sellers: models.Manager["ProductSeller"]
 
 
 class ProductSeller(models.Model):
@@ -39,15 +40,16 @@ class ProductSeller(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sellers')
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='product_sellers')
-
-    price = models.DecimalField(max_digits=8, decimal_places=0, default=0)
+    free_shipping = models.BooleanField(default=False)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     amount = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.product.title} - {self.seller.name}"
 
+
 # Product image
-def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
+def product_images_directory_path(instance, filename: str) -> str:
     return "products/product_{pk}/images/{filename}".format(
         pk=instance.product.pk,
         filename=filename,
@@ -56,7 +58,7 @@ def product_images_directory_path(instance: "ProductImage", filename: str) -> st
 
 class ProductImage(models.Model):
     # DB fields
-    image = models.ImageField(upload_to=product_images_directory_path)
+    image = models.ImageField(upload_to=product_images_directory_path, null=False)
     description = models.CharField(max_length=200, null=False, blank=True)
 
     # DB relatives
