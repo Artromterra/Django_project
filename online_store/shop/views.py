@@ -1,12 +1,18 @@
 import os
+import random
 from typing import List
 from logging import getLogger
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView, View
 from django.core.cache import cache
 from django.db.models import Count
+from django.views.generic.base import TemplateView, View
+from django.views.generic.edit import FormView
+from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib import messages
 
@@ -15,14 +21,14 @@ from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
 
 from services.view_history_products_service import ViewHistoryProductsService
-from .models.product import Product
-from django.contrib.auth.mixins import LoginRequiredMixin
-import random
+from profiles.models import Account, User
 from .models.cart import CartItem, Cart
 from .models.seller import Seller
+from .models.order import Order
+from .models.product import Product
 import utils.files
 import utils.celery_utils
-from .forms import ImportFilesForm, NewImportFileForm
+from .forms import ImportFilesForm, NewImportFileForm, OrderUserForm, OrderDeliveryForm, OrderPayForm
 from .tasks import import_data_from_files
 
 logger = getLogger("main.shop.views")
@@ -132,7 +138,6 @@ class AddToCartView(LoginRequiredMixin, View):
         product = Product.objects.get(id=product_id)
         cart, created = Cart.objects.get_or_create(user=request.user)
 
-
         sellers = Seller.objects.filter(sellerproduct__product=product)
         selected_seller = random.choice(sellers) if sellers else None
 
@@ -239,3 +244,212 @@ def import_from_files_page(request: HttpRequest) -> HttpResponse:
         "files": import_files,
     }
     return render(request, "admin/shop/import_page.html", context)
+
+
+class OrderUserView(FormView):
+    template_name = "order_user.html"
+    form_class = OrderUserForm
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.pk = None
+        self.session = None
+
+    def get_initial(self):
+        """
+        метод добавления данных зарегистрированного пользователя в форму при инициализации
+        :return: dict словарь данных пользователя
+        """
+        user = self.request.user
+        pk = self.kwargs.get("pk")
+        cart_queryset = Cart.objects.filter(pk=pk)
+        if not cart_queryset.exists():
+            return redirect('/')
+        if user.is_authenticated:
+            self.session['user_page'] = True
+            account = Account.objects.get(user=user.pk)
+            fio = account.last_name + ' ' + account.first_name + ' ' + account.patronymic
+            initial = {
+                'username': fio,
+                'email': user.email,
+                'phone': user.phone,
+            }
+            return initial
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        self.session = request.session
+        self.session['delivery_page'] = False
+        self.session['pay_page'] = False
+        self.session['cart_id'] = self.kwargs.get('pk')
+        session_key = request.session.session_key
+        cart = Cart.objects.filter(pk=self.kwargs.get("pk"))
+        if not cart.exists():
+            return redirect('/')
+        else:
+            cart[0].session_key = session_key
+            cart[0].save()
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        password_confirm = form.cleaned_data['password_confirm']
+        form.clean()
+        phone = form.cleaned_data['phone']
+        user.set_password(password_confirm)
+        user.is_active = True
+        user.username = username
+        user.email = email
+        user.phone = phone
+        user.save()
+        self.pk = user.pk
+        account = Account.objects.create(user=user)
+        account.save()
+        self.session['user_page'] = True
+        return super(OrderUserView, self).form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        cart_obj = Cart.objects.get(pk=pk)
+        cart_obj.user_id = self.pk
+        cart_obj.save()
+        self.session['user_page'] = True
+        return reverse_lazy("profiles:login")
+
+
+class OrderDeliveryView(FormView):
+    template_name = 'order_delivery_page.html'
+    form_class = OrderDeliveryForm
+    # success_url = 'shop:order_pay'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+        self.cart_id = None
+
+    def get(self, request, *args, **kwargs):
+        self.cart_id = request.session.get('cart_id')
+        if not request.session.has_key('delivery_page'):
+            # исправить на путь к корзине
+            return redirect('/')
+        if request.session.get('delivery_page') and not request.session.get('pay_page'):
+            return redirect(reverse_lazy('shop:order_pay'))
+        elif request.session.get('pay_page') and request.session.get('delivery_page'):
+            return redirect(reverse_lazy('shop:order_confirm'))
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.session['delivery'] = form.cleaned_data['delivery']
+        self.session['city'] = form.cleaned_data['city']
+        self.session['address'] = form.cleaned_data['address']
+        self.session['delivery_page'] = True
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        self.session = request.session
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('shop:order_pay')
+
+
+class OrderPayView(FormView):
+    template_name = 'order_pay.html'
+    form_class = OrderPayForm
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+        self.obj = None
+        self.order_queryset = None
+
+    def get(self, request, *args, **kwargs):
+        if not request.session.has_key('delivery_page'):
+            # исправить на путь к корзине по желанию
+            return redirect('/')
+        if not request.session.get('delivery_page'):
+            return redirect('shop:order_delivery')
+        if request.session.get('pay_page'):
+            return redirect('shop:order_confirm')
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if self.obj:
+            self.obj.payment_method = form.cleaned_data['payment_method']
+            self.obj.save()
+            self.session['order_id'] = self.obj.pk
+        else:
+            self.order_queryset.update(payment_method=form.cleaned_data['payment_method'])
+            data = self.order_queryset.values_list()
+
+            self.session['order_id'] = self.order_queryset[0].pk
+        self.session['pay_page'] = True
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        self.session = request.session
+        sk = self.session.session_key
+        session = Session.objects.get(session_key=sk)
+        data = session.get_decoded()
+        self.order_queryset = Order.objects.filter(cart_id=self.session.get('cart_id'))
+        if self.order_queryset.exists():
+            self.order_queryset.update(
+                city=self.session.get('city'),
+                address=self.session.get('address'),
+                delivery=self.session.get('delivery'),
+            )
+        else:
+            self.obj, created = Order.objects.get_or_create(
+                city=data['city'],
+                address=data['address'],
+                delivery=data['delivery'],
+                cart_id=data['cart_id'],
+            )
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('shop:order_confirm')
+
+
+class OrderConfirmView(TemplateView):
+    template_name = 'order_confirm.html'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+
+    def get(self, request, *args, **kwargs):
+        """
+        проверка пользователя на наличие ранее пройденных шагов при оформлении заказа
+        """
+        self.session = request.session
+        s = Session.objects.get(session_key=self.session.session_key)
+        data = s.get_decoded()
+        if (request.session.has_key('delivery_page')
+            and request.session.has_key('pay_page')
+            and request.session.has_key('user_page')
+        ):
+            # исправить на путь к корзине по желанию
+            return super().get(request, *args, **kwargs)
+        return redirect('/')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_pk = self.session.get('order_id')
+        order= Order.objects.get(pk=order_pk)
+        user = User.objects.get(pk=self.request.user.pk)
+        cart = CartItem.objects.select_related(
+            "product",
+            "cart",
+            "selected_seller"
+        ).filter(cart_id=order.cart.pk)
+        total = sum(item.get_final_price() * item.quantity for item in cart)
+        context = {
+            'cart': cart,
+            'total': total,
+            "user": user,
+            "order": order,
+        }
+        return context
+
