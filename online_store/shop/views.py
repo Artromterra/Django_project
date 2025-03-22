@@ -9,17 +9,15 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView, View
 from django.core.cache import cache
-from django.db.models import Count
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib import messages
+from django.core.paginator import Paginator
 
-from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
-
 from services.view_history_products_service import ViewHistoryProductsService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
@@ -28,7 +26,13 @@ from .models.order import Order
 from .models.product import Product
 import utils.files
 import utils.celery_utils
-from .forms import ImportFilesForm, NewImportFileForm, OrderUserForm, OrderDeliveryForm, OrderPayForm
+from .forms import (
+    ImportFilesForm,
+    NewImportFileForm,
+    OrderUserForm,
+    OrderDeliveryForm,
+    OrderPayForm,
+)
 from .tasks import import_data_from_files
 
 logger = getLogger("main.shop.views")
@@ -94,10 +98,26 @@ class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
     context_object_name: str = "products"
+    paginate_by = 10
 
     def get_context_data(self, **kwargs) -> dict:
-        sort_query = self.request.GET.get("sort", "-carts_count")
-        return get_context_data_sort(self.context_object_name, sort_query)
+        """
+        Сортировка товара, для вывода на странице каталога товаров
+
+        Порядок работы:
+        1. Получаю метод сортировки из GET параметра.
+        2. Если метод не передан, устанавливаю сортировку по популярности.
+        3. Запрашиваю данные из кеша, если они есть, вывожу.
+        4. Если кеша нет, запрашиваю товары с сортировкой в БД
+        5. Перевожу товары в DTO формат.
+        6. Кеширую данные.
+        7. Пагинирую данные.
+        8. Вывожу данные.
+        """
+        sorting_method = self.request.GET.get("sort", "-carts_count")
+        sorted_context = get_context_data_sort(self.context_object_name, sorting_method)
+        patinated_sorted_context = self._context_pagination(sorted_context)
+        return patinated_sorted_context
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """
@@ -110,10 +130,23 @@ class ProductListView(ListView):
         4. Превращаем отфильтрованные объекты в ProductListDTO.
         5. Формируем контекст для рендеринга страницы каталога товаров,
             включая параметры фильтрации.
-        6. Возвращаем отрендеренную страницу с отфильтрованными продуктами.
+        6. Пагинирует данные.
+        7. Возвращаем отрендеренную страницу с продуктами.
         """
-        context = get_context_data_filtered(self.context_object_name, request.POST)
-        return render(request, "catalog.html", context)
+        filtered_context = get_context_data_filtered(self.context_object_name, request.POST)
+        patinated_filtered_context = self._context_pagination(filtered_context)
+        return render(request, "catalog.html", patinated_filtered_context)
+
+    def _context_pagination(self, context: dict) -> dict:
+        """Пагинирует контекст и возвращает его же"""
+        page_number = self.request.GET.get("page")
+        paginator = Paginator(context[self.context_object_name], self.paginate_by)
+        page_obj = paginator.get_page(page_number)
+
+        context[self.context_object_name] = page_obj
+        context["paginator"] = paginator
+        context["page_obj"] = page_obj
+        return context
 
 
 class CartView(LoginRequiredMixin, View):
@@ -452,4 +485,3 @@ class OrderConfirmView(TemplateView):
             "order": order,
         }
         return context
-
