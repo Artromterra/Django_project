@@ -1,18 +1,24 @@
 from django.contrib import admin
 from django.urls import path
 
-from .views import check_integration_with_frontend, ProductDetailView, ProductListView, CartView, AddToCartView, \
-    UpdateCartItemView
+from .views import (
+    ProductDetailView,
+    ProductListView,
+    OrderUserView,
+    OrderDeliveryView,
+    OrderPayView,
+    OrderConfirmView,
+    CartView,
+)
 
 app_name = "shop"
 
-# TODO: Remove the check_integration_with_frontend view function
-#  - it is needed to check integration with the base frontend
 urlpatterns = [
-    path("check-frontend/", check_integration_with_frontend, name="check-frontend"),
     path("products/", ProductListView.as_view(), name="products_list"),
     path("products/<int:pk>/", ProductDetailView.as_view(), name="products_detail"),
-    # path("product-properties/<int:product_id>/", product_properties, name="product-characterictic")
+    path("order/<int:pk>", OrderUserView.as_view(), name="order_user"),
+    path("order-delivery/", OrderDeliveryView.as_view(), name="order_delivery"),
+    path("order-pay/", OrderPayView.as_view(), name="order_pay"),
+    path("order-confirm/", OrderConfirmView.as_view(), name="order_confirm"),
     path('cart/', CartView.as_view(), name='cart'),
 ]
-
