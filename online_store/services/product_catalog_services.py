@@ -1,4 +1,4 @@
-'''Логика сортировки, фильтрации дял каталога товаров'''
+'''Логика сортировки, фильтрации для каталога товаров'''
 
 from django.core.cache import cache
 from django.db.models import Count
@@ -8,7 +8,7 @@ from shop.models.product import Product
 from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 
-SORT_QUERY_LIST = [
+SORTING_METHODS = [
     "carts_count",
     "-carts_count",
     "price",
@@ -21,14 +21,14 @@ SORT_QUERY_LIST = [
 
 
 def get_context_data_sort(
-    context_object_name: str, sort_query: str
+    context_object_name: str, sorting_method: str
 ) -> dict[str, list[ProductListDTO]]:
     '''Загружает контекстные данные и сортирует их по переданному методу соритровки'''
 
-    if sort_query not in SORT_QUERY_LIST:
-        sort_query = "-carts_count"
+    if sorting_method not in SORTING_METHODS:
+        sorting_method = "-carts_count"
 
-    cache_key = f"products_list_sort_{sort_query}"
+    cache_key = f"products_list_sort_{sorting_method}"
     cache_data = cache.get(cache_key)
     if cache_data:
         return {context_object_name: cache_data}
@@ -37,7 +37,7 @@ def get_context_data_sort(
         Product.objects.filter(is_active=True)
         .annotate(carts_count=Count("cart_product_items"))
         .annotate(reviews_count=Count("reviews"))
-        .order_by(sort_query)
+        .order_by(sorting_method)
         .all()
     )
     products_dto = ProductListDTO.from_objects(products)  # type: ignore
