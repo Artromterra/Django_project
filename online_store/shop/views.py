@@ -2,6 +2,7 @@ import os
 import random
 from typing import List
 from logging import getLogger
+from urllib import request
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,10 +23,11 @@ from services.view_history_products_service import ViewHistoryProductsService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
 from .models.seller import Seller
-from .models.order import Order
+from .models.order import Order, OrderDeliveryPrice
 from .models.product import Product
 import utils.files
 import utils.celery_utils
+from utils.calculating_price import calculate_price
 from .forms import (
     ImportFilesForm,
     NewImportFileForm,
@@ -477,7 +479,13 @@ class OrderConfirmView(TemplateView):
             "cart",
             "selected_seller"
         ).filter(cart_id=order.cart.pk)
-        total = sum(item.get_final_price() * item.quantity for item in cart)
+        total = calculate_price(
+            cart_queryset=cart,
+            order=order,
+            delivery_price=OrderDeliveryPrice(),
+        )
+        order.total_price = total
+        order.save()
         context = {
             'cart': cart,
             'total': total,
@@ -485,3 +493,16 @@ class OrderConfirmView(TemplateView):
             "order": order,
         }
         return context
+
+
+class OrderHistoryView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'historyorder.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        queryset = (Order.objects.
+        filter(cart__user_id=self.request.user.pk).
+        order_by('-created_at')[:3])
+
+        return queryset

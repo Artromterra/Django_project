@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.core.cache import cache
 from django.urls import path
 
-from .models.order import Order
+from .models.order import Order, OrderDeliveryPrice
 from .models.product import Product, ProductImage, ProductSeller
 from .models.category import Category
 from .models.reviews import Review
@@ -126,22 +126,23 @@ class CartItemAdmin(admin.ModelAdmin):
     list_filter = ('selected_seller',)
     search_fields = ('product__title', 'cart__user__username')
 
+@admin.register(OrderDeliveryPrice)
+class OrderDeliveryPriceAdmin(admin.ModelAdmin):
+    list_display = ('express_price', 'regular_price', 'order_price_for_delivery')
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('cart', 'product_in_cart', 'created_at')
+    list_display = ('cart', 'product_in_cart', 'paid', 'created_at')
     search_fields = ('cart__user__username',)
 
     def product_in_cart(self, obj):
-        prod_list = []
         products = obj.cart.cart_items.all()
-        for product in products:
-            prod_list.append(product.product.title)
+        prod_list = [product.product.title for product in products]
         return prod_list
 
 
 original_get_urls = admin.site.get_urls
-
 
 def custom_get_urls():
     custom_urls = [
