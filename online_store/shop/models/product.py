@@ -9,6 +9,8 @@ from .seller import Seller
 
 # Product main model
 class Product(models.Model):
+    objects = models.Manager()
+
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"

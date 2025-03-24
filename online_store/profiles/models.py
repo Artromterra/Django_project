@@ -79,6 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 from shop.models.order import Order
 class Account(models.Model):
+    objects = models.Manager()
 
     # DB Fields
     # ФИО

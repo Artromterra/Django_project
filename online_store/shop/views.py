@@ -2,7 +2,6 @@ import os
 import random
 from typing import List
 from logging import getLogger
-from urllib import request
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -405,8 +404,8 @@ class OrderPayView(FormView):
             return redirect('/')
         if not request.session.get('delivery_page'):
             return redirect('shop:order_delivery')
-        if request.session.get('pay_page'):
-            return redirect('shop:order_confirm')
+        # if request.session.get('pay_page'):
+        #     return redirect('shop:order_confirm')
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -416,7 +415,6 @@ class OrderPayView(FormView):
             self.session['order_id'] = self.obj.pk
         else:
             self.order_queryset.update(payment_method=form.cleaned_data['payment_method'])
-            data = self.order_queryset.values_list()
 
             self.session['order_id'] = self.order_queryset[0].pk
         self.session['pay_page'] = True
@@ -506,3 +504,22 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
         order_by('-created_at')[:3])
 
         return queryset
+
+
+class OrderDetailView(LoginRequiredMixin ,DetailView):
+    model = Order
+    context_object_name = 'order'
+    template_name = 'oneorder.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.kwargs.get('pk'))
+        user = User.objects.get(pk=self.request.user.pk)
+        cart = CartItem.objects.select_related(
+            "product",
+            "cart",
+            "selected_seller"
+        ).filter(cart_id=order.cart_id)
+        context['cart'] = cart
+        context['user'] = user
+        return context

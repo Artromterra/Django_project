@@ -7,6 +7,9 @@ class Order(models.Model):
     """
     Заказ пользователя
     """
+
+    objects = models.Manager()
+
     class Meta:
         ordering = ('-created_at',)
         verbose_name = 'Order'

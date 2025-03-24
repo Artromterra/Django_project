@@ -7,6 +7,8 @@ def seller_directory_path(instance: "Seller", filename: str) -> str:
 
 
 class Seller(models.Model):
+    objects = models.Manager()
+
     class Meta:
         verbose_name = 'Seller'
         verbose_name_plural = 'Sellers'
