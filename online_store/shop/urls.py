@@ -8,12 +8,17 @@ from .views import (
     OrderDeliveryView,
     OrderPayView,
     OrderConfirmView,
-    CartView,
     OrderHistoryView,
     OrderDetailView,
+    CartAddView,
+    CartRemoveView,
+    CartUpdateView,
+    CartView,
 )
 
+
 app_name = "shop"
+
 
 urlpatterns = [
     path("products/", ProductListView.as_view(), name="products_list"),
@@ -24,5 +29,8 @@ urlpatterns = [
     path("order-confirm/", OrderConfirmView.as_view(), name="order_confirm"),
     path("order-history/", OrderHistoryView.as_view(), name="order_history"),
     path("order-detail/<int:pk>/", OrderDetailView.as_view(), name="order_detail"),
-    path('cart/', CartView.as_view(), name='cart'),
+    path("cart/add/", CartAddView.as_view(), name="cart_add"),
+    path("cart/remove/", CartRemoveView.as_view(), name="cart_remove"),
+    path("cart/update/", CartUpdateView.as_view(), name="cart_update"),
+    path("cart/", CartView.as_view(), name="cart"),
 ]

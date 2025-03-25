@@ -36,6 +36,18 @@ from .forms import (
 )
 from .tasks import import_data_from_files
 
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from shop.models.cart import Cart, CartItem
+from services.cart_service import CartService
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+from django.views.generic import TemplateView
+
 logger = getLogger("main.shop.views")
 
 
@@ -523,3 +535,84 @@ class OrderDetailView(LoginRequiredMixin ,DetailView):
         context['cart'] = cart
         context['user'] = user
         return context
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CartAddView(APIView):
+    """Добавление товара в корзину"""
+
+    def post(self, request, *args, **kwargs):
+        product_id = request.data.get("product_id")
+        seller_id = request.data.get("seller_id")
+        quantity = int(request.data.get("quantity", 1))
+
+        cart_service = CartService(request)
+        cart_service.add_product(product_id, seller_id, quantity)
+
+        return Response(
+            {"message": "Товар добавлен", "cart_count": cart_service.get_cart_count()},
+            status=status.HTTP_200_OK,
+        )
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CartRemoveView(APIView):
+    """Удаление товара из корзины"""
+
+    def post(self, request, *args, **kwargs):
+        product_id = request.data.get("product_id")
+        seller_id = request.data.get("seller_id")
+
+        cart_service = CartService(request)
+        cart_service.remove_product(product_id, seller_id)
+
+        return Response(
+            {"message": "Товар удален", "cart_count": cart_service.get_cart_count()},
+            status=status.HTTP_200_OK,
+        )
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CartUpdateView(APIView):
+    """Изменение количества товара в корзине"""
+
+    def post(self, request, *args, **kwargs):
+        product_id = request.data.get("product_id")
+        seller_id = request.data.get("seller_id")
+        delta = int(request.data.get("delta", 0))
+
+        cart_service = CartService(request)
+        cart_service.update_product_quantity(product_id, seller_id, delta)
+
+        return Response(
+            {"message": "Количество обновлено", "cart_count": cart_service.get_cart_count()},
+            status=status.HTTP_200_OK,
+        )
+
+
+# class CartView(APIView):
+class CartView(TemplateView):
+    template_name = "cart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        context["cart"] = cart
+        return context
+    # """Получение списка товаров в корзине"""
+    #
+    # def get(self, request, *args, **kwargs):
+    #     cart_service = CartService(request)
+    #     items = [
+    #         {
+    #             "product": item.product.name,
+    #             "seller": item.selected_seller.name,
+    #             "quantity": item.quantity,
+    #             "price": item.get_final_price(),
+    #         }
+    #         for item in cart_service.get_cart_items()
+    #     ]
+    #     return Response(
+    #         {"cart": items, "cart_count": cart_service.get_cart_count()},
+    #         status=status.HTTP_200_OK,
+    #     )
