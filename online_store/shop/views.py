@@ -22,10 +22,11 @@ from services.view_history_products_service import ViewHistoryProductsService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
 from .models.seller import Seller
-from .models.order import Order
+from .models.order import Order, OrderDeliveryPrice
 from .models.product import Product
 import utils.files
 import utils.celery_utils
+from utils.calculating_price import calculate_price
 from .forms import (
     ImportFilesForm,
     NewImportFileForm,
@@ -403,8 +404,8 @@ class OrderPayView(FormView):
             return redirect('/')
         if not request.session.get('delivery_page'):
             return redirect('shop:order_delivery')
-        if request.session.get('pay_page'):
-            return redirect('shop:order_confirm')
+        # if request.session.get('pay_page'):
+        #     return redirect('shop:order_confirm')
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -414,7 +415,6 @@ class OrderPayView(FormView):
             self.session['order_id'] = self.obj.pk
         else:
             self.order_queryset.update(payment_method=form.cleaned_data['payment_method'])
-            data = self.order_queryset.values_list()
 
             self.session['order_id'] = self.order_queryset[0].pk
         self.session['pay_page'] = True
@@ -477,11 +477,49 @@ class OrderConfirmView(TemplateView):
             "cart",
             "selected_seller"
         ).filter(cart_id=order.cart.pk)
-        total = sum(item.get_final_price() * item.quantity for item in cart)
+        total = calculate_price(
+            cart_queryset=cart,
+            order=order,
+            delivery_price=OrderDeliveryPrice(),
+        )
+        order.total_price = total
+        order.save()
         context = {
             'cart': cart,
             'total': total,
             "user": user,
             "order": order,
         }
+        return context
+
+
+class OrderHistoryView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'historyorder.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        queryset = (Order.objects.
+        filter(cart__user_id=self.request.user.pk).
+        order_by('-created_at')[:3])
+
+        return queryset
+
+
+class OrderDetailView(LoginRequiredMixin ,DetailView):
+    model = Order
+    context_object_name = 'order'
+    template_name = 'oneorder.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.kwargs.get('pk'))
+        user = User.objects.get(pk=self.request.user.pk)
+        cart = CartItem.objects.select_related(
+            "product",
+            "cart",
+            "selected_seller"
+        ).filter(cart_id=order.cart_id)
+        context['cart'] = cart
+        context['user'] = user
         return context

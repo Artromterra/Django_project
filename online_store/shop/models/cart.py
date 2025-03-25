@@ -14,6 +14,8 @@ class Cart(models.Model):
         created_at (datetime): дата создания корзины
         cart_items (List[CartItem]): все продукты, которые находятся в карточке
     """
+    objects = models.Manager()
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -40,6 +42,8 @@ class CartItem(models.Model):
         selected_seller (Seller): внешний ключ - продавец
         quantity (int): количество товара в корзине
     """
+    objects = models.Manager()
+
     cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,

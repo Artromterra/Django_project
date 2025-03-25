@@ -10,6 +10,7 @@ from django.views.generic import FormView, TemplateView, UpdateView
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from shop.models.order import Order
 from .forms import (
     RegisterForm,
     LoginForm,
@@ -113,6 +114,13 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
 
 class UserAccountView(LoginRequiredMixin, TemplateView):
     template_name = "account.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = Order.objects.filter(cart__user=self.request.user).order_by('-created_at').first()
+        context['order'] = order
+        return context
+
 
 class UserProfileView(LoginRequiredMixin, TemplateView):
     template_name = "profile.html"

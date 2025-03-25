@@ -1,20 +1,15 @@
 from django.db import models
 
-from .cart import Cart
+from .cart import Cart, CartItem
 
 
 class Order(models.Model):
     """
     Заказ пользователя
-
-    Arguments:
-        city (str): город доставки
-        address (str): адрес доставки
-        express_delivery (bool): экспресс доставка
-        payment_method (str): способ оплаты (онлайн картой или со случайного чужого счёта)
-        created_at (datetime): дата создания заказа
-        cart (Cart): внешний ключ - корзина, которая была использована для создания заказа
     """
+
+    objects = models.Manager()
+
     class Meta:
         ordering = ('-created_at',)
         verbose_name = 'Order'
@@ -36,6 +31,7 @@ class Order(models.Model):
 
     city = models.CharField('City', max_length=100)
     address = models.CharField('Address', max_length=500)
+    paid = models.BooleanField('Paid', default=False)
     delivery = models.CharField(
         'Delivery',
         max_length=2,
@@ -48,6 +44,12 @@ class Order(models.Model):
         choices=CARD_CHOICES,
         default=SELF_CARD,
     )
+    total_price = models.DecimalField(
+        'Total Price',
+        decimal_places=0,
+        max_digits=10,
+        default=0,
+    )
     created_at = models.DateTimeField('Created at', auto_now_add=True)
 
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='order')
@@ -56,3 +58,31 @@ class Order(models.Model):
         if self.cart.user is not None:
             return f'Заказ № {self.pk}, пользователь {self.cart.user.username}'
         return f'Заказ № {self.pk}, пользователь Anonymous'
+
+
+class OrderDeliveryPrice(models.Model):
+    class Meta:
+        verbose_name = 'Order Delivery Price'
+        verbose_name_plural = 'Order Delivery Prices'
+
+    express_price = models.DecimalField(
+        'Express Delivery Price',
+        decimal_places=2,
+        max_digits=7,
+        default=500,
+    )
+    regular_price = models.DecimalField(
+        'Regular Delivery Price',
+        decimal_places=2,
+        max_digits=7,
+        default=200,
+    )
+    order_price_for_delivery = models.DecimalField(
+        'Order Price For Delivery',
+        decimal_places=2,
+        max_digits=10,
+        default=2000,
+    )
+
+    def __str__(self):
+        return 'Prices for order delivery'
