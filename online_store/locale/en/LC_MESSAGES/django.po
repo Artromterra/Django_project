@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-29 08:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: online_store/settings.py:133
+msgid "English"
+msgstr ""
+
+#: online_store/settings.py:134
+msgid "Russian"
+msgstr ""
+
+#: shop/models/discount.py:12
+msgid "Percentage"
+msgstr ""
+
+#: shop/models/discount.py:13
+msgid "Fixed amount"
+msgstr ""
+
+#: shop/models/discount.py:16
+msgid "Название скидки"
+msgstr ""
+
+#: shop/models/discount.py:21
+msgid "Тип скидки"
+msgstr ""
+
+#: shop/models/discount.py:26
+msgid "Величина скидки"
+msgstr ""
+
+#: shop/models/discount.py:28
+msgid "Дата начала"
+msgstr ""
+
+#: shop/models/discount.py:29
+msgid "Дата окончания"
+msgstr ""
+
+#: shop/models/discount.py:30
+msgid "Активна"
+msgstr ""
+
+#: shop/models/discount.py:31
+msgid "Продукты"
+msgstr ""
+
+#: shop/models/discount.py:32
+msgid "Категории"
+msgstr ""

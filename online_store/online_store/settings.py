@@ -15,6 +15,11 @@ import os
 
 from django.conf.global_settings import SERVER_EMAIL
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
+
+
+
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -60,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'online_store.urls'
@@ -124,9 +130,20 @@ AUTH_USER_MODEL = 'profiles.User'
 
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = [
+    ('en', _("English")),
+    ('ru', _("Russian"))
+]
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
+USE_L10N = True
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/'
+]
 
 USE_TZ = True
 
