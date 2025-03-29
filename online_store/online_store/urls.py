@@ -19,15 +19,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from banners.views import HomepageView
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
+    path('', HomepageView.as_view(), name='homepage'),
+
+]
+
+urlpatterns += i18n_patterns(
     path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
-    path('', HomepageView.as_view(), name='homepage'),
     path('reviews/', include('reviews.urls'), name='reviews'),
     path('comparison/', include('comparison.urls'), name='comparison')
-]
+)
 
 if settings.DEBUG:
     urlpatterns.extend(static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
