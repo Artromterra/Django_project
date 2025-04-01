@@ -93,9 +93,9 @@
       {% endif %}
           <a class="CartBlock-block" href="{% url 'cart' %}">
             <img class="CartBlock-img" src="/static/assets/img/icons/cart.svg" alt="cart.svg" />
-            <span class="CartBlock-amount">{{ cart_item.quantity }}</span>
+            <span class="CartBlock-amount">{{ cart_total_count }}</span>
           </a>
-          <div class="CartBlock-block"><span class="CartBlock-price">{{ total_price }}$</span></div>
+          <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_price }}$</span></div>
       </div>
     </div>
     <div class="row-block Header-trigger">
