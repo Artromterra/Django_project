@@ -87,6 +87,7 @@ TEMPLATES = [
 
                 'online_store.context_processors.category_menu'
                 'online_store.context_processors.cart'
+                'online_store.context_processors.comparison'
             ],
         },
     },
