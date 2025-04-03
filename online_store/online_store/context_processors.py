@@ -1,5 +1,7 @@
 from services.category_menu import CategoryMenuService
 from services.cart_service import CartService
+from services.сomparison_service import ComparisonService
+
 
 def category_menu(request):
     """
@@ -22,4 +24,19 @@ def cart(request):
     return {
         'cart_total_price': cart_total_price,
         'cart_total_count': cart_total_count
+    }
+
+def comparison(request):
+    """
+    Context processor, который добавляет количество сравниваемых товаров  в контекст всех шаблонов.
+    """
+    user = request.user if request.user.is_authenticated else None
+    session_key = request.session.session_key if not user else None
+
+    comparison_service = ComparisonService(user=user, session_key=session_key)
+
+    comparison_count = comparison_service.get_count()
+
+    return {
+        'comparison_count': comparison_count
     }

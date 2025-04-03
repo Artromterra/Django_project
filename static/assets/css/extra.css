@@ -1484,6 +1484,24 @@ a.Cart-title {
     border-radius: 100px;
 }
 
+.Comparison-amount {
+    background: #0063d1;
+    position: absolute;
+    right: -14px;
+    top: 0px;
+    min-width: 23px;
+    font-size: 12px;
+    letter-spacing: -0.6px;
+    color: #fff;
+    padding: 2px;
+    line-height: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #fff;
+    border-radius: 100px;
+}
+
 .CartBlock-price {
     font-size: 13px;
     color: #777;
