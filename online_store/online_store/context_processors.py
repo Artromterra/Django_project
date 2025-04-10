@@ -32,6 +32,9 @@ def comparison(request):
     """
     user = request.user if request.user.is_authenticated else None
     session_key = request.session.session_key if not user else None
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
 
     comparison_service = ComparisonService(user=user, session_key=session_key)
 
