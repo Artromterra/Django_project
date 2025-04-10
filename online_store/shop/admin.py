@@ -1,6 +1,12 @@
+
+from typing import Dict, Type
+from logging import getLogger
+
 from django.contrib import admin, messages
+from django.http import HttpResponseRedirect
 from django.core.cache import cache
 from django.urls import path
+from constance.admin import Config, ConstanceAdmin
 
 from .models.order import Order, OrderDeliveryPrice
 from .models.product import Product, ProductImage, ProductSeller
@@ -11,6 +17,10 @@ from .models.seller import Seller
 from .models.cart import Cart,CartItem
 from .models.discount import Discount
 from .views import load_new_import_file, import_from_files_page
+
+from services.cache.cleaners import BaseCleaner, AllCleaner, BannerCleaner, ShopCleaner
+
+logger = getLogger("main.shop.admin")
 
 
 @admin.action(description="Сбросить кеш меню категорий")
@@ -154,3 +164,37 @@ def custom_get_urls():
 
 admin_site = admin.site
 admin_site.get_urls = custom_get_urls
+
+
+class CustomConstanceAdmin(ConstanceAdmin):
+    change_list_template = "admin/constance_config/change_list.html"
+    cache_cleaners: Dict[str, Type[BaseCleaner]] = {
+        "all": AllCleaner,
+        "shop": ShopCleaner,
+        "banners": BannerCleaner,
+    }
+
+    def changelist_view(self, request, extra_context=None):
+        """Clear the cache depending on the application selection."""
+        extra_context = extra_context or {}
+        extra_context['cache_apps'] = list(self.cache_cleaners.keys())
+
+        if request.method == 'POST':
+            cache_reset: bool = False
+            for app_name in self.cache_cleaners.keys():
+                button_name: str = f"reset_{app_name}_cache"
+                if button_name in request.POST:
+                    logger.debug("Reset cache for app %s", app_name)
+                    self.cache_cleaners[app_name]().clean()
+                    cache_reset = True
+
+            if cache_reset:
+                return HttpResponseRedirect(request.get_full_path())
+
+        response = super().changelist_view(request, extra_context)
+        response.context_data["cache_apps"] = list(self.cache_cleaners.keys())
+        return response
+
+
+admin.site.unregister([Config])
+admin.site.register([Config], CustomConstanceAdmin)
