@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-29 08:04+0000\n"
+"POT-Creation-Date: 2025-04-07 17:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,21 +20,21 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: online_store/settings.py:133
-msgid "English"
-msgstr ""
-
 #: online_store/settings.py:134
+msgid "English"
+msgstr "Английский"
+
+#: online_store/settings.py:135
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: shop/models/discount.py:12
 msgid "Percentage"
-msgstr ""
+msgstr "Процент"
 
 #: shop/models/discount.py:13
 msgid "Fixed amount"
-msgstr ""
+msgstr "Хиксированное значение"
 
 #: shop/models/discount.py:16
 msgid "Название скидки"
@@ -66,4 +66,657 @@ msgstr ""
 
 #: shop/models/discount.py:32
 msgid "Категории"
+msgstr ""
+
+#: templates/about.html:12
+msgid "About Megano"
+msgstr "О Megano"
+
+#: templates/about.html:16 templates/payment.html:16
+#: templates/paymentsomeone.html:16
+msgid "home"
+msgstr "Домой"
+
+#: templates/about.html:19
+msgid "About Us"
+msgstr "О нас"
+
+#: templates/about.html:35
+msgid "Shipping & Returns"
+msgstr "Доставка и возврат"
+
+#: templates/about.html:38
+msgid "World wide shipping"
+msgstr "Доставка по всему миру"
+
+#: templates/about.html:49
+msgid "Money Back"
+msgstr "Возврат денег"
+
+#: templates/about.html:52
+msgid "Guaranted payments"
+msgstr "Гарантированные выплаты"
+
+#: templates/about.html:63
+msgid "Support Policy"
+msgstr "Политика поддержки"
+
+#: templates/about.html:66
+msgid "Fast support team"
+msgstr "Служба поддержки"
+
+#: templates/about.html:77
+msgid "Quality Guarantee"
+msgstr "Гарантия качества"
+
+#: templates/about.html:80
+msgid "Best guaranted items"
+msgstr "Лучшее предложение"
+
+#: templates/about.html:88
+msgid "Follow Us"
+msgstr "Подпишистесь на нас"
+
+#: templates/about.html:115
+msgid "Why Choose Megano"
+msgstr "Кто выбирает Megano"
+
+#: templates/about.html:118
+msgid ""
+" \n"
+"                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit "
+"doli. \n"
+"                    Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu "
+"sociis natoque penatibus \n"
+"                    et magnis dis parturient montesti, nascetur ridiculus "
+"mus. Donec quam felis, \n"
+"                    ultricies nec, pellentesque eutu, pretiumem.\n"
+"                    "
+msgstr ""
+
+#: templates/about.html:126
+msgid ""
+"\n"
+"                    Nulla consequat massa quis enim. Donec pede justo, "
+"fringilla vel,\n"
+"                     aliquet nec, vulputate eget, arcu. In enim justotuio, "
+"rhoncus ut loret, imperdiet a,\n"
+"                      venenatis vitae, justo. Nullam dictum felis eu pede "
+"mollis pretium. Integer \n"
+"                      tincidunt. Cras dapibus. Vivamus element semper nisi. "
+"Aenean vulputate eleifend \n"
+"                      tellus. Aenean leo ligula, porttitor eu, consequat "
+"vitae  ligula eget dolor. \n"
+"                      Aenean massa. Cumtipsu sociis natoque pena tibusetm t "
+"semper ni.\n"
+"                    "
+msgstr ""
+
+#: templates/about.html:136 templates/index.html:19
+msgid "Get Started"
+msgstr "Начать покупки"
+
+#: templates/about.html:154
+msgid "Megano Store Hystory"
+msgstr "История Megano"
+
+#: templates/about.html:157
+msgid ""
+"\n"
+"                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit "
+"doli. Aenean commodo ligula eget dolor. \n"
+"                    Aenean massa. Cumtipsu sociis natoque penatibus et "
+"magnis dis parturient montesti, nascetur ridiculus mus. \n"
+"                    Donec quam felis, ultricies nec, pellentesque eutu, "
+"pretiumem.\n"
+"                    "
+msgstr ""
+
+#: templates/about.html:165
+msgid "Lorem ipsum dolor sit amet, consectetuer"
+msgstr ""
+
+#: templates/about.html:168
+msgid "adipiscing elit doli. Aenean commodo ligula"
+msgstr ""
+
+#: templates/about.html:171
+msgid "eget dolor. Aenean massa. Cumtipsu sociis"
+msgstr ""
+
+#: templates/about.html:174
+msgid "natoque penatibus et magnis dis parturient"
+msgstr ""
+
+#: templates/about.html:177
+msgid "montesti, nascetur ridiculus mus. Donec"
+msgstr ""
+
+#: templates/about.html:180
+msgid "quam felis, ultricies nec, pellentesque eutu"
+msgstr ""
+
+#: templates/account.html:14 templates/footer.html:13
+#: templates/historyorder.html:14 templates/profile.html:16
+#: templates/profileAvatar.html:31
+msgid "Навигация"
+msgstr ""
+
+#: templates/account.html:21 templates/header.html:102
+#: templates/historyorder.html:22 templates/profile.html:24
+#: templates/profileAvatar.html:38
+msgid "Личный кабинет"
+msgstr ""
+
+#: templates/account.html:25 templates/footer.html:32
+#: templates/historyorder.html:27 templates/profile.html:29
+#: templates/profileAvatar.html:12 templates/profileAvatar.html:18
+#: templates/profileAvatar.html:42
+msgid "Профиль"
+msgstr ""
+
+#: templates/account.html:29 templates/account.html:63
+#: templates/historyorder.html:32 templates/profile.html:34
+#: templates/profileAvatar.html:46
+msgid "История заказов"
+msgstr ""
+
+#: templates/account.html:46
+msgid "Редактировать профиль"
+msgstr ""
+
+#: templates/account.html:70 templates/historyorder.html:57
+#: templates/oneorder.html:53 templates/order_confirm.html:44
+#: templates/product.html:203 templates/product.html:247
+#: templates/product.html:290
+msgid "Тип доставки"
+msgstr ""
+
+#: templates/account.html:74 templates/historyorder.html:63
+#: templates/oneorder.html:57 templates/order_confirm.html:48
+msgid "Экспресс доставка"
+msgstr ""
+
+#: templates/account.html:78 templates/historyorder.html:60
+#: templates/oneorder.html:61 templates/order_confirm.html:52
+#: templates/product.html:206 templates/product.html:250
+#: templates/product.html:293
+msgid "Обычная доставка"
+msgstr ""
+
+#: templates/account.html:84 templates/historyorder.html:68
+#: templates/oneorder.html:79 templates/order_confirm.html:69
+#: templates/payment.html:12 templates/payment.html:20
+#: templates/paymentsomeone.html:12 templates/paymentsomeone.html:19
+#: templates/product.html:211 templates/product.html:255
+#: templates/product.html:298
+msgid "Оплата"
+msgstr ""
+
+#: templates/account.html:88 templates/historyorder.html:71
+#: templates/oneorder.html:83 templates/order_confirm.html:72
+#: templates/product.html:214 templates/product.html:258
+#: templates/product.html:301
+msgid "Онлайн картой"
+msgstr ""
+
+#: templates/account.html:92 templates/historyorder.html:75
+#: templates/oneorder.html:87 templates/order_confirm.html:76
+msgid "Онлайн со случайного чужого счёта"
+msgstr ""
+
+#: templates/account.html:98 templates/historyorder.html:81
+msgid "Общая стоимость"
+msgstr ""
+
+#: templates/account.html:104 templates/historyorder.html:89
+#: templates/oneorder.html:93
+msgid "Статус"
+msgstr ""
+
+#: templates/account.html:108 templates/historyorder.html:95
+#: templates/oneorder.html:97
+msgid "Оплачен"
+msgstr ""
+
+#: templates/account.html:112 templates/historyorder.html:92
+#: templates/oneorder.html:101
+msgid "Не оплачен"
+msgstr ""
+
+#: templates/cart.html:48
+msgid "Ваша корзина пуста"
+msgstr ""
+
+#: templates/cart.html:56 templates/order_confirm.html:108
+msgid "Итого"
+msgstr ""
+
+#: templates/cart.html:62
+msgid "Оформить заказ"
+msgstr ""
+
+#: templates/catalog.html:14 templates/catalog.html:64
+msgid "Фильтр"
+msgstr ""
+
+#: templates/catalog.html:46
+msgid "Только товары в наличии"
+msgstr ""
+
+#: templates/catalog.html:56
+msgid "С бесплатной доставкой"
+msgstr ""
+
+#: templates/catalog.html:79
+msgid "Популярные тэги"
+msgstr ""
+
+#: templates/catalog.html:85 templates/catalog.html:94
+msgid "Видео"
+msgstr ""
+
+#: templates/catalog.html:89 templates/catalog.html:93
+msgid "Разработка"
+msgstr ""
+
+#: templates/catalog.html:90
+msgid "Игры"
+msgstr ""
+
+#: templates/catalog.html:102
+msgid "Сортировать по"
+msgstr ""
+
+#: templates/catalog.html:106
+msgid "Популярности"
+msgstr ""
+
+#: templates/catalog.html:109
+msgid "Цене"
+msgstr ""
+
+#: templates/catalog.html:112
+msgid "Отзывам"
+msgstr ""
+
+#: templates/catalog.html:115
+msgid "Новизне"
+msgstr ""
+
+#: templates/catalog.html:142
+msgid "Товаров на данный момент нет"
+msgstr ""
+
+#: templates/comparison.html:28 templates/comparison.html:140
+#: templates/product.html:125 templates/product.html:159
+msgid "Характеристика"
+msgstr ""
+
+#: templates/comparison.html:31 templates/comparison.html:143
+#: templates/product.html:162
+msgid "Значение"
+msgstr ""
+
+#: templates/comparison.html:36 templates/comparison.html:148
+msgid "Общие параметры"
+msgstr ""
+
+#: templates/comparison.html:42 templates/comparison.html:154
+msgid "Тип"
+msgstr ""
+
+#: templates/comparison.html:45 templates/comparison.html:157
+msgid "Ноутбук"
+msgstr ""
+
+#: templates/comparison.html:50 templates/comparison.html:161
+msgid "Модель"
+msgstr ""
+
+#: templates/comparison.html:56 templates/comparison.html:165
+msgid "Год релиза"
+msgstr ""
+
+#: templates/comparison.html:62 templates/comparison.html:170
+msgid "Экран"
+msgstr ""
+
+#: templates/comparison.html:68 templates/comparison.html:174
+msgid "Диагональ экрана (дюйм)"
+msgstr ""
+
+#: templates/comparison.html:74 templates/comparison.html:179
+msgid "Разрешение экрана"
+msgstr ""
+
+#: templates/comparison.html:80 templates/comparison.html:185
+msgid "Плотность пикселей"
+msgstr ""
+
+#: templates/comparison.html:86 templates/comparison.html:190
+msgid "Система"
+msgstr ""
+
+#: templates/comparison.html:91 templates/comparison.html:195
+msgid "Операционная система"
+msgstr ""
+
+#: templates/comparison.html:97 templates/comparison.html:200
+msgid "Версия ОС"
+msgstr ""
+
+#: templates/email.html:23 templates/password.html:23
+msgid "Восстановление пароля"
+msgstr ""
+
+#: templates/email.html:25
+msgid ""
+"Для восстановления пароля введите адрес электронной почты, на которую "
+"зарегистрирована учетная запись"
+msgstr ""
+
+#: templates/email.html:35 templates/header.html:40
+#: templates/header_for_authorization.html:39 templates/register.html:32
+msgid "Вход"
+msgstr ""
+
+#: templates/footer.html:17 templates/header.html:74 templates/sale.html:14
+msgid "Главная"
+msgstr ""
+
+#: templates/footer.html:22 templates/header.html:82
+msgid "Каталог"
+msgstr ""
+
+#: templates/footer.html:27 templates/header.html:87
+msgid "Сравнение"
+msgstr ""
+
+#: templates/footer.html:39
+msgid "Контакты"
+msgstr ""
+
+#: templates/footer.html:40
+msgid "Phone"
+msgstr "Телефон"
+
+#: templates/footer.html:40
+msgid "Email"
+msgstr "Электронная почта"
+
+#: templates/header.html:43 templates/header_for_authorization.html:41
+#: templates/login.html:42 templates/register.html:24
+msgid "Регистрация"
+msgstr ""
+
+#: templates/header.html:79
+msgid "Скидки"
+msgstr ""
+
+#: templates/header.html:106
+msgid "Административный раздел"
+msgstr ""
+
+#: templates/header.html:110
+msgid "Выход"
+msgstr ""
+
+#: templates/header.html:125
+msgid "Показать навигацию"
+msgstr ""
+
+#: templates/header.html:143
+msgid "Все категории"
+msgstr ""
+
+#: templates/header.html:155
+msgid "Телевизоры"
+msgstr ""
+
+#: templates/header.html:165
+msgid "Наушники"
+msgstr ""
+
+#: templates/header.html:174
+msgid "Стиральные машины"
+msgstr ""
+
+#: templates/header.html:183
+msgid "Аксессуары"
+msgstr ""
+
+#: templates/header.html:191
+msgid "Чехлы"
+msgstr ""
+
+#: templates/header.html:208
+msgid "Поиск"
+msgstr ""
+
+#: templates/index.html:69
+msgid "ОГРАНИЧЕННЫЕ ПРЕДЛОЖЕНИЯ"
+msgstr ""
+
+#: templates/index.html:92
+msgid "days"
+msgstr "дней"
+
+#: templates/index.html:99
+msgid "hours"
+msgstr "часов"
+
+#: templates/index.html:107
+msgid "mins"
+msgstr "минут"
+
+#: templates/index.html:115
+msgid "secs"
+msgstr "секунд"
+
+#: templates/index.html:309
+msgid "Ограниченный тираж"
+msgstr ""
+
+#: templates/login.html:39
+msgid "Забыли пароль?"
+msgstr ""
+
+#: templates/oneorder.html:12
+msgid "Заказ"
+msgstr ""
+
+#: templates/oneorder.html:27
+msgid "Дата заказа"
+msgstr ""
+
+#: templates/oneorder.html:33 templates/order_confirm.html:25
+#: templates/order_user.html:32 templates/profileAvatar.html:75
+msgid "ФИО"
+msgstr ""
+
+#: templates/oneorder.html:39 templates/order_confirm.html:32
+#: templates/order_user.html:38 templates/profile.html:97
+#: templates/profileAvatar.html:83
+msgid "Телефон"
+msgstr ""
+
+#: templates/oneorder.html:45 templates/order_user.html:45
+#: templates/profile.html:108 templates/profileAvatar.html:89
+msgid "E-mail"
+msgstr "Электронная почта"
+
+#: templates/oneorder.html:67 templates/order_confirm.html:58
+#: templates/order_delivery_page.html:30
+msgid "Город"
+msgstr ""
+
+#: templates/oneorder.html:73 templates/order_confirm.html:63
+#: templates/order_delivery_page.html:37
+msgid "Адрес"
+msgstr ""
+
+#: templates/oneorder.html:108
+msgid "Оплата не прошла"
+msgstr ""
+
+#: templates/oneorder.html:111
+msgid "Оплата не выполнена"
+msgstr ""
+
+#: templates/oneorder.html:150 templates/order_confirm.html:115
+#: templates/order_confirm.html:119 templates/payment.html:45
+#: templates/paymentsomeone.html:42
+msgid "Оплатить"
+msgstr ""
+
+#: templates/order_confirm.html:17 templates/order_selector.html:31
+msgid "Шаг 4. Подтверждение заказа"
+msgstr ""
+
+#: templates/order_delivery_page.html:19 templates/order_selector.html:21
+msgid "Шаг 2. Способ доставки"
+msgstr ""
+
+#: templates/order_delivery_page.html:43 templates/order_pay.html:26
+#: templates/order_user.html:74
+msgid "Дальше"
+msgstr ""
+
+#: templates/order_pay.html:19 templates/order_selector.html:26
+msgid "Шаг 3. Способ оплаты"
+msgstr ""
+
+#: templates/order_selector.html:8
+msgid "Прогресс заполнения"
+msgstr ""
+
+#: templates/order_selector.html:16 templates/order_user.html:23
+msgid "Шаг 1. Параметры пользователя"
+msgstr ""
+
+#: templates/order_user.html:54 templates/profile.html:118
+#: templates/profileAvatar.html:95
+msgid "Пароль"
+msgstr ""
+
+#: templates/order_user.html:60 templates/profile.html:128
+#: templates/profileAvatar.html:101
+msgid "Подтверждение пароля"
+msgstr ""
+
+#: templates/order_user.html:66
+msgid "Я уже зарегистрирован"
+msgstr ""
+
+#: templates/password.html:25
+msgid "Придумайте новый пароль для учетной записи"
+msgstr ""
+
+#: templates/password_reset_done.html:23
+msgid ""
+"Отправлена инструкция для сброса пароля на ваш email. Если вы не получили "
+"письмо, проверьте папку спам."
+msgstr ""
+
+#: templates/payment.html:33
+msgid "Номер карты"
+msgstr ""
+
+#: templates/paymentsomeone.html:32
+msgid "Номер счета"
+msgstr ""
+
+#: templates/paymentsomeone.html:37
+msgid "Сгенирировать случайный счет"
+msgstr ""
+
+#: templates/product.html:53 templates/product.html:149
+msgid "Особенности отсутствуют"
+msgstr ""
+
+#: templates/product.html:71 templates/product.html:195
+#: templates/product.html:239 templates/product.html:283
+msgid "Купить"
+msgstr ""
+
+#: templates/product.html:80
+msgid "Поздравляем!"
+msgstr ""
+
+#: templates/product.html:86
+msgid "Товар успешно добавлен в корзину!"
+msgstr ""
+
+#: templates/product.html:96
+msgid "Тэги"
+msgstr ""
+
+#: templates/product.html:104
+msgid "Теги отсутствуют"
+msgstr ""
+
+#: templates/product.html:115
+msgid "Описание"
+msgstr ""
+
+#: templates/product.html:120
+msgid "Продавцы"
+msgstr ""
+
+#: templates/product.html:130
+msgid "Отзывы"
+msgstr ""
+
+#: templates/product.html:173
+msgid "Характеристик нет"
+msgstr ""
+
+#: templates/product.html:219 templates/product.html:263
+#: templates/product.html:306
+msgid "Стоимость"
+msgstr ""
+
+#: templates/profile.html:50 templates/profileAvatar.html:62
+msgid "Аватар"
+msgstr ""
+
+#: templates/profile.html:55
+msgid "Загрузить фото"
+msgstr ""
+
+#: templates/profile.html:65
+msgid "Имя"
+msgstr ""
+
+#: templates/profile.html:75
+msgid "Фамилия"
+msgstr ""
+
+#: templates/profile.html:85
+msgid "Отчество"
+msgstr ""
+
+#: templates/profile.html:139 templates/profileAvatar.html:108
+msgid "Сохранить"
+msgstr ""
+
+#: templates/profile.html:143
+msgid "Профиль успешно сохранен"
+msgstr ""
+
+#: templates/profileAvatar.html:68
+msgid "Выберите аватар"
+msgstr ""
+
+#: templates/progressPayment.html:12 templates/progressPayment.html:18
+msgid "Ожидание оплаты"
+msgstr ""
+
+#: templates/progressPayment.html:28
+msgid "Ждем подтверждения оплаты платежной системой"
+msgstr ""
+
+#: templates/sale.html:18
+msgid "Блог"
 msgstr ""

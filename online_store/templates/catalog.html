@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
 <div class="Middle Middle_top">
   <div class="Section Section_column Section_columnLeft">
@@ -7,7 +10,9 @@
       <div class="Section-column">
         <div class="Section-columnSection">
           <header class="Section-header">
-            <strong class="Section-title">Фильтр</strong>
+            <strong class="Section-title">
+              {% translate "Фильтр" %}
+            </strong>
           </header>
           <div class="Section-columnContent">
 
@@ -37,7 +42,9 @@
                 <label class="toggle">
                   <input type="checkbox" name="available_only" {% if available_only %}checked{% endif %}>
                   <span class="toggle-box"></span>
-                  <span class="toggle-text">Только товары в наличии</span>
+                  <span class="toggle-text">
+                    {% translate "Только товары в наличии" %}
+                  </span>
                 </label>
               </div>
 
@@ -45,13 +52,17 @@
                 <label class="toggle">
                   <input type="checkbox" name="free_shipping" {% if free_shipping %}checked{% endif %}>
                   <span class="toggle-box"></span>
-                  <span class="toggle-text">С бесплатной доставкой</span>
+                  <span class="toggle-text">
+                    {% translate "С бесплатной доставкой" %}
+                  </span>
                 </label>
               </div>
 
               <div class="form-group">
                 <div class="buttons">
-                  <button class="btn btn_square btn_dark btn_narrow">Фильтр</button>
+                  <button class="btn btn_square btn_dark btn_narrow">
+                    {% translate "Фильтр" %}
+                  </button>
                 </div>
               </div>
             </form>
@@ -64,27 +75,45 @@
         </div>
         <div class="Section-columnSection">
           <header class="Section-header">
-            <strong class="Section-title">Популярные тэги
+            <strong class="Section-title">
+              {% translate "Популярные тэги" %}
             </strong>
           </header>
           <div class="Section-columnContent">
-            <div class="buttons"><a class="btn btn_default btn_sm" href="#">Видео</a><a class="btn btn_default btn_sm"
-                href="#">Разработка</a><a class="btn btn_default btn_sm" href="#">Игры</a><a
+            <div class="buttons">
+              <a class="btn btn_default btn_sm" href="#">
+                {% translate "Видео" %}
+              </a>
+            <a class="btn btn_default btn_sm"
+                href="#">
+                {% translate "Разработка" %}</a><a class="btn btn_default btn_sm" href="#">
+                  {% translate "Игры" %}</a><a
                 class="btn btn_default btn_sm" href="#">Asus</a><a class="btn btn_default btn_sm"
-                href="#">Разработка</a><a class="btn btn_default btn_sm" href="#">Видео</a>
+                href="#">
+                {% translate "Разработка" %}</a><a class="btn btn_default btn_sm" href="#">
+                  {% translate "Видео" %}</a>
             </div>
           </div>
         </div>
       </div>
       <div class="Section-content">
         <div class="Sort">
-          <div class="Sort-title">Сортировать по:
+          <div class="Sort-title">
+            {% translate "Сортировать по" %}:
           </div>
           <div class="Sort-variants">
-            <a class="Sort-sortBy" data-sort="carts_count">Популярности</a>
-            <a class="Sort-sortBy" data-sort="price">Цене</a>
-            <a class="Sort-sortBy" data-sort="reviews_count">Отзывам</a>
-            <a class="Sort-sortBy" data-sort="created_at">Новизне</a>
+            <a class="Sort-sortBy" data-sort="carts_count">
+              {% translate "Популярности" %}
+            </a>
+            <a class="Sort-sortBy" data-sort="price">
+              {% translate "Цене" %}
+            </a>
+            <a class="Sort-sortBy" data-sort="reviews_count">
+              {% translate "Отзывам" %}
+            </a>
+            <a class="Sort-sortBy" data-sort="created_at">
+              {% translate "Новизне" %}
+            </a>
           </div>
         </div>
         {% if products %}
@@ -109,7 +138,9 @@
           {% endfor %}
         </div>
         {% else %}
-        <h2>Товаров на данный момент нет</h2>
+        <h2>
+          {% translate "Товаров на данный момент нет" %}
+        </h2>
         {% endif %}
 
         <div class="Pagination">

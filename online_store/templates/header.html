@@ -1,3 +1,6 @@
+{% load i18n %}
+
+
 <div class="ControlPanel">
   <div class="wrap">
     <div class="row ControlPanel-row">
@@ -33,8 +36,12 @@
         <div class="row ControlPanel-rowSplit">
           {% if not user.is_authenticated %}
             <div class="row-block">
-              <a class="ControlPanel-title" href="{% url 'profiles:login' %}">Вход</a>
-              <a class="ControlPanel-title" href="{% url 'profiles:register' %}">Регистрация</a>
+              <a class="ControlPanel-title" href="{% url 'profiles:login' %}">
+                {% translate "Вход" %}
+              </a>
+              <a class="ControlPanel-title" href="{% url 'profiles:register' %}">
+                {% translate "Регистрация" %}
+              </a>
             </div>
           {% endif %}
         </div>
@@ -63,16 +70,22 @@
       <div class="menuModal" id="navigate">
         <ul class="menu menu_main">
           <li class="menu-item">
-            <a class="menu-link" href="#">Главная</a>
+            <a class="menu-link" href="#">
+              {% translate "Главная" %}
+            </a>
           </li>
           <li class="menu-item">
-            <span class="menu-label menu-label_success">Скидки</span>
-            <a class="menu-link" href="#">Каталог</a>
+            <span class="menu-label menu-label_success">
+              {% translate "Скидки" %}
+            </span>
+            <a class="menu-link" href="#">
+              {% translate "Каталог" %}
+            </a>
           </li>
           <li class="menu-item">
-              <a class="menu-link" href="{% url 'comparison' %}">Сравнение
-                  <span class="Comparison-amount">{{ comparison_count }}</span>
-              </a>
+            <a class="menu-link" href="#">
+              {% translate "Сравнение" %}
+            </a>
           </li>
         </ul>
       </div>
@@ -85,24 +98,32 @@
             <img class="CartBlock-img" src="/static/assets/img/icons/loon-icon.svg" alt="loon-icon.svg" />
           </button>
           <div class="dropdown-content">
-            <a class="dropdown-content-a" href="{% url 'profiles:user_account_view' %}">Личный кабинет</a>
+            <a class="dropdown-content-a" href="{% url 'profiles:user_account_view' %}">
+              {% translate "Личный кабинет" %}
+            </a>
             {% if user.is_superuser %}
-              <a class="dropdown-content-a" href="{% url 'admin:index' %}">Административный раздел</a>
+              <a class="dropdown-content-a" href="{% url 'admin:index' %}">
+                {% translate "Административный раздел" %}
+              </a>
             {% endif %}
-            <a class="dropdown-content-a" href="{% url 'profiles:logout' %}">Выход</a>
+            <a class="dropdown-content-a" href="{% url 'profiles:logout' %}">
+              {% translate "Выход" %}
+            </a>
           </div>
         </div>
       {% endif %}
-          <a class="CartBlock-block" href="{% url 'cart' %}">
+          <a class="CartBlock-block" href="#">
             <img class="CartBlock-img" src="/static/assets/img/icons/cart.svg" alt="cart.svg" />
-            <span class="CartBlock-amount">{{ cart_total_count }}</span>
+            <span class="CartBlock-amount">0</span>
           </a>
-          <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_price }}$</span></div>
+          <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span></div>
       </div>
     </div>
     <div class="row-block Header-trigger">
       <a class="menuTrigger" href="#navigate">
-        <div class="menuTrigger-content">Показать навигацию</div>
+        <div class="menuTrigger-content">
+          {% translate "Показать навигацию" %}
+        </div>
         <span></span>
         <span></span>
         <span></span>
@@ -118,7 +139,9 @@
           <div class="CategoriesButton-icon">
             <img src="/static/assets/img/icons/allDep.svg" alt="allDep.svg" />
           </div>
-          <span class="CategoriesButton-text">Все категории</span>
+          <span class="CategoriesButton-text">
+            {% translate "Все категории" %}
+          </span>
           <div class="CategoriesButton-arrow"></div>
         </div>
         <div class="CategoriesButton-content">
@@ -128,7 +151,9 @@
               <div class="CategoriesButton-icon">
                 <img src="/static/assets/img/icons/departments/1.svg" alt="1.svg" />
               </div>
-              <span class="CategoriesButton-text">Телевизоры</span>
+              <span class="CategoriesButton-text">
+                {% translate "Телевизоры" %}
+              </span>
             </a>
           </div>
           <div class="CategoriesButton-link">
@@ -136,7 +161,8 @@
               <div class="CategoriesButton-icon">
                 <img src="/static/assets/img/icons/departments/2.svg" alt="2.svg" />
               </div>
-              <span class="CategoriesButton-text">Наушники</span>
+              <span class="CategoriesButton-text">
+                {% translate "Наушники" %}</span>
             </a>
           </div>
           <div class="CategoriesButton-link">
@@ -144,7 +170,8 @@
               <div class="CategoriesButton-icon">
                 <img src="/static/assets/img/icons/departments/3.svg" alt="3.svg" />
               </div>
-              <span class="CategoriesButton-text">Стиральные машины</span>
+              <span class="CategoriesButton-text">
+                {% translate "Стиральные машины" %}</span>
             </a>
             <a class="CategoriesButton-arrow" href="#"></a>
             <div class="CategoriesButton-submenu">
@@ -152,13 +179,17 @@
                 <div class="CategoriesButton-icon">
                   <img src="/static/assets/img/icons/departments/1.svg" alt="1.svg" />
                 </div>
-                <span class="CategoriesButton-text">Аксессуары</span>
+                <span class="CategoriesButton-text">
+                  {% translate "Аксессуары" %}
+                </span>
               </a>
               <a class="CategoriesButton-link" href="#">
                 <div class="CategoriesButton-icon">
                   <img src="/static/assets/img/icons/departments/2.svg" alt="2.svg" />
                 </div>
-                <span class="CategoriesButton-text">Чехлы</span>
+                <span class="CategoriesButton-text">
+                  {% translate "Чехлы" %}
+                </span>
               </a>
             </div>
           </div>
@@ -174,7 +205,7 @@
           <input class="search-input" id="query" name="query" type="text" placeholder="NVIDIA GeForce RTX 3060" />
           <button class="search-button" type="submit" name="search" id="search">
             <img src="/static/assets/img/icons/search.svg" alt="search.svg" />
-            Поиск
+            {% translate "Поиск" %}
           </button>
         </form>
       </div>

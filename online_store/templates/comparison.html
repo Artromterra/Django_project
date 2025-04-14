@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
 <div class="Middle">
         <div class="wrap">
@@ -21,51 +24,78 @@
                                         <div class="table">
                                             <table>
                                                 <tr>
-                                                    <th class="hed">Характеристика</th>
-                                                    <th class="hed">Значение</th>
+                                                    <th class="hed">
+                                                        {% translate "Характеристика" %}
+                                                    </th>
+                                                    <th class="hed">
+                                                        {% translate "Значение" %}
+                                                    </th>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Общие параметры</b></td>
+                                                    <td><b>
+                                                        {% translate "Общие параметры" %}
+                                                    </b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Тип</td>
-                                                    <td class="comparis">Ноутбук</td>
+                                                    <td class="comparis">
+                                                        {% translate "Тип" %}
+                                                    </td>
+                                                    <td class="comparis">
+                                                        {% translate "Ноутбук" %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Модель</td>
+                                                    <td>
+                                                        {% translate "Модель" %}
+                                                    </td>
                                                     <td>Irbis NB270</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Год релиза</td>
+                                                    <td>
+                                                        {% translate "Год релиза" %}
+                                                    </td>
                                                     <td>2019</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Экран</b></td>
+                                                    <td><b>
+                                                        {% translate "Экран" %}
+                                                    </b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Диагональ экрана (дюйм)</td>
+                                                    <td>
+                                                        {% translate "Диагональ экрана (дюйм)" %}
+                                                    </td>
                                                     <td>14.1"</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Разрешение экрана</td>
+                                                    <td>
+                                                        {% translate "Разрешение экрана" %}
+                                                    </td>
                                                     <td>Full HD (1920x1080)</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Плотность пикселей</td>
+                                                    <td class="comparis">
+                                                        {% translate "Плотность пикселей" %}
+                                                    </td>
                                                     <td class="comparis">156 ppi</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Система</b></td>
+                                                    <td><b>
+                                                        {% translate "Система" %}</b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Операционная система</td>
+                                                    <td class="comparis">
+                                                        {% translate "Операционная система" %}
+                                                    </td>
                                                     <td class="comparis">Android</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Версия ОС </td>
+                                                    <td>
+                                                        {% translate "Версия ОС" %}
+                                                    </td>
                                                     <td>Android 10 Go</td>
                                                 </tr>
                                             </table>
@@ -106,51 +136,68 @@
 
                                             <table>
                                                 <tr>
-                                                    <th>Характеристика</th>
-                                                    <th>Значение</th>
+                                                    <th>
+                                                        {% translate "Характеристика" %}
+                                                    </th>
+                                                    <th>
+                                                        {% translate "Значение" %}
+                                                    </th>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Общие параметры</b></td>
+                                                    <td><b>
+                                                        {% translate "Общие параметры" %}
+                                                    </b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Тип</td>
-                                                    <td class="comparis">Ноутбук</td>
+                                                    <td class="comparis">
+                                                        {% translate "Тип" %}
+                                                    </td>
+                                                    <td class="comparis">
+                                                        {% translate "Ноутбук" %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Модель</td>
+                                                    <td>{% translate "Модель" %}</td>
                                                     <td>Irbis HG70</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Год релиза</td>
+                                                    <td>{% translate "Год релиза" %}</td>
                                                     <td>2013</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Экран</b></td>
+                                                    <td><b>
+                                                        {% translate "Экран" %}</b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Диагональ экрана (дюйм)</td>
+                                                    <td>{% translate "Диагональ экрана (дюйм)" %}</td>
                                                     <td>14.1"</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Разрешение экрана</td>
+                                                    <td>
+                                                        {% translate "Разрешение экрана" %}
+                                                    </td>
                                                     <td>Full HD (1920x1080)</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Плотность пикселей</td>
+                                                    <td class="comparis">
+                                                        {% translate "Плотность пикселей" %}</td>
                                                     <td class="comparis">156 ppi</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b>Система</b></td>
+                                                    <td><b>
+                                                        {% translate "Система" %}</b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="comparis">Операционная система</td>
+                                                    <td class="comparis">
+                                                        {% translate "Операционная система" %}</td>
                                                     <td class="comparis">Android</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Версия ОС </td>
+                                                    <td>
+                                                        {% translate "Версия ОС" %} </td>
                                                     <td>Android 7</td>
                                                 </tr>
                                             </table>

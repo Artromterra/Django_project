@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
   <div class="Middle Middle_top">
     <div class="Section Section_column Section_columnRight Section_columnWide Order">
@@ -10,20 +13,24 @@
         <div class="Section-content">
           <div class="Order-block Order-block_OPEN">
             <header class="Section-header Section-header_sm">
-              <h2 class="Section-title">Шаг 4. Подтверждение заказа</h2>
+              <h2 class="Section-title">
+                {% translate "Шаг 4. Подтверждение заказа" %}</h2>
             </header>
             <div class="Order-infoBlock">
               <div class="Order-personal">
                 <div class="row">
                   <div class="row-block">
                     <div class="Order-info">
-                      <div class="Order-infoType">ФИО:
+                      <div class="Order-infoType">
+                        {% translate "ФИО" %}:
                       </div>
                       <div class="Order-infoContent">{{ user.account }}
                       </div>
                     </div>
                     <div class="Order-info">
-                      <div class="Order-infoType">Телефон:</div>
+                      <div class="Order-infoType">
+                        {% translate "Телефон" %}:
+                      </div>
                       <div class="Order-infoContent">+7{{ user.phone }}</div>
                     </div>
                     <div class="Order-info">
@@ -33,27 +40,41 @@
                   </div>
                   <div class="row-block">
                     <div class="Order-info Order-info_delivery">
-                      <div class="Order-infoType">Тип доставки:</div>
+                      <div class="Order-infoType">
+                        {% translate "Тип доставки" %}:
+                      </div>
                       {% if order.delivery == 'ED' %}
-                        <div class="Order-infoContent">Экспресс доставка</div>
+                        <div class="Order-infoContent">
+                          {% translate "Экспресс доставка" %}
+                        </div>
                       {% else %}
-                        <div class="Order-infoContent">Обычная доставка</div>
+                        <div class="Order-infoContent">
+                          {% translate "Обычная доставка" %}
+                        </div>
                       {% endif %}
                     </div>
                     <div class="Order-info">
-                      <div class="Order-infoType">Город:</div>
+                      <div class="Order-infoType">
+                        {% translate "Город" %}:</div>
                       <div class="Order-infoContent">{{ order.city }}</div>
                     </div>
                     <div class="Order-info">
-                      <div class="Order-infoType">Адрес:</div>
+                      <div class="Order-infoType">
+                        {% translate "Адрес" %}:
+                      </div>
                       <div class="Order-infoContent">{{ order.address }}</div>
                     </div>
                     <div class="Order-info Order-info_pay">
-                      <div class="Order-infoType">Оплата:</div>
+                      <div class="Order-infoType">
+                        {% translate "Оплата" %}:</div>
                       {% if order.payment_method == 'SC' %}
-                      	<div class="Order-infoContent">Онлайн картой</div>
+                      	<div class="Order-infoContent">
+                          {% translate "Онлайн картой" %}
+                        </div>
                       {% else %}
-                        <div class="Order-infoContent">Онлайн со случайного чужого счёта</div>
+                        <div class="Order-infoContent">
+                          {% translate "Онлайн со случайного чужого счёта" %}
+                        </div>
                       {% endif %}
                     </div>
                   </div>
@@ -83,15 +104,20 @@
                 {% endfor %}
                 <div class="Cart-total">
                   <div class="Cart-block Cart-block_total">
-                    <strong class="Cart-title">Итого:
+                    <strong class="Cart-title">
+                      {% translate "Итого" %}:
                     </strong><span class="Cart-price">{{ total }} руб.</span>
                   </div>
                   <div class="Cart-block">
                     {% if order.payment_method == 'SC' %}
 {#                      TODO: изменить на корректные url#}
-                      <a class="btn btn_primary btn_lg" href="payment.html">Оплатить</a>
+                      <a class="btn btn_primary btn_lg" href="payment.html">
+                        {% translate "Оплатить" %}
+                      </a>
                     {% else %}
-                      <a class="btn btn_primary btn_lg" href="paymentsomeone.html">Оплатить</a>
+                      <a class="btn btn_primary btn_lg" href="paymentsomeone.html">
+                        {% translate "Оплатить" %}
+                      </a>
                     {% endif %}
                   </div>
                 </div>

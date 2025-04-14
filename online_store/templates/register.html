@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block header %}
   {% include 'header_for_authorization.html' %}
 {% endblock %}
@@ -17,14 +20,16 @@
       </div>
       <div class="wrapper">
         <div class="header">
-          <h3 class="sign-in">Регистрация</h3>
+          <h3 class="sign-in">
+            {% translate "Регистрация" %}</h3>
         </div>
         <div class="clear"></div>
         <form action="#" method="post">
           {% csrf_token %}
           {{ form.as_div }}
           <input type="submit" value="Зарегистрироваться" />
-          <a class="registr" href="{% url 'profiles:login' %}">Вход</a>
+          <a class="registr" href="{% url 'profiles:login' %}">
+            {% translate "Вход" %}</a>
           <div class="clear"></div>
         </form>
       </div>

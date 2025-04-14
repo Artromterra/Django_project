@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="Middle Middle_top">
     <div class="Section">
@@ -41,17 +43,23 @@
                     </div>
                 </div>
                 {% empty %}
-                <p>Ваша корзина пуста.</p>
+                <p>
+                    {% translate "Ваша корзина пуста" %}.
+                </p>
                 {% endfor %}
 
                 {% if cart.cart_items.all %}
                 <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
-                        <strong class="Cart-title">Итого:</strong>
+                        <strong class="Cart-title">
+                            {% translate "Итого" %}:
+                        </strong>
                         <span class="Cart-price">{{ cart.get_total_price }}$</span>
                     </div>
                     <div class="Cart-block">
-                        <a class="btn btn_success btn_lg" href="{% url 'order_checkout' %}">Оформить заказ</a>
+                        <a class="btn btn_success btn_lg" href="{% url 'order_checkout' %}">
+                            {% translate "Оформить заказ" %}
+                        </a>
                     </div>
                 </div>
                 {% endif %}

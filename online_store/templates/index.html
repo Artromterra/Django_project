@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
   <div class="Header-slider">
     <div class="Slider Slider_main">
@@ -12,7 +15,9 @@
                 <strong class="Slider-title">{{ banner.product_title}}</strong>
                 <div class="Slider-text">{{ banner.product_description }}</div>
                 <div class="Slider-footer">
-                  <a class="btn btn_primary" href="{{ banner.url }}">Get Started</a>
+                  <a class="btn btn_primary" href="{{ banner.url }}">
+                    {% translate "Get Started" %}
+                  </a>
                 </div>
               </div>
               <div class="row-block">
@@ -60,7 +65,8 @@
         <div class="Section-column">
           <div class="Section-columnSection Section-columnSection_mark">
             <header class="Section-columnHeader">
-              <strong class="Section-columnTitle">ОГРАНИЧЕННЫЕ ПРЕДЛОЖЕНИЯ
+              <strong class="Section-columnTitle">
+                {% translate "ОГРАНИЧЕННЫЕ ПРЕДЛОЖЕНИЯ" %}
               </strong>
             </header>
             <div class="Card">
@@ -82,25 +88,32 @@
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-days">
-                      </div><span class="CountDown-label">days</span>
+                      </div><span class="CountDown-label">
+                        {% translate "days" %}</span>
                     </div>
                   </div>
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-hours">
-                      </div><span class="CountDown-label">hours</span>
+                      </div><span class="CountDown-label">
+                        {% translate "hours" %}
+                      </span>
                     </div>
                   </div>
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-minutes">
-                      </div><span class="CountDown-label">mins</span>
+                      </div><span class="CountDown-label">
+                        {% translate "mins" %}
+                      </span>
                     </div>
                   </div>
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-secs">
-                      </div><span class="CountDown-label">secs</span>
+                      </div><span class="CountDown-label">
+                        {% translate "secs" %}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -292,7 +305,8 @@
         <div class="Section-content">
           <div class="Slider Slider_carousel">
             <header class="Section-header Section-header_close">
-              <h2 class="Section-title">Ограниченный тираж
+              <h2 class="Section-title">
+                {% translate "Ограниченный тираж" %}
               </h2>
               <div class="Section-control">
                   <div class="Slider-navigate"></div>
