@@ -93,7 +93,7 @@
           </div>
         </div>
       {% endif %}
-          <a class="CartBlock-block" href="{% url 'cart' %}">
+          <a class="CartBlock-block" href="{% url 'shop:cart' %}">
             <img class="CartBlock-img" src="/static/assets/img/icons/cart.svg" alt="cart.svg" />
             <span class="CartBlock-amount">{{ cart_total_count }}</span>
           </a>

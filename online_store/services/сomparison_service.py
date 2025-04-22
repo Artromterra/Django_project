@@ -6,6 +6,9 @@ class ComparisonService:
         """
         Конструктор принимает либо user, либо session_key
         """
+        # FIXME: При первом заходе на сайт после запуска вызывается это исключение.
+        #  После того как закомментировал это условие и запустил сайт, ошибка пропала,
+        #  и можно было обратно раскомментировать. Необходимо разобраться
         if not user and not session_key:
             raise ValueError("Either user or session_key must be provided.")
         self.user = user
