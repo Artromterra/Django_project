@@ -136,8 +136,10 @@ dmypy.json
 # .DS_Store
 **/.DS_Store
 
-# DB migrations
-migrations
+# migration files
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
 
 imports_with_errors
 successful_imports
