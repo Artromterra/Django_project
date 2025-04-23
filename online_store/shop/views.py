@@ -88,7 +88,7 @@ class ProductDetailView(DetailView):
         return obj
 
     def get_object(self, *args, **kwargs):
-        cache_key = f"product_detail_{self.kwargs["pk"]}"
+        cache_key = f"product_detail_{self.kwargs['pk']}"
         cache_data = cache.get(cache_key)
         if cache_data:
             return cache_data
