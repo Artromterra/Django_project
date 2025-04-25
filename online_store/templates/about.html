@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
   <div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">About Megano
+          <h1 class="Middle-title">
+            {% translate "About Megano" %}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="index.html">
+              {% translate "home" %}</a>
             </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>About Us</span>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>
+              {% translate "About Us" %}
+            </span>
             </li>
           </ul>
         </div>
@@ -24,9 +31,11 @@
               <div class="media-image"><img src="/static/assets/img/icons/advantages/shipping.svg" alt="shipping.svg"/>
               </div>
               <div class="media-content">
-                <strong class="media-title">Shipping & Returns
+                <strong class="media-title">
+                  {% translate "Shipping & Returns" %}
                 </strong>
-                <p class="media-text">World wide shipping
+                <p class="media-text">
+                  {% translate "World wide shipping" %}
                 </p>
               </div>
             </div>
@@ -36,9 +45,11 @@
               <div class="media-image"><img src="/static/assets/img/icons/advantages/moneyBack.svg" alt="moneyBack.svg"/>
               </div>
               <div class="media-content">
-                <strong class="media-title">Money Back
+                <strong class="media-title">
+                  {% translate "Money Back" %}
                 </strong>
-                <p class="media-text">Guaranted payments
+                <p class="media-text">
+                  {% translate "Guaranted payments" %}
                 </p>
               </div>
             </div>
@@ -48,9 +59,11 @@
               <div class="media-image"><img src="/static/assets/img/icons/advantages/support.svg" alt="support.svg"/>
               </div>
               <div class="media-content">
-                <strong class="media-title">Support Policy
+                <strong class="media-title">
+                  {% translate "Support Policy" %}
                 </strong>
-                <p class="media-text">Fast support team
+                <p class="media-text">
+                  {% translate "Fast support team" %}
                 </p>
               </div>
             </div>
@@ -60,16 +73,19 @@
               <div class="media-image"><img src="/static/assets/img/icons/advantages/quality.svg" alt="quality.svg"/>
               </div>
               <div class="media-content">
-                <strong class="media-title">Quality Guarantee
+                <strong class="media-title">
+                  {% translate "Quality Guarantee" %}
                 </strong>
-                <p class="media-text">Best guaranted items
+                <p class="media-text">
+                  {% translate "Best guaranted items" %}
                 </p>
               </div>
             </div>
           </div>
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Follow Us
+              <strong class="Section-title">
+                {% translate "Follow Us" %}
               </strong>
             </header>
             <div class="Section-columnContent">
@@ -95,13 +111,30 @@
             <div class="Article-section">
               <div class="row row_verticalCenter row_maxHalf">
                 <div class="row-block">
-                  <h2>Why Choose Megano?
+                  <h2>
+                    {% translate "Why Choose Megano" %}?
                   </h2>
-                  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit doli. Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
+                  <p>
+                    {% blocktranslate %}
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit doli.
+                    Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu sociis natoque penatibus
+                    et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis,
+                    ultricies nec, pellentesque eutu, pretiumem.
+                    {% endblocktranslate %}
                   </p>
-                  <p>Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justotuio, rhoncus ut loret, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus element semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae  ligula eget dolor. Aenean massa. Cumtipsu sociis natoque pena tibusetm t semper ni.
+                  <p>
+                    {% blocktranslate %}
+                    Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
+                     aliquet nec, vulputate eget, arcu. In enim justotuio, rhoncus ut loret, imperdiet a,
+                      venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer
+                      tincidunt. Cras dapibus. Vivamus element semper nisi. Aenean vulputate eleifend
+                      tellus. Aenean leo ligula, porttitor eu, consequat vitae  ligula eget dolor.
+                      Aenean massa. Cumtipsu sociis natoque pena tibusetm t semper ni.
+                    {% endblocktranslate %}
                   </p>
-                  <div><a class="btn btn_primary" href="#">Get Started</a>
+                  <div><a class="btn btn_primary" href="#">
+                    {% translate "Get Started" %}
+                  </a>
                   </div>
                 </div>
                 <div class="row-block">
@@ -117,22 +150,34 @@
                   </div>
                 </div>
                 <div class="row-block">
-                  <h2>Megano Store Hystory
+                  <h2>
+                    {% translate "Megano Store Hystory" %}
                   </h2>
-                  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit doli. Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
+                  <p>
+                    {% blocktranslate %}
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit doli. Aenean commodo ligula eget dolor.
+                    Aenean massa. Cumtipsu sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus.
+                    Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
+                    {% endblocktranslate %}
                   </p>
                   <ul>
-                    <li>Lorem ipsum dolor sit amet, consectetuer
+                    <li>
+                      {% translate "Lorem ipsum dolor sit amet, consectetuer" %}
                     </li>
-                    <li>adipiscing elit doli. Aenean commodo ligula
+                    <li>
+                      {% translate "adipiscing elit doli. Aenean commodo ligula" %}
                     </li>
-                    <li>eget dolor. Aenean massa. Cumtipsu sociis
+                    <li>
+                      {% translate "eget dolor. Aenean massa. Cumtipsu sociis" %}
                     </li>
-                    <li>natoque penatibus et magnis dis parturient
+                    <li>
+                      {% translate "natoque penatibus et magnis dis parturient" %}
                     </li>
-                    <li>montesti, nascetur ridiculus mus. Donec
+                    <li>
+                      {% translate "montesti, nascetur ridiculus mus. Donec" %}
                     </li>
-                    <li>quam felis, ultricies nec, pellentesque eutu
+                    <li>
+                      {% translate "quam felis, ultricies nec, pellentesque eutu" %}
                     </li>
                   </ul>
                 </div>

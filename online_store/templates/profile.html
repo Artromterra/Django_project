@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
@@ -11,19 +12,27 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Навигация</strong>
+              <strong class="Section-title">
+                {% translate "Навигация" %}
+              </strong>
             </header>
             <div class="Section-columnContent">
               <div class="NavigateProfile">
                 <ul class="menu menu_vt">
                   <li class="menu-item">
-                    <a class="menu-link" href="{% url 'profiles:user_account_view' %}">Личный кабинет</a>
+                    <a class="menu-link" href="{% url 'profiles:user_account_view' %}">
+                      {% translate "Личный кабинет" %}
+                    </a>
                   </li>
                   <li class="menu-item_ACTIVE menu-item">
-                    <a class="menu-link" href="{% url 'profiles:user_profile_view' %}">Профиль</a>
+                    <a class="menu-link" href="{% url 'profiles:user_profile_view' %}">
+                      {% translate "Профиль" %}
+                    </a>
                   </li>
                   <li class="menu-item">
-                    <a class="menu-link" href="{% url 'shop:order_history' %}">История заказов</a>
+                    <a class="menu-link" href="{% url 'shop:order_history' %}">
+                      {% translate "История заказов" %}
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -37,11 +46,13 @@
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="avatar">Аватар</label>
+                    <label class="form-label" for="avatar">
+                      {% translate "Аватар" %}
+                    </label>
                     <div class="Profile-avatar Profile-avatar_noimg">
                       <label class="Profile-fileLabel" for="avatar">
                         <img src="/static/assets/img/icons/upload.png" alt="" />
-                        Загрузить фото
+                        {% translate "Загрузить фото" %}
                       </label>
                       <input class="Profile-file form-input"
                              id="avatar"
@@ -50,7 +61,9 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="first_name">Имя</label>
+                    <label class="form-label" for="first_name">
+                      {% translate "Имя" %}
+                    </label>
                     <input class="form-input"
                            id="first_name"
                            name="first_name"
@@ -58,7 +71,9 @@
                            value="{{ user.account.first_name }}" />
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="last_name">Фамилия</label>
+                    <label class="form-label" for="last_name">
+                      {% translate "Фамилия" %}
+                    </label>
                     <input class="form-input"
                            id="last_name"
                            name="last_name"
@@ -66,7 +81,9 @@
                            value="{{ user.account.last_name }}" />
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="patronymic">Отчество</label>
+                    <label class="form-label" for="patronymic">
+                      {% translate "Отчество" %}
+                    </label>
                     <input class="form-input"
                            id="patronymic"
                            name="patronymic"
@@ -76,7 +93,9 @@
                 </div>
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="phone">Телефон</label>
+                    <label class="form-label" for="phone">
+                      {% translate "Телефон" %}
+                    </label>
                     <input class="form-input"
                            id="phone"
                            name="phone"
@@ -85,7 +104,9 @@
                            autocomplete="off"/>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="email">E-mail</label>
+                    <label class="form-label" for="email">
+                      {% translate "E-mail" %}
+                    </label>
                     <input class="form-input"
                            id="email"
                            name="email"
@@ -93,7 +114,9 @@
                            value="{{ user.email }}" />
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="password">Пароль</label>
+                    <label class="form-label" for="password">
+                      {% translate "Пароль" %}
+                    </label>
                     <input class="form-input"
                            id="password"
                            name="password"
@@ -101,7 +124,9 @@
                            placeholder="Тут можно изменить пароль" />
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="passwordReply">Подтверждение пароля</label>
+                    <label class="form-label" for="passwordReply">
+                      {% translate "Подтверждение пароля" %}
+                    </label>
                     <input class="form-input"
                            id="passwordReply"
                            name="passwordReply"
@@ -111,11 +136,11 @@
                   <div class="form-group">
                     <div class="Profile-btn">
                       <button class="btn btn_success" type="submit">
-                        Сохранить
+                        {% translate "Сохранить" %}
                       </button>
                     </div>
                     <div class="Profile-success">
-                      Профиль успешно сохранен
+                      {% translate "Профиль успешно сохранен" %}
                     </div>
                   </div>
                 </div>

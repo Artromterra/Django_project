@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+
 {% block content %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -16,45 +19,59 @@
             {% csrf_token %}
             <div class="Order-block Order-block_OPEN" id="step1">
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 1. Параметры пользователя</h2>
+                <h2 class="Section-title">
+                  {% translate "Шаг 1. Параметры пользователя" %}
+                </h2>
               </header>
               {{ form.non_field_errors }}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
                     {{ form.username.errors }}
-                    <label for="{{ form.username.id_for_label }}">ФИО</label>
+                    <label for="{{ form.username.id_for_label }}">
+                      {% translate "ФИО" %}
+                    </label>
                     {{ form.username }}
                   </div>
                   <div class="form-group">
-                    <label for="{{ form.phone.id_for_label }}">Телефон</label>
+                    <label for="{{ form.phone.id_for_label }}">
+                      {% translate "Телефон" %}
+                    </label>
                     {{ form.phone }}
                   </div>
                   <div class="form-group">
                     {{ form.email.errors }}
-                    <label for="{{ form.email.id_for_label }}">E-mail</label>
+                    <label for="{{ form.email.id_for_label }}">
+                      {% translate "E-mail" %}
+                    </label>
                     {{ form.email }}
                   </div>
                 </div>
                 <div class="row-block">
                   {% if not user.is_authenticated %}
                   <div class="form-group">
-                    <label for="{{ form.password.id_for_label }}">Пароль</label>
+                    <label for="{{ form.password.id_for_label }}">
+                      {% translate "Пароль" %}
+                    </label>
                     {{ form.password }}
                   </div>
                   <div class="form-group">
-                    <label for="{{ form.password_confirm.id_for_label }}">Подтверждение пароля</label>
+                    <label for="{{ form.password_confirm.id_for_label }}">
+                      {% translate "Подтверждение пароля" %}
+                    </label>
                     {{ form.password_confirm }}
                   </div>
                   <div class="form-group">
-                    <a class="btn btn_muted Order-btnReg" href="{% url 'profiles:login' %}">Я уже зарегистрирован</a>
+                    <a class="btn btn_muted Order-btnReg" href="{% url 'profiles:login' %}">
+                      {% translate "Я уже зарегистрирован" %}
+                    </a>
                   </div>
                   {% endif %}
                 </div>
               </div>
               <div class="Order-footer">
                 <a  class="btn btn_success" href="{% url 'shop:order_delivery' %}">
-                  Дальше
+                  {% translate "Дальше" %}
                 </a>
               </div>
             </div>
