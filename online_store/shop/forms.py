@@ -1,7 +1,8 @@
 import re
+from typing import List, Callable, Any
 
-from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from profiles.models import User
 from shop.models.order import Order
@@ -147,3 +148,31 @@ class OrderPayForm(forms.ModelForm):
             }),
         choices=CHOICES,
     )
+
+
+class ListEmailsField(forms.CharField):
+    """A field for entering a list of emails."""
+
+    def __init__(self, *args, separator: str = "\n", **kwargs):
+        """
+        :param separator: The separator used to separate the emails in the string.
+        """
+        super().__init__(*args, **kwargs)
+        self.__separator = separator
+
+    def clean(self, value) -> List[str]:
+        value = super().clean(value)
+        if not value:
+            return []
+
+        emails: List[str] = list()
+        for part in re.split(r'[ ,;\n\r\t]+', value):
+            cleaned_part = (part.replace("[", "")
+                            .replace("]", "")
+                            .replace("'", ""))
+            email = cleaned_part.strip()
+            if email:
+                validate_email(email)
+                emails.append(email)
+
+        return emails
