@@ -6,64 +6,67 @@
 <div class="Middle Middle_top">
     <div class="Section">
         <div class="wrap">
-            <form class="form Cart" action="#" method="post">
-                {% csrf_token %}
-                {% for item in cart.cart_items.all %}
-                <div class="Cart-product">
-                    <div class="Cart-block Cart-block_row">
-                        <div class="Cart-block Cart-block_pict">
-                            <a class="Cart-pict" href="{{ item.product.get_absolute_url }}">
-                                <img class="Cart-img" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
-                            </a>
-                        </div>
-                        <div class="Cart-block Cart-block_info">
-                            <a class="Cart-title" href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
-                            <div class="Cart-desc">{{ item.product.description }}</div>
-                        </div>
-                        <div class="Cart-block Cart-block_price">
-                            <div class="Cart-price">{{ cart_item.get_final_price }}$</div>
-                        </div>
-                    </div>
-                    <div class="Cart-block Cart-block_row">
-                        <div class="Cart-block Cart-block_seller">
-                            <span>Продавец: {{ item.selected_seller.name }}</span>
-                        </div>
-                        <div class="Cart-block Cart-block_amount">
-                            <div class="Cart-amount">
-                                <div class="Amount">
-                                    <input class="Amount-input form-input" name="amount_{{ item.id }}" type="text" value="{{ item.quantity }}" readonly />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="Cart-block Cart-block_delete">
-                            <a class="Cart-delete" href="{% url 'cart_remove' %}" data-product-id="{{ item.product.id }}" data-seller-id="{{ item.selected_seller.id }}">
-                                <img src="/static/assets/img/icons/card/delete.svg" alt="Удалить" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <p>
-                    {% translate "Ваша корзина пуста" %}.
-                </p>
-                {% endfor %}
 
-                {% if cart.cart_items.all %}
-                <div class="Cart-total">
-                    <div class="Cart-block Cart-block_total">
-                        <strong class="Cart-title">
-                            {% translate "Итого" %}:
-                        </strong>
-                        <span class="Cart-price">{{ cart.get_total_price }}$</span>
-                    </div>
-                    <div class="Cart-block">
-                        <a class="btn btn_success btn_lg" href="{% url 'order_checkout' %}">
-                            {% translate "Оформить заказ" %}
+            {% for item in cart.cart_items.all %}
+            <div class="Cart-product">
+                <div class="Cart-block Cart-block_row">
+                    <div class="Cart-block Cart-block_pict">
+                        <a class="Cart-pict" href="{{ item.product.get_absolute_url }}">
+                            <img class="Cart-img" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
                         </a>
                     </div>
+                    <div class="Cart-block Cart-block_info">
+                        <a class="Cart-title" href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                        <div class="Cart-desc">{{ item.product.description }}</div>
+                    </div>
+                    <div class="Cart-block Cart-block_price">
+                        <div class="Cart-price">{{ item.get_final_price }}$</div>
+                    </div>
                 </div>
-                {% endif %}
-            </form>
+                <div class="Cart-block Cart-block_row">
+                    <div class="Cart-block Cart-block_seller">
+                        <span>Продавец: {{ item.selected_seller.name }}</span>
+                    </div>
+                    <div class="Cart-block Cart-block_amount">
+                        <div class="Cart-amount">
+                            <div class="Amount">
+                                <input class="Amount-input form-input" name="amount_{{ item.id }}" type="text" value="{{ item.quantity }}" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Cart-block Cart-block_delete">
+                        <form action="{% url 'shop:cart_remove' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <input type="hidden" name="seller_id" value="{{ item.selected_seller.id }}">
+                            <button type="submit" class="Cart-delete" style="background: none; border: none; padding: 0;">
+                                <img src="/static/assets/img/icons/card/delete.svg" alt="Удалить" />
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>
+                {% translate "Ваша корзина пуста" %}.
+            </p>
+            {% endfor %}
+
+            {% if cart.cart_items.all %}
+            <div class="Cart-total">
+                <div class="Cart-block Cart-block_total">
+                    <strong class="Cart-title">
+                        {% translate "Итого" %}:
+                    </strong>
+                    <span class="Cart-price">{{ cart.get_total_price }}$</span>
+                </div>
+                <div class="Cart-block">
+                    <a class="btn btn_success btn_lg" href="{% url 'shop:order_confirm' %}">
+                        {% translate "Оформить заказ" %}
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

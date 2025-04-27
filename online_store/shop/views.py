@@ -555,21 +555,21 @@ class CartAddView(APIView):
         )
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CartRemoveView(APIView):
-    """Удаление товара из корзины"""
-
+class CartRemoveView(View):
     def post(self, request, *args, **kwargs):
-        product_id = request.data.get("product_id")
-        seller_id = request.data.get("seller_id")
+        product_id = request.POST.get('product_id')
+        seller_id = request.POST.get('seller_id')
 
+        # Создаём сервис корзины и вызываем метод удаления
         cart_service = CartService(request)
         cart_service.remove_product(product_id, seller_id)
 
-        return Response(
-            {"message": "Товар удален", "cart_count": cart_service.get_cart_count()},
-            status=status.HTTP_200_OK,
-        )
+        # Добавляем сообщение об успешном удалении
+        messages.success(request, "Товар успешно удалён из корзины!")
+
+        # Перенаправляем обратно в корзину
+        return redirect('shop:cart')
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')
