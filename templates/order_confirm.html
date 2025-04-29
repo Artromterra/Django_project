@@ -73,7 +73,7 @@
                       <div class="Cart-desc">{{ cart.product.short_description }}</div>
                     </div>
                     <div class="Cart-block Cart-block_price">
-                      <div class="Cart-price">{{ cart.get_final_price }} руб.</div>
+                      <div class="Cart-price">{{ cart.get_final_price }}$.</div>
                     </div>
                   </div>
                   <div class="Cart-block Cart-block_row">
@@ -83,8 +83,8 @@
                 {% endfor %}
                 <div class="Cart-total">
                   <div class="Cart-block Cart-block_total">
-                    <strong class="Cart-title">Итого:
-                    </strong><span class="Cart-price">{{ total }} руб.</span>
+                    <strong class="Cart-title">Итого (с учетом доставки):
+                    </strong><span class="Cart-price">{{ total }}$.</span>
                   </div>
                   <div class="Cart-block">
                     {% if order.payment_method == 'SC' %}

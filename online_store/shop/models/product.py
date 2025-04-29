@@ -35,6 +35,8 @@ class Product(models.Model):
 
 
 class ProductSeller(models.Model):
+    objects = models.Manager()
+
     class Meta:
         verbose_name = "Product Seller"
         verbose_name_plural = "Product Sellers"

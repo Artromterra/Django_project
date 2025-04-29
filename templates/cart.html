@@ -10,16 +10,16 @@
                 <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                         <div class="Cart-block Cart-block_pict">
-                            <a class="Cart-pict" href="{{ item.product.get_absolute_url }}">
-                                <img class="Cart-img" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+                            <a class="Cart-pict" href="{% url 'shop:products_detail' pk=item.product.id %}">
+                                <img class="Cart-img" src="/media/{{ item.product.images.all.0.image }}" alt="{{ item.product.title }}" />
                             </a>
                         </div>
                         <div class="Cart-block Cart-block_info">
-                            <a class="Cart-title" href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                            <a class="Cart-title" href="{% url 'shop:products_detail' pk=item.product.id %}">{{ item.product.title }}</a>
                             <div class="Cart-desc">{{ item.product.description }}</div>
                         </div>
                         <div class="Cart-block Cart-block_price">
-                            <div class="Cart-price">{{ cart_item.get_final_price }}$</div>
+                            <div class="Cart-price">{{ item.get_final_price }}$</div>
                         </div>
                     </div>
                     <div class="Cart-block Cart-block_row">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="Cart-block Cart-block_delete">
-                            <a class="Cart-delete" href="{% url 'cart_remove' %}" data-product-id="{{ item.product.id }}" data-seller-id="{{ item.selected_seller.id }}">
+                            <a class="Cart-delete" href="{% url 'shop:cart_remove' %}" data-product-id="{{ item.product.id }}" data-seller-id="{{ item.selected_seller.id }}">
                                 <img src="/static/assets/img/icons/card/delete.svg" alt="Удалить" />
                             </a>
                         </div>
@@ -47,11 +47,11 @@
                 {% if cart.cart_items.all %}
                 <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
-                        <strong class="Cart-title">Итого:</strong>
-                        <span class="Cart-price">{{ cart.get_total_price }}$</span>
+                        <strong class="Cart-title">Итого без скидки / со скидкой:</strong>
+                        <span class="Cart-price">{{ total_price }} / {{ total_discount_price }}$</span>
                     </div>
                     <div class="Cart-block">
-                        <a class="btn btn_success btn_lg" href="{% url 'order_checkout' %}">Оформить заказ</a>
+                        <a class="btn btn_success btn_lg" href="{% url 'shop:order_user' pk=cart.id %}">Оформить заказ</a>
                     </div>
                 </div>
                 {% endif %}

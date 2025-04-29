@@ -1,5 +1,6 @@
 import os
 import random
+from termios import TIOCPKT_DOSTOP
 from typing import List
 from logging import getLogger
 
@@ -19,6 +20,7 @@ from django.core.paginator import Paginator
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
 from services.view_history_products_service import ViewHistoryProductsService
+from services.discount_service import DiscountService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
 from .models.seller import Seller
@@ -162,21 +164,21 @@ class ProductListView(ListView):
         return context
 
 
-class CartView(LoginRequiredMixin, View):
-    def get(self, request):
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        cart_items = CartItem.objects.filter(cart=cart)
-
-        total_price = sum(
-            item.get_final_price() * item.quantity
-            for item in cart_items
-        )
-
-        context = {
-            'cart_items': cart_items,
-            'total_price': total_price
-        }
-        return render(request, 'cart.html', context)
+# class CartView(LoginRequiredMixin, View):
+#     def get(self, request):
+#         cart, created = Cart.objects.get_or_create(user=request.user)
+#         cart_items = CartItem.objects.filter(cart=cart)
+#
+#         total_price = sum(
+#             item.get_final_price() * item.quantity
+#             for item in cart_items
+#         )
+#
+        # context = {
+        #     'cart_items': cart_items,
+        #     'total_price': total_price
+        # }
+        # return render(request, 'cart.html', context)
 
 
 class AddToCartView(LoginRequiredMixin, View):
@@ -463,11 +465,14 @@ class OrderConfirmView(TemplateView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
+        self.total_price = 0
 
     def get(self, request, *args, **kwargs):
         """
         проверка пользователя на наличие ранее пройденных шагов при оформлении заказа
         """
+        cart_service = CartService(request)
+        self.total_price = cart_service.get_cart_total_price()
         self.session = request.session
         s = Session.objects.get(session_key=self.session.session_key)
         data = s.get_decoded()
@@ -490,15 +495,16 @@ class OrderConfirmView(TemplateView):
             "selected_seller"
         ).filter(cart_id=order.cart.pk)
         total = calculate_price(
+            total_prod_price=float(cart[0].cart.total_price),
             cart_queryset=cart,
             order=order,
             delivery_price=OrderDeliveryPrice(),
         )
-        order.total_price = total
+        order.total_discount_price = total
         order.save()
         context = {
-            'cart': cart,
-            'total': total,
+            "cart": cart,
+            "total": total,
             "user": user,
             "order": order,
         }
@@ -594,11 +600,38 @@ class CartUpdateView(APIView):
 class CartView(TemplateView):
     template_name = "cart.html"
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.session = None
+        self.total_discount_price = 0
+        self.total_price = 0
+
+    def get(self, request, *args, **kwargs):
+        cart_service = CartService(request)
+        discount = DiscountService(request)
+        max_priority = discount.get_max_priority_discount()
+        categories = max_priority.categories.all()
+        cart_obj = cart_service.get_or_create_cart()
+        self.total_price = cart_service.get_cart_total_price()
+        if max_priority.cart_price > 0:  # проверяем, что эта скидка на всю корзину
+            self.total_discount_price = float(discount.discount_price_on_cart())
+        elif categories:
+            self.total_discount_price = discount.discount_by_category(category=categories)
+        else:
+            self.total_discount_price = float(discount.discount_on_each_product_in_cart())
+        cart_obj.total_price = self.total_discount_price
+        cart_obj.save()
+        return super().get(request, *args, **kwargs)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        cart, created = Cart.objects.get_or_create(user_id=self.request.user.id)
         context["cart"] = cart
+        context["total_discount_price"] = self.total_discount_price
+        context["total_price"] = self.total_price
         return context
+
     # """Получение списка товаров в корзине"""
     #
     # def get(self, request, *args, **kwargs):
@@ -616,3 +649,16 @@ class CartView(TemplateView):
     #         {"cart": items, "cart_count": cart_service.get_cart_count()},
     #         status=status.HTTP_200_OK,
     #     )
+
+class TestDiscountView(View):
+    def get(self, request, *args, **kwargs):
+        prod = Product.objects.get(pk=2)
+        discount = DiscountService(request)
+        category = discount.discount_by_category(product=prod)
+        return render(
+            request,
+        'test.html',
+            context={
+                'product':prod,
+                'category': category,
+            })

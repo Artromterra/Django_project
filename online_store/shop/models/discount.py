@@ -3,8 +3,11 @@ from .product import Product
 from .category import Category
 
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator
 
 class Discount(models.Model):
+    objects = models.Manager()
+
     PERCENTAGE = 'percentage'
     FIXED_AMOUNT = 'fixed'
 
@@ -28,6 +31,15 @@ class Discount(models.Model):
     start_date = models.DateTimeField(null=True, blank=True, verbose_name=_("Дата начала"))
     end_date = models.DateTimeField(null=True, blank=True, verbose_name=_("Дата окончания"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активна"))
+    priority = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Вес скидки от 1 до 5"),
+        validators=[MaxValueValidator(5)],
+    )
+    # поля для ввода значений при скидке на всю корзину
+    cart_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Количество товара в корзине"))
+    cart_price = models.PositiveIntegerField(default=0, verbose_name=_("Итоговая стоимость товаров в корзине"))
+
     products = models.ManyToManyField(Product, blank=True, related_name='discounts', verbose_name=_("Продукты"))
     categories = models.ManyToManyField(Category, blank=True, related_name='discounts', verbose_name=_("Категории"))
 

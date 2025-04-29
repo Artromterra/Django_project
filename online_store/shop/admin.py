@@ -69,7 +69,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'discount_type', 'value', 'start_date', 'end_date', 'is_active')
+    list_display = ('name', 'discount_type', 'value', 'start_date', 'end_date', 'priority', 'is_active')
     list_filter = ('discount_type', 'is_active', 'start_date', 'end_date')
     search_fields = ('name',)
     filter_horizontal = ('products', 'categories')

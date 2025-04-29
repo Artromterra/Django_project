@@ -1,7 +1,10 @@
 from django.db import models
+
 from profiles.models import User
 from .product import Product, ProductSeller
 from .seller import Seller
+
+
 
 
 class Cart(models.Model):
@@ -25,6 +28,7 @@ class Cart(models.Model):
     )
     session_key = models.CharField(max_length=40, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
     def __str__(self):
         if self.user:
@@ -61,18 +65,16 @@ class CartItem(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
 
+
     def get_final_price(self):
-        seller_product = ProductSeller.objects.get(
-            product=self.product,
-            seller=self.selected_seller
-        )
-        price = seller_product.price
-        if self.product.discount > 0:
-            price = price * (1 - self.product.discount / 100)
+        from services.discount_service import get_final_price_for_cart_product
+        price = get_final_price_for_cart_product(product=self.product)
         return price
+
 
     def get_available_sellers(self):
         return Seller.objects.filter(product_sellers__product=self.product)
+
 
     def __str__(self):
         return f'{self.cart.pk} {self.product.title} {self.selected_seller.name}'
