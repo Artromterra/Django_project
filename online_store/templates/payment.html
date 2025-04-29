@@ -26,24 +26,54 @@
         </div>
         <div class="Section">
             <div class="wrap">
-                <form class="form Payment" action="#" method="post">
+<!--                <form class="form Payment" action="#" method="post">-->
+<!--                    <div class="Payment-card">-->
+<!--                        <div class="form-group">-->
+<!--                            <label class="form-label">-->
+<!--                                {% translate "Номер карты" %}-->
+<!--                            </label>-->
+<!--                            <input class="form-input Payment-bill"-->
+<!--                            id="numero1"-->
+<!--                            name="numero1"-->
+<!--                            type="text"-->
+<!--                            placeholder="9999 9999"-->
+<!--                            data-mask="9999 9999"-->
+<!--                            data-validate="require pay" />-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="Payment-pay"><a class="btn btn_primary" href="{% url 'shop:payment_progress' %}">-->
+<!--                        {% translate "Оплатить" %}-->
+<!--                    </a>-->
+<!--                    </div>-->
+<!--                </form>-->
+                <form class="form Payment" action="" method="post">
+                    {% csrf_token %}
                     <div class="Payment-card">
                         <div class="form-group">
-                            <label class="form-label">
-                                {% translate "Номер карты" %}
-                            </label>
-                            <input class="form-input Payment-bill"
-                            id="numero1"
-                            name="numero1"
-                            type="text"
-                            placeholder="9999 9999"
-                            data-mask="9999 9999"
-                            data-validate="require pay" />
+                            <label class="form-label" for="id_cart_number">Номер карты</label>
+                            {{ form.cart_number }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="id_expiry_month">Месяц окончания (MM)</label>
+                            {{ form.expiry_month }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="id_expiry_year">Год окончания (YYYY)</label>
+                            {{ form.expiry_year }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="id_cvc">CVC</label>
+                            {{ form.cvc }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="id_total_price">Сумма</label>
+                            {{ form.total_price }}
                         </div>
                     </div>
-                    <div class="Payment-pay"><a class="btn btn_primary" href="progressPayment.html">
-                        {% translate "Оплатить" %}
-                    </a>
+                    <div class="Payment-pay">
+                        <button class="btn btn_primary" type="submit">
+                            Оплатить
+                        </button>
                     </div>
                 </form>
             </div>

@@ -15,6 +15,7 @@ from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
@@ -34,7 +35,9 @@ from .forms import (
     OrderDeliveryForm,
     OrderPayForm,
 )
+from .serializers import PaymentSerializer
 from .tasks import import_data_from_files
+
 
 
 from rest_framework.views import APIView
@@ -47,6 +50,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 from django.views.generic import TemplateView
+
+from .forms import OrderYookassaPayForm
+from services.payment_service import PaymentService
 
 logger = getLogger("main.shop.views")
 
@@ -599,20 +605,40 @@ class CartView(TemplateView):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
         context["cart"] = cart
         return context
-    # """Получение списка товаров в корзине"""
-    #
-    # def get(self, request, *args, **kwargs):
-    #     cart_service = CartService(request)
-    #     items = [
-    #         {
-    #             "product": item.product.name,
-    #             "seller": item.selected_seller.name,
-    #             "quantity": item.quantity,
-    #             "price": item.get_final_price(),
-    #         }
-    #         for item in cart_service.get_cart_items()
-    #     ]
-    #     return Response(
-    #         {"cart": items, "cart_count": cart_service.get_cart_count()},
-    #         status=status.HTTP_200_OK,
-    #     )
+
+
+class OrderPayment(LoginRequiredMixin, FormView):
+    model = Order
+    template_name = 'payment.html'
+    form_class = OrderYookassaPayForm
+    success_url = '/shop/order-confirm/payment/progressPayment/'
+
+    def form_valid(self, form):
+        service = PaymentService()
+        response = service.pay_order(
+            cart_number=form.cleaned_data['cart_number'],
+            expiry_month=form.cleaned_data['expiry_month'],
+            expiry_year=form.cleaned_data['expiry_year'],
+            cvc=form.cleaned_data['cvc'],
+            total_price=form.cleaned_data['total_price'],
+            order_id=self.get_order().id
+        )
+
+        # Тут можешь обработать response от ЮKassa
+        # например сохранить статус оплаты или редиректить на страницу оплаты
+        return super().form_valid(form)
+
+    def get_order(self):
+        return Order.objects.filter(cart__user=self.request.user, paid=False).first()
+
+    def get_initial(self):
+        order = self.get_order()
+        return {
+            'total_price': order.total_price
+        }
+
+
+
+class OrderPaymentProgress(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'progressPayment.html'

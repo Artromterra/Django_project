@@ -149,6 +149,18 @@ class OrderPayForm(forms.ModelForm):
         choices=CHOICES,
     )
 
+class OrderYookassaPayForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('cart_number', 'expiry_month', 'expiry_year', 'cvc', 'total_price')
+
+    cart_number = forms.CharField(max_length=16, label='Номер карты')
+    expiry_month = forms.CharField(max_length=2, label='Месяц окончания (MM)')
+    expiry_year = forms.CharField(max_length=4, label='Год окончания (YYYY)')
+    cvc = forms.CharField(max_length=4, label='CVC', widget=forms.PasswordInput())
+    total_price = forms.DecimalField(disabled=True, label='Сумма')
+
+
 
 class ListEmailsField(forms.CharField):
     """A field for entering a list of emails."""
