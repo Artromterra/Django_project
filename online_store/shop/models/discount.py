@@ -33,18 +33,34 @@ class Discount(models.Model):
     is_active = models.BooleanField(default=True, verbose_name=_("Активна"))
     priority = models.PositiveIntegerField(
         default=1,
-        verbose_name=_("Вес скидки от 1 до 5"),
-        validators=[MaxValueValidator(5)],
+        verbose_name=_("Вес скидки, максимальная 2"),
+        validators=[MaxValueValidator(2)],
     )
     # поля для ввода значений при скидке на всю корзину
-    cart_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Количество товара в корзине"))
-    cart_price = models.PositiveIntegerField(default=0, verbose_name=_("Итоговая стоимость товаров в корзине"))
+    cart_quantity = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Количество товара в корзине")
+    )
+    cart_price = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Итоговая стоимость товаров в корзине")
+    )
 
-    products = models.ManyToManyField(Product, blank=True, related_name='discounts', verbose_name=_("Продукты"))
-    categories = models.ManyToManyField(Category, blank=True, related_name='discounts', verbose_name=_("Категории"))
+    products = models.ManyToManyField(
+        Product,
+        blank=True,
+        related_name='discounts',
+        verbose_name=_("Продукты")
+    )
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
+        related_name='discounts',
+        verbose_name=_("Категории")
+    )
 
     def __str__(self):
-        return self.name
+        return f'{self.name}, {self.discount_type}, {self.value}'
 
     def is_valid(self):
         """Проверяет, действует ли скидка в текущий момент."""

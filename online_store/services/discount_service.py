@@ -22,10 +22,12 @@ def get_final_price_for_cart_product(product: Product):
         )
         return price_max
 
+
 def check_type(discount: Discount, max_price: Decimal):
+    """расчет цены товара в зависимости от типа скидки"""
     if discount:
         if discount.discount_type == 'percentage':
-            price = max_price * (100 - discount.value) / 100
+            price = max_price * (1 - discount.value / 100)
             return price
         else:
             price = max_price - discount.value
@@ -36,6 +38,9 @@ def check_type(discount: Discount, max_price: Decimal):
 
 
 class DiscountService:
+    """
+    класс для обработки окончательной цены корзины в зависимости от скидок
+    """
     def __init__(self, request):
         self.request = request
         self.cart_service = CartService(self.request)
@@ -53,32 +58,36 @@ class DiscountService:
         получение объекта скидки с максимальным приоритетом
         """
         priority_max_obj = (
-            Discount.objects.all().
-            order_by('-priority').first()
+            Discount.objects.
+            filter(priority=2).
+            all()
         )
         return priority_max_obj
 
 
-    def one_product_discount_price(self, product: Product):
+    def one_product_discount_price(self, product: Product, discount: Discount):
         """
         получение окончательной цены для каждого товара при наличии скидки
         """
         max_price = self.get_max_price(product=product)
-        discount = (Discount.objects.
-        prefetch_related('products').
-        filter(products__id=product.id).
-        order_by('-priority').first()
-        )
-        price = check_type(discount=discount, max_price=max_price)
+        if discount.categories.exists():
+            price = check_type(discount=discount, max_price=max_price)
+        elif discount.products.filter(id=product.id).exists():
+            price = check_type(discount=discount, max_price=max_price)
+        else:
+            price = max_price
         return price
 
 
-    def discount_on_each_product_in_cart(self):
+    def discount_on_each_product_in_cart(self, discount: Discount):
         """суммарная цена товара в корзине с учетом скидки на каждый товар"""
         cart_items = self.cart_service.get_cart_items()
         price = 0
         for item in cart_items:
-            price += item.quantity * self.one_product_discount_price(product=item.product)
+            price += item.quantity * self.one_product_discount_price(
+                product=item.product,
+                discount=discount,
+            )
         return price
 
 
@@ -110,7 +119,7 @@ class DiscountService:
         total_quantity = self.cart_service.get_cart_count()
         if total_price >= discount.cart_price and total_quantity >= discount.cart_quantity:
             if discount.discount_type == 'percentage':
-                price = total_price * (100 - discount.value) / 100
+                price = total_price * (1 - discount.value / 100)
             else:
                 price = total_price - discount.value
                 if price <= 0:
