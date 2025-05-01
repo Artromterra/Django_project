@@ -667,13 +667,3 @@ class DiscountView(ListView):
     model = Discount
     queryset = Discount.objects.all().order_by("-end_date")
     context_object_name = 'discounts'
-
-    # def get_context_data(self, **kwargs):
-
-
-
-
-    # def get(self, request, *args, **kwargs):
-    #     discount = DiscountService(request)
-    #     self.discount = discount.get_max_priority_discount()
-    #     return super().get(request, *args, **kwargs)
