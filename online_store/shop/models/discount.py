@@ -67,6 +67,6 @@ class Discount(models.Model):
         from django.utils.timezone import now
         if not self.is_active:
             return False
-        if self.start_date and self.end_date:
+        if self.start_date and self.end_date is not None:
             return self.start_date <= now() <= self.end_date
-        return True
+        return False

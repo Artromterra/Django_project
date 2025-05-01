@@ -609,24 +609,27 @@ class CartView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         cart_service = CartService(request)
-        discount = DiscountService(request)
-        max_priority = discount.get_max_priority_discount()
+        discount_service = DiscountService(request)
+        max_priority = discount_service.get_max_priority_discount()
         cart_obj = cart_service.get_or_create_cart()
         self.total_price = cart_service.get_cart_total_price()
         price_list = []
         for obj in max_priority:
-            if obj.cart_price > 0:  # проверяем, что эта скидка на всю корзину
-                price_list.append(float(discount.discount_price_on_cart()))
-                break
-            elif obj.categories.all().count() > 0: # проверка, что скидка относится к категории
-                price_list.append(discount.discount_by_category(
-                    category=obj.categories.all(),
-                ))
-            else: # расчет скидки на группу товаров
-                price_list.append(float(
-                    discount.discount_on_each_product_in_cart(discount=obj))
-                )
-        self.total_discount_price = min(price_list)
+            if obj.is_valid():
+                if obj.cart_price > 0:  # проверяем, что эта скидка на всю корзину
+                    price_list.append(float(discount_service.discount_price_on_cart()))
+                    break
+                elif obj.categories.all().count() > 0: # проверка, что скидка относится к категории
+                    price_list.append(discount_service.discount_by_category(
+                        category=obj.categories.all(),
+                    ))
+                else: # расчет скидки на группу товаров
+                    price_list.append(float(
+                        discount_service.discount_on_each_product_in_cart(discount=obj))
+                    )
+            else:
+                price_list.append(self.total_price)
+        self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
         cart_obj.total_price = self.total_discount_price
         cart_obj.save()
         return super().get(request, *args, **kwargs)
@@ -659,17 +662,18 @@ class CartView(TemplateView):
     #     )
 
 
-class DiscountView(TemplateView):
+class DiscountView(ListView):
     template_name = "sale.html"
+    model = Discount
+    queryset = Discount.objects.all().order_by("-end_date")
+    context_object_name = 'discounts'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.discount = None
+    # def get_context_data(self, **kwargs):
 
-    def get(self, request, *args, **kwargs):
-        discount = DiscountService(request)
-        self.discount = discount.get_max_priority_discount()
-        return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        ...
+
+
+    # def get(self, request, *args, **kwargs):
+    #     discount = DiscountService(request)
+    #     self.discount = discount.get_max_priority_discount()
+    #     return super().get(request, *args, **kwargs)
