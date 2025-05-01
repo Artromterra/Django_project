@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
-from django.conf.global_settings import SERVER_EMAIL
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 
@@ -48,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #
+    'constance',
+
     'profiles.apps.ProfilesConfig',
     'shop.apps.ShopConfig',
     'django_cleanup',
@@ -74,7 +75,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / ".." / "templates",
+            BASE_DIR / "templates",
             BASE_DIR / "reviews" / "templates" / "reviews",
         ],
         'APP_DIRS': True,
@@ -246,3 +247,61 @@ CELERY_CONCURRENCY = int(os.getenv("CELERY_CONCURRENCY", 4))
 DIR_WITH_IMPORT_FILES = os.getenv("DIR_WITH_IMPORT_FILES", str(BASE_DIR / ".." / "media" / "import_files"))
 DIR_WITH_SUCCESSFUL_IMPORTS = os.getenv("DIR_WITH_SUCCESSFUL_IMPORTS", str(BASE_DIR / ".." / "successful_imports"))
 DIR_WITH_IMPORTS_WITH_ERRORS = os.getenv("DIR_WITH_IMPORTS_WITH_ERRORS", str(BASE_DIR / ".." / "imports_with_errors"))
+
+# constance
+CONSTANCE_BACKEND = "constance.backends.redisd.RedisBackend"
+CONSTANCE_REDIS_CACHE_TIMEOUT = int(os.getenv("CONSTANCE_REDIS_CACHE_TIMEOUT", 60))
+CONSTANCE_REDIS_CONNECTION = os.getenv("CONSTANCE_REDIS_CONNECTION", "redis://localhost")
+CONSTANCE_REDIS_PREFIX = os.getenv("CONSTANCE_REDIS_PREFIX", "constance:online_store:")
+
+CONSTANCE_ADDITIONAL_FIELDS = {
+    "list_emails": [
+        "shop.forms.ListEmailsField",
+        {
+            "widget": "django.forms.widgets.Textarea"
+        }
+    ]
+}
+
+# The default settings values will be taken from the .env file.
+# This means that if there are no records of these settings in the database,
+# they will be taken from .env. However, if there is a record of settings in the database,
+# these values will be selected even if you change the .env file.
+CONSTANCE_CONFIG = {
+    "DIR_WITH_IMPORT_FILES": (DIR_WITH_IMPORT_FILES, "The dir with the import files", str),
+    "DIR_WITH_SUCCESSFUL_IMPORTS": (
+        DIR_WITH_SUCCESSFUL_IMPORTS,
+        "The directory where the import files are moved in case of successful import.",
+        str,
+    ),
+    "DIR_WITH_IMPORTS_WITH_ERRORS": (
+        DIR_WITH_IMPORTS_WITH_ERRORS,
+        "The directory where the import files are moved in case of import failure.",
+        str,
+    ),
+    "ADMIN_EMAILS": (
+        " ".join((email for email in ADMIN_EMAILS)),
+        "Emails to which emails with import results will be sent. "
+        "Enter the email addresses from the new lines.",
+        "list_emails",
+    ),
+    "DEFAULT_LIMIT_REVIEWS": (
+        DEFAULT_LIMIT_REVIEWS,
+        "The default number of reviews on the product page.",
+        int,
+    )
+}
+
+# Splitting into blocks
+CONSTANCE_CONFIG_FIELDSETS = {
+    "Importing settings": {
+        "fields": (
+            "DIR_WITH_IMPORT_FILES",
+            "DIR_WITH_SUCCESSFUL_IMPORTS",
+            "DIR_WITH_IMPORTS_WITH_ERRORS",
+            "ADMIN_EMAILS",
+        ),
+        "collapse": False,
+    },
+    "Reviews": ("DEFAULT_LIMIT_REVIEWS",)
+}

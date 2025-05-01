@@ -1,7 +1,8 @@
 import re
+from typing import List, Callable, Any
 
-from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from profiles.models import User
 from shop.models.order import Order
@@ -147,3 +148,43 @@ class OrderPayForm(forms.ModelForm):
             }),
         choices=CHOICES,
     )
+
+class OrderYookassaPayForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('cart_number', 'expiry_month', 'expiry_year', 'cvc', 'total_price')
+
+    cart_number = forms.CharField(max_length=16, label='Номер карты')
+    expiry_month = forms.CharField(max_length=2, label='Месяц окончания (MM)')
+    expiry_year = forms.CharField(max_length=4, label='Год окончания (YYYY)')
+    cvc = forms.CharField(max_length=4, label='CVC', widget=forms.PasswordInput())
+    total_price = forms.DecimalField(disabled=True, label='Сумма')
+
+
+
+class ListEmailsField(forms.CharField):
+    """A field for entering a list of emails."""
+
+    def __init__(self, *args, separator: str = "\n", **kwargs):
+        """
+        :param separator: The separator used to separate the emails in the string.
+        """
+        super().__init__(*args, **kwargs)
+        self.__separator = separator
+
+    def clean(self, value) -> List[str]:
+        value = super().clean(value)
+        if not value:
+            return []
+
+        emails: List[str] = list()
+        for part in re.split(r'[ ,;\n\r\t]+', value):
+            cleaned_part = (part.replace("[", "")
+                            .replace("]", "")
+                            .replace("'", ""))
+            email = cleaned_part.strip()
+            if email:
+                validate_email(email)
+                emails.append(email)
+
+        return emails

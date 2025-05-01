@@ -198,6 +198,20 @@ wheels = [
 ]
 
 [[package]]
+name = "django-constance"
+version = "4.3.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/08/58100c61c15c0d187d257c0f01277e48fdfdbe96bda60e88ffe043412ecc/django_constance-4.3.2.tar.gz", hash = "sha256:d86e6b6a797157a4b49d0c679f1b7b9c70b1b540f36dfcda5346736997ae51bd", size = 174866 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/cd/37312ca0a02905fb3d44649a0bd2ec4ec21b60d967c3ccb9ff9d07db157b/django_constance-4.3.2-py3-none-any.whl", hash = "sha256:cd3e08f4cac457016db550a9244177da39cef8e39f4a56859692306cc8f11dc1", size = 64240 },
+]
+
+[package.optional-dependencies]
+redis = [
+    { name = "redis" },
+]
+
+[[package]]
 name = "django-diploma"
 version = "0.1.0"
 source = { virtual = "." }
@@ -205,6 +219,7 @@ dependencies = [
     { name = "celery", extra = ["gevent"] },
     { name = "django" },
     { name = "django-cleanup" },
+    { name = "django-constance", extra = ["redis"] },
     { name = "djangorestframework" },
     { name = "docutils" },
     { name = "openpyxl" },
@@ -224,6 +239,7 @@ requires-dist = [
     { name = "celery", extras = ["gevent"], specifier = ">=5.4.0" },
     { name = "django", specifier = "==5.0" },
     { name = "django-cleanup", specifier = ">=9.0.0" },
+    { name = "django-constance", extras = ["redis"], specifier = ">=4.3.2" },
     { name = "djangorestframework", specifier = ">=3.15.2" },
     { name = "docutils", specifier = ">=0.21.2" },
     { name = "openpyxl", specifier = ">=3.1.5" },
