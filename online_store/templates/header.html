@@ -101,7 +101,7 @@
             <a class="dropdown-content-a" href="{% url 'profiles:user_account_view' %}">
               {% translate "Личный кабинет" %}
             </a>
-            {% if user.is_superuser %}
+            {% if user.is_staff %}
               <a class="dropdown-content-a" href="{% url 'admin:index' %}">
                 {% translate "Административный раздел" %}
               </a>

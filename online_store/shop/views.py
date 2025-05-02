@@ -634,7 +634,8 @@ class CartView(TemplateView):
                     )
             else:
                 price_list.append(self.total_price)
-        self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
+        if price_list:
+            self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
         self.cart_obj.total_price = self.total_discount_price
         self.cart_obj.save()
         return super().get(request, *args, **kwargs)
