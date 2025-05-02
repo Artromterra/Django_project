@@ -611,12 +611,13 @@ class CartView(TemplateView):
         self.session = None
         self.total_discount_price = 0
         self.total_price = 0
+        self.cart_obj = None
 
     def get(self, request, *args, **kwargs):
         cart_service = CartService(request)
         discount_service = DiscountService(request)
         max_priority = discount_service.get_max_priority_discount()
-        cart_obj = cart_service.get_or_create_cart()
+        self.cart_obj = cart_service.get_or_create_cart()
         self.total_price = cart_service.get_cart_total_price()
         price_list = []
         for obj in max_priority:
@@ -635,15 +636,14 @@ class CartView(TemplateView):
             else:
                 price_list.append(self.total_price)
         self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
-        cart_obj.total_price = self.total_discount_price
-        cart_obj.save()
+        self.cart_obj.total_price = self.total_discount_price
+        self.cart_obj.save()
         return super().get(request, *args, **kwargs)
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart, created = Cart.objects.get_or_create(user_id=self.request.user.id)
-        context["cart"] = cart
+        context["cart"] = self.cart_obj
         context["total_discount_price"] = self.total_discount_price
         context["total_price"] = self.total_price
         return context
