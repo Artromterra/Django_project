@@ -608,7 +608,6 @@ class CartView(TemplateView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.session = None
         self.total_discount_price = 0
         self.total_price = 0
         self.cart_obj = None
