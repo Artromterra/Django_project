@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.db.models.query import QuerySet
 
 from decimal import Decimal
@@ -32,6 +33,9 @@ class Product(models.Model):
     sellers = models.ManyToManyField('Seller', through='ProductSeller', related_name="products")
     images: models.Manager["ProductImage"]
     product_sellers: models.Manager["ProductSeller"]
+
+    def get_absolute_url(self):
+        return reverse('shop:products_detail', kwargs={'pk': self.pk})
 
 
 class ProductSeller(models.Model):

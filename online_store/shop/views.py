@@ -107,14 +107,6 @@ class ProductDetailView(DetailView):
         return object
 
 
-# def product_properties(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)
-#     properties = model_to_dict(product)  # Преобразуем объект в словарь
-#     return render(request,
-#                   'product_properties_template.html',
-#                   {'product': product, 'properties': properties})
-
-
 class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
@@ -168,23 +160,6 @@ class ProductListView(ListView):
         context["paginator"] = paginator
         context["page_obj"] = page_obj
         return context
-
-
-# class CartView(LoginRequiredMixin, View):
-#     def get(self, request):
-#         cart, created = Cart.objects.get_or_create(user=request.user)
-#         cart_items = CartItem.objects.filter(cart=cart)
-#
-#         total_price = sum(
-#             item.get_final_price() * item.quantity
-#             for item in cart_items
-#         )
-#
-        # context = {
-        #     'cart_items': cart_items,
-        #     'total_price': total_price
-        # }
-        # return render(request, 'cart.html', context)
 
 
 class AddToCartView(LoginRequiredMixin, View):
@@ -619,23 +594,26 @@ class CartView(TemplateView):
         self.cart_obj = cart_service.get_or_create_cart()
         self.total_price = cart_service.get_cart_total_price()
         price_list = []
-        for obj in max_priority:
-            if obj.is_valid():
-                if obj.cart_price > 0:  # проверяем, что эта скидка на всю корзину
-                    price_list.append(float(discount_service.discount_price_on_cart()))
-                    break
-                elif obj.categories.all().count() > 0: # проверка, что скидка относится к категории
-                    price_list.append(discount_service.discount_by_category(
-                        category=obj.categories.all(),
-                    ))
-                else: # расчет скидки на группу товаров
-                    price_list.append(float(
-                        discount_service.discount_on_each_product_in_cart(discount=obj))
-                    )
-            else:
-                price_list.append(self.total_price)
-        if price_list:
-            self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
+        if max_priority:
+            for obj in max_priority:
+                if obj.is_valid():
+                    if obj.cart_price > 0:  # проверяем, что эта скидка на всю корзину
+                        price_list.append(float(discount_service.discount_price_on_cart()))
+                        break
+                    elif obj.categories.all().count() > 0: # проверка, что скидка относится к категории
+                        price_list.append(discount_service.discount_by_category(
+                            category=obj.categories.all(),
+                        ))
+                    else: # расчет скидки на группу товаров
+                        price_list.append(float(
+                            discount_service.discount_on_each_product_in_cart(discount=obj))
+                        )
+                else:
+                    price_list.append(self.total_price)
+            if price_list:
+                self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
+        else:
+            self.total_discount_price = self.total_price
         self.cart_obj.total_price = self.total_discount_price
         self.cart_obj.save()
         return super().get(request, *args, **kwargs)
@@ -678,7 +656,6 @@ class OrderPayment(LoginRequiredMixin, FormView):
         return {
             'total_price': order.total_price
         }
-
 
 
 class OrderPaymentProgress(LoginRequiredMixin, ListView):
