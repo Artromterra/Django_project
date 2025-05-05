@@ -1,0 +1,112 @@
+[
+{
+    "model": "shop.category",
+    "pk": 1,
+    "fields": {
+        "name": "Электроника",
+        "category_icon": "category/icons/5.svg",
+        "description": "Вся электроника, какая есть на свете",
+        "parent_category": null,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 2,
+    "fields": {
+        "name": "Смартфоны и гаджеты",
+        "category_icon": "category/icons/8.svg",
+        "description": "Все смартфоны со всего мира",
+        "parent_category": 1,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 3,
+    "fields": {
+        "name": "Телевизоры и аксесуары",
+        "category_icon": "category/icons/1.svg",
+        "description": "Все телевизоры и дополнения к ним",
+        "parent_category": 1,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 4,
+    "fields": {
+        "name": "Бытовая техника",
+        "category_icon": "category/icons/3.svg",
+        "description": "Все что нужно, чтобы облегчить жизнь в своем доме",
+        "parent_category": null,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 5,
+    "fields": {
+        "name": "Мелкая техника для кухни",
+        "category_icon": "category/icons/10.svg",
+        "description": "Вся мелко бытовая техника для дома, чайники, микроволновки, тостеры",
+        "parent_category": 4,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 6,
+    "fields": {
+        "name": "Крупная техника для кухни",
+        "category_icon": "category/icons/7.svg",
+        "description": "Холодильники, посудомоечные машины, стиральные машины, печи",
+        "parent_category": 4,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 7,
+    "fields": {
+        "name": "Ноутбуки, планшеты",
+        "category_icon": "category/icons/1_Fd6ibmZ.svg",
+        "description": "Ноутбуки, планшеты и электронные книги",
+        "parent_category": 1,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 8,
+    "fields": {
+        "name": "Наушники и аудиотехника",
+        "category_icon": "category/icons/2.svg",
+        "description": "Наушники и аудиотехника",
+        "parent_category": 1,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 9,
+    "fields": {
+        "name": "Фотоаппараты",
+        "category_icon": "category/icons/6.svg",
+        "description": "Все фотоаппараты",
+        "parent_category": null,
+        "is_active": true
+    }
+},
+{
+    "model": "shop.category",
+    "pk": 10,
+    "fields": {
+        "name": "Скидки",
+        "category_icon": "category/icons/4.svg",
+        "description": "Скидки на товары, корзину, категории",
+        "parent_category": null,
+        "is_active": true
+    }
+}
+]

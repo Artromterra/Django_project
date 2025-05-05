@@ -1,0 +1,28 @@
+[
+{
+    "model": "shop.seller",
+    "pk": 1,
+    "fields": {
+        "user": 3,
+        "name": "Worldberries",
+        "description": "Продавец всего и вся на свете",
+        "image": "sellers/seller_None/images/pic_worldberries.jpg",
+        "phone": "88005009632",
+        "address": "Москва ул. Начальная 12 строение1",
+        "email": "worldberries@mail.ru"
+    }
+},
+{
+    "model": "shop.seller",
+    "pk": 2,
+    "fields": {
+        "user": 4,
+        "name": "mobylink",
+        "description": "Любые мобильники из Китая",
+        "image": "sellers/seller_None/images/pic_mobile_seller.jpg",
+        "phone": "89002005487",
+        "address": "Саратов, ул. Диагональная 45 офис 21",
+        "email": "semenov@mail.ru"
+    }
+}
+]

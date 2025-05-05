@@ -1,0 +1,46 @@
+[
+{
+    "model": "profiles.account",
+    "pk": 1,
+    "fields": {
+        "first_name": "Виктор",
+        "last_name": "Сергеев",
+        "patronymic": "Петрович",
+        "user": 2,
+        "last_order": null
+    }
+},
+{
+    "model": "profiles.account",
+    "pk": 2,
+    "fields": {
+        "first_name": "Сергей",
+        "last_name": "Ковалев",
+        "patronymic": "Сергеевич",
+        "user": 1,
+        "last_order": null
+    }
+},
+{
+    "model": "profiles.account",
+    "pk": 3,
+    "fields": {
+        "first_name": "Павел",
+        "last_name": "Леоненко",
+        "patronymic": "Алексеевич",
+        "user": 3,
+        "last_order": null
+    }
+},
+{
+    "model": "profiles.account",
+    "pk": 4,
+    "fields": {
+        "first_name": "Александр",
+        "last_name": "Семенов",
+        "patronymic": "Викторович",
+        "user": 4,
+        "last_order": null
+    }
+}
+]

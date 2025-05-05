@@ -1,0 +1,78 @@
+[
+{
+    "model": "profiles.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$EUWfRtHRrBNI6KK9sv4wbB$DBk7VB9AYJABYm3Fpeg4AzKOTeVIY01XIefpAzqBEw0=",
+        "last_login": "2025-05-05T09:54:35.409Z",
+        "username": "admin",
+        "email": "admin@admin.ru",
+        "phone": "1223334455",
+        "is_active": true,
+        "is_staff": true,
+        "is_superuser": true,
+        "avatar": "profile/user_1/avatar/admin.jpg",
+        "groups": [
+            4
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "profiles.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$C4rCGSWNOInZGxDRybEh54$/uq982CEVjdqC0yuCi7xJJ08d7fn4p/T/DlGLsshqBA=",
+        "last_login": "2025-05-05T09:53:07.451Z",
+        "username": "Виктор-пользователь",
+        "email": "sergeev@mail.ru",
+        "phone": "2123654567",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "avatar": "profile/user_2/avatar/user_1.jpg",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "profiles.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$RmY23j79nWIDjcsr2JtI6S$2mRlY7BF5pjsG63FBXBInkg4JcBxmQYJDLFACtQTwGk=",
+        "last_login": "2025-05-05T09:53:46.875Z",
+        "username": "worldberries",
+        "email": "worldberries@mail.ru",
+        "phone": "9856321256",
+        "is_active": true,
+        "is_staff": true,
+        "is_superuser": false,
+        "avatar": "profile/user_3/avatar/pic_worldberries.jpg",
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "profiles.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$ulzrHAu3ZknFq1zLQkhrQm$mX19KU+83X+4CYqGM4LzN3wILSOnUe4Lu58AEFDJ1IY=",
+        "last_login": "2025-05-05T09:55:54.709Z",
+        "username": "Mobylink",
+        "email": "seller2@mail.ru",
+        "phone": "5468953625",
+        "is_active": true,
+        "is_staff": true,
+        "is_superuser": false,
+        "avatar": "profile/user_4/avatar/pic_mobile_seller.jpg",
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
+}
+]

@@ -162,6 +162,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / '..' / 'media'
 
+FIXTURE_DIR = 'fixtures'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -177,6 +179,7 @@ CACHES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("SMTP_PORT", 587))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "0") == "1"

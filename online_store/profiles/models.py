@@ -44,9 +44,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
         null=True,
         blank=True,
-        # validators=[
-        #     RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
-        # ]
+        validators=[
+            RegexValidator(regex=r'^\d{10}$', message='Введите 10 цифр без кода страны')
+        ]
     )
     is_active = models.BooleanField('is active', default=False)
     is_staff = models.BooleanField('is staff', default=False)
