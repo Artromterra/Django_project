@@ -59,6 +59,8 @@ class Order(models.Model):
             return f'Заказ № {self.pk}, пользователь {self.cart.user.username}'
         return f'Заказ № {self.pk}, пользователь Anonymous'
 
+    yookassa_payment_id = models.CharField(max_length=100, null=True, blank=True)
+
 
 class OrderDeliveryPrice(models.Model):
     class Meta:

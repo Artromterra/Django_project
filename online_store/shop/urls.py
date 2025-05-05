@@ -17,6 +17,7 @@ from .views import (
     DiscountView,
     OrderPayment,
     OrderPaymentProgress,
+    YookassaReturnView,
 )
 
 
@@ -39,4 +40,5 @@ urlpatterns = [
     path("cart/update/", CartUpdateView.as_view(), name="cart_update"),
     path("cart/", CartView.as_view(), name="cart"),
     path("discount/", DiscountView.as_view(), name="discount"),
+    path('shop/yookassa/return/', YookassaReturnView.as_view(), name='yookassa_return'),
 ]

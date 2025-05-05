@@ -56,6 +56,8 @@ from django.views.generic import TemplateView
 from .forms import OrderYookassaPayForm
 from services.payment_service import PaymentService
 
+import requests
+
 logger = getLogger("main.shop.views")
 
 
@@ -626,45 +628,94 @@ class CartView(TemplateView):
         context["total_price"] = self.total_price
         return context
 
-
 class OrderPayment(LoginRequiredMixin, FormView):
     model = Order
     template_name = 'payment.html'
     form_class = OrderYookassaPayForm
-    success_url = '/shop/order-confirm/payment/progressPayment/'
 
     def form_valid(self, form):
         service = PaymentService()
+        order = self.get_order()
         response = service.pay_order(
             cart_number=form.cleaned_data['cart_number'],
             expiry_month=form.cleaned_data['expiry_month'],
             expiry_year=form.cleaned_data['expiry_year'],
             cvc=form.cleaned_data['cvc'],
             total_price=form.cleaned_data['total_price'],
-            order_id=self.get_order().id
+            order_id=order.id
         )
 
-        # Тут можешь обработать response от ЮKassa
-        # например сохранить статус оплаты или редиректить на страницу оплаты
-        return super().form_valid(form)
+        # Сохраняем payment_id
+        order.yookassa_payment_id = response.get("id")
+        order.save()
+
+        return redirect(self.get_success_url())
 
     def get_order(self):
         return Order.objects.filter(cart__user=self.request.user, paid=False).first()
 
     def get_initial(self):
         order = self.get_order()
-        return {
-            'total_price': order.total_price
-        }
+        return {'total_price': order.total_price} if order else {}
+
+    def get_success_url(self):
+        return '/shop/order-confirm/payment/progressPayment'
 
 
-class OrderPaymentProgress(LoginRequiredMixin, ListView):
-    model = Order
+class OrderPaymentProgress(LoginRequiredMixin, TemplateView):
     template_name = 'progressPayment.html'
 
+    def get(self, request, *args, **kwargs):
+        order = Order.objects.filter(cart__user=request.user, paid=False).first()
 
-class DiscountView(ListView):
-    template_name = "sale.html"
-    model = Discount
-    queryset = Discount.objects.all().order_by("-end_date")
-    context_object_name = 'discounts'
+        if not order or not order.yookassa_payment_id:
+            return redirect('/shop/order-confirm/payment/')
+
+        service = PaymentService()
+        try:
+            payment_status = service.check_payment_status(order.yookassa_payment_id)
+            status = payment_status.get("status")
+
+            if status == "succeeded":
+                order.paid = True
+                order.save()
+                return redirect('/account/')
+            else:
+                return self.render_to_response({
+                    "status": status,
+                    "order": order
+                })
+
+        except Exception as e:
+            print("Ошибка при проверке платежа:", str(e))
+            messages.error(request, "Ошибка при проверке оплаты.")
+            return redirect('/shop/order-confirm/payment/')
+
+
+YOOKASSA_SHOP_ID = os.getenv('YOOKASSA_SHOP_ID')
+YOOKASSA_API_KEY = os.getenv('YOOKASSA_API_KEY')
+
+class YookassaReturnView(LoginRequiredMixin, View):
+    def get(self, request):
+        order = Order.objects.filter(cart__user=request.user, paid=False).first()
+        if not order or not order.yookassa_payment_id:
+            messages.error(request, "Ошибка идентификации заказа")
+            return redirect("/shop/order-confirm/payment/")
+
+        response = requests.get(
+            f"https://api.yookassa.ru/v3/payments/{order.yookassa_payment_id}",
+            auth=(YOOKASSA_SHOP_ID, YOOKASSA_API_KEY),
+        )
+        if response.status_code == 200:
+            payment_data = response.json()
+            if payment_data.get("status") == "succeeded":
+                order.paid = True
+                order.save()
+                messages.success(request, "Оплата прошла успешно")
+                return redirect("/account/")
+            else:
+                messages.error(request, "Оплата не удалась.")
+        else:
+            messages.error(request, "Ошибка при проверке оплаты")
+
+        return redirect("/shop/order-confirm/payment/")

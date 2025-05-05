@@ -7,7 +7,7 @@ from shop.models.product import Product
 
 
 @dataclass
-class ProductDTO:
+class ProductListDTO:
     id: int
     title: str
     price: float
@@ -15,7 +15,7 @@ class ProductDTO:
     image_url: Optional[str] = None
 
     @classmethod
-    def from_object(cls, object: Product) -> "ProductDTO":
+    def from_object(cls, object: Product) -> "ProductListDTO":
         if not object:
             return None
         return cls(
@@ -33,7 +33,7 @@ class ProductDTO:
     @classmethod
     def from_objects(
         cls, queryset: QuerySet[Product]
-    ) -> List["ProductDTO"]:
+    ) -> List["ProductListDTO"]:
         return [cls.from_object(obj) for obj in queryset]
 
     @classmethod
