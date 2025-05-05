@@ -20,8 +20,10 @@ from django.shortcuts import get_object_or_404
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
 from services.view_history_products_service import ViewHistoryProductsService
+from services.discount_service import DiscountService
 from profiles.models import Account, User
 from .models.cart import CartItem, Cart
+from .models.discount import Discount
 from .models.seller import Seller
 from .models.order import Order, OrderDeliveryPrice
 from .models.product import Product
@@ -105,14 +107,6 @@ class ProductDetailView(DetailView):
         return object
 
 
-# def product_properties(request, product_id):
-#     product = get_object_or_404(Product, id=product_id)
-#     properties = model_to_dict(product)  # Преобразуем объект в словарь
-#     return render(request,
-#                   'product_properties_template.html',
-#                   {'product': product, 'properties': properties})
-
-
 class ProductListView(ListView):
     template_name = "catalog.html"
     model = Product
@@ -166,23 +160,6 @@ class ProductListView(ListView):
         context["paginator"] = paginator
         context["page_obj"] = page_obj
         return context
-
-
-class CartView(LoginRequiredMixin, View):
-    def get(self, request):
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        cart_items = CartItem.objects.filter(cart=cart)
-
-        total_price = sum(
-            item.get_final_price() * item.quantity
-            for item in cart_items
-        )
-
-        context = {
-            'cart_items': cart_items,
-            'total_price': total_price
-        }
-        return render(request, 'cart.html', context)
 
 
 class AddToCartView(LoginRequiredMixin, View):
@@ -469,11 +446,14 @@ class OrderConfirmView(TemplateView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
+        self.total_price = 0
 
     def get(self, request, *args, **kwargs):
         """
         проверка пользователя на наличие ранее пройденных шагов при оформлении заказа
         """
+        cart_service = CartService(request)
+        self.total_price = cart_service.get_cart_total_price()
         self.session = request.session
         s = Session.objects.get(session_key=self.session.session_key)
         data = s.get_decoded()
@@ -496,15 +476,16 @@ class OrderConfirmView(TemplateView):
             "selected_seller"
         ).filter(cart_id=order.cart.pk)
         total = calculate_price(
+            total_prod_price=float(cart[0].cart.total_price),
             cart_queryset=cart,
             order=order,
             delivery_price=OrderDeliveryPrice(),
         )
-        order.total_price = total
+        order.total_discount_price = total
         order.save()
         context = {
-            'cart': cart,
-            'total': total,
+            "cart": cart,
+            "total": total,
             "user": user,
             "order": order,
         }
@@ -600,10 +581,49 @@ class CartUpdateView(APIView):
 class CartView(TemplateView):
     template_name = "cart.html"
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.total_discount_price = 0
+        self.total_price = 0
+        self.cart_obj = None
+
+    def get(self, request, *args, **kwargs):
+        cart_service = CartService(request)
+        discount_service = DiscountService(request)
+        max_priority = discount_service.get_max_priority_discount()
+        self.cart_obj = cart_service.get_or_create_cart()
+        self.total_price = cart_service.get_cart_total_price()
+        price_list = []
+        if max_priority:
+            for obj in max_priority:
+                if obj.is_valid():
+                    if obj.cart_price > 0:  # проверяем, что эта скидка на всю корзину
+                        price_list.append(float(discount_service.discount_price_on_cart()))
+                        break
+                    elif obj.categories.all().count() > 0: # проверка, что скидка относится к категории
+                        price_list.append(discount_service.discount_by_category(
+                            category=obj.categories.all(),
+                        ))
+                    else: # расчет скидки на группу товаров
+                        price_list.append(float(
+                            discount_service.discount_on_each_product_in_cart(discount=obj))
+                        )
+                else:
+                    price_list.append(self.total_price)
+            if price_list:
+                self.total_discount_price = min(price_list) # выбираем минимальную стоимость корзины (соответственно максимальную скидку)
+        else:
+            self.total_discount_price = self.total_price
+        self.cart_obj.total_price = self.total_discount_price
+        self.cart_obj.save()
+        return super().get(request, *args, **kwargs)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart, created = Cart.objects.get_or_create(user=self.request.user)
-        context["cart"] = cart
+        context["cart"] = self.cart_obj
+        context["total_discount_price"] = self.total_discount_price
+        context["total_price"] = self.total_price
         return context
 
 
@@ -638,7 +658,13 @@ class OrderPayment(LoginRequiredMixin, FormView):
         }
 
 
-
 class OrderPaymentProgress(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'progressPayment.html'
+
+
+class DiscountView(ListView):
+    template_name = "sale.html"
+    model = Discount
+    queryset = Discount.objects.all().order_by("-end_date")
+    context_object_name = 'discounts'

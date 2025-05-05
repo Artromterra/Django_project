@@ -3,8 +3,11 @@ from .product import Product
 from .category import Category
 
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator
 
 class Discount(models.Model):
+    objects = models.Manager()
+
     PERCENTAGE = 'percentage'
     FIXED_AMOUNT = 'fixed'
 
@@ -28,17 +31,42 @@ class Discount(models.Model):
     start_date = models.DateTimeField(null=True, blank=True, verbose_name=_("Дата начала"))
     end_date = models.DateTimeField(null=True, blank=True, verbose_name=_("Дата окончания"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активна"))
-    products = models.ManyToManyField(Product, blank=True, related_name='discounts', verbose_name=_("Продукты"))
-    categories = models.ManyToManyField(Category, blank=True, related_name='discounts', verbose_name=_("Категории"))
+    priority = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Вес скидки, максимальная 2"),
+        validators=[MaxValueValidator(2)],
+    )
+    # поля для ввода значений при скидке на всю корзину
+    cart_quantity = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Количество товара в корзине")
+    )
+    cart_price = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Итоговая стоимость товаров в корзине")
+    )
+
+    products = models.ManyToManyField(
+        Product,
+        blank=True,
+        related_name='discounts',
+        verbose_name=_("Продукты")
+    )
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
+        related_name='discounts',
+        verbose_name=_("Категории")
+    )
 
     def __str__(self):
-        return self.name
+        return f'{self.name}, {self.discount_type}, {self.value}'
 
     def is_valid(self):
         """Проверяет, действует ли скидка в текущий момент."""
         from django.utils.timezone import now
         if not self.is_active:
             return False
-        if self.start_date and self.end_date:
+        if self.start_date and self.end_date is not None:
             return self.start_date <= now() <= self.end_date
-        return True
+        return False

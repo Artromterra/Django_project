@@ -3,71 +3,71 @@
 {% load i18n %}
 
 {% block content %}
-<div class="Middle Middle_top">
+  <div class="Middle Middle_top">
     <div class="Section">
-        <div class="wrap">
+      <div class="wrap">
 
-            {% for item in cart.cart_items.all %}
-            <div class="Cart-product">
-                <div class="Cart-block Cart-block_row">
-                    <div class="Cart-block Cart-block_pict">
-                        <a class="Cart-pict" href="{{ item.product.get_absolute_url }}">
-                            <img class="Cart-img" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
-                        </a>
-                    </div>
-                    <div class="Cart-block Cart-block_info">
-                        <a class="Cart-title" href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
-                        <div class="Cart-desc">{{ item.product.description }}</div>
-                    </div>
-                    <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price">{{ item.get_final_price }}$</div>
-                    </div>
-                </div>
-                <div class="Cart-block Cart-block_row">
-                    <div class="Cart-block Cart-block_seller">
-                        <span>Продавец: {{ item.selected_seller.name }}</span>
-                    </div>
-                    <div class="Cart-block Cart-block_amount">
-                        <div class="Cart-amount">
-                            <div class="Amount">
-                                <input class="Amount-input form-input" name="amount_{{ item.id }}" type="text" value="{{ item.quantity }}" readonly />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Cart-block Cart-block_delete">
-                        <form action="{% url 'shop:cart_remove' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                            <input type="hidden" name="seller_id" value="{{ item.selected_seller.id }}">
-                            <button type="submit" class="Cart-delete" style="background: none; border: none; padding: 0;">
-                                <img src="/static/assets/img/icons/card/delete.svg" alt="Удалить" />
-                            </button>
-                        </form>
-                    </div>
-                </div>
+        {% for item in cart.cart_items.all %}
+          <div class="Cart-product">
+            <div class="Cart-block Cart-block_row">
+              <div class="Cart-block Cart-block_pict">
+                <a class="Cart-pict" href="{{ item.product.get_absolute_url }}">
+                  <img class="Cart-img" src="/media/{{ item.product.images.all.0.image }}" alt="{{ item.product.title }}" />
+                </a>
+              </div>
+              <div class="Cart-block Cart-block_info">
+                <a class="Cart-title" href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a>
+                <div class="Cart-desc">{{ item.product.short_description }}</div>
+              </div>
+              <div class="Cart-block Cart-block_price">
+                <div class="Cart-price">{{ item.get_final_price }}$</div>
+              </div>
             </div>
-            {% empty %}
-            <p>
-                {% translate "Ваша корзина пуста" %}.
-            </p>
-            {% endfor %}
+            <div class="Cart-block Cart-block_row">
+              <div class="Cart-block Cart-block_seller">
+                <span>Продавец: {{ item.selected_seller.name }}</span>
+              </div>
+              <div class="Cart-block Cart-block_amount">
+                <div class="Cart-amount">
+                  <div class="Amount">
+                    <input class="Amount-input form-input" name="amount_{{ item.id }}" type="text" value="{{ item.quantity }}" readonly />
+                  </div>
+                </div>
+              </div>
+              <div class="Cart-block Cart-block_delete">
+                <form action="{% url 'shop:cart_remove' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                  <input type="hidden" name="seller_id" value="{{ item.selected_seller.id }}">
+                  <button type="submit" class="Cart-delete" style="background: none; border: none; padding: 0; cursor: pointer">
+                    <img src="/static/assets/img/icons/card/delete.svg" alt="Удалить" />
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <p>
+            {% translate "Ваша корзина пуста" %}.
+          </p>
+        {% endfor %}
 
-            {% if cart.cart_items.all %}
-            <div class="Cart-total">
-                <div class="Cart-block Cart-block_total">
-                    <strong class="Cart-title">
-                        {% translate "Итого" %}:
-                    </strong>
-                    <span class="Cart-price">{{ cart.get_total_price }}$</span>
-                </div>
-                <div class="Cart-block">
-                    <a class="btn btn_success btn_lg" href="{% url 'shop:order_confirm' %}">
-                        {% translate "Оформить заказ" %}
-                    </a>
-                </div>
+        {% if cart.cart_items.all %}
+          <div class="Cart-total">
+            <div class="Cart-block Cart-block_total">
+              <strong class="Cart-title">
+                {% translate "Итого" %} (без скидки / с учетом скидки):
+              </strong>
+              <span class="Cart-price">{{ total_price }} / {{ total_discount_price }}$</span>
             </div>
-            {% endif %}
-        </div>
+            <div class="Cart-block">
+              <a class="btn btn_success btn_lg" href="{% url 'shop:order_user' pk=cart.id %}">
+                {% translate "Оформить заказ" %}
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

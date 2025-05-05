@@ -41,7 +41,7 @@
               </div>
             </div>
             <div class="Account-column">
-              <div class="Account-name"> {{ user.account.first_name }} {{ user.account.last_name }} {{ user.account.patronymic }}
+              <div class="Account-name"> {{ user.account.last_name }} {{ user.account.first_name }} {{ user.account.patronymic }}
               </div><a class="Account-editLink" href="{% url 'profiles:user_profile_update_view' %}">
                 {% translate "Редактировать профиль" %}
               </a>
@@ -51,6 +51,7 @@
             <div class="Account-column Account-column_full">
               <div class="Order Order_anons">
                 <div class="Order-personal">
+                {% if order is not None %}
                   <div class="row">
                     <div class="row-block">
                       <a class="Order-title" href="{% url 'shop:order_detail' pk=order.pk %}">
@@ -115,6 +116,9 @@
                       </div>
                     </div>
                   </div>
+                {% else %}
+                    <p class="Order-title">У вас нет заказов</p>
+                {% endif %}
                 </div>
               </div>
             </div>
