@@ -23,7 +23,7 @@ def get_final_price_for_cart_product(product: Product):
         return price_max
 
 
-def check_type(discount: Discount, max_price: Decimal):
+def _check_type(discount: Discount, max_price: Decimal):
     """расчет цены товара в зависимости от типа скидки"""
     if discount:
         if discount.discount_type == 'percentage':
@@ -65,15 +65,15 @@ class DiscountService:
         return priority_max_obj
 
 
-    def one_product_discount_price(self, product: Product, discount: Discount):
+    def _one_product_discount_price(self, product: Product, discount: Discount):
         """
         получение окончательной цены для каждого товара при наличии скидки
         """
         max_price = self.get_max_price(product=product)
         if discount.categories.exists():
-            price = check_type(discount=discount, max_price=max_price)
+            price = _check_type(discount=discount, max_price=max_price)
         elif discount.products.filter(id=product.id).exists():
-            price = check_type(discount=discount, max_price=max_price)
+            price = _check_type(discount=discount, max_price=max_price)
         else:
             price = max_price
         return price
@@ -84,7 +84,7 @@ class DiscountService:
         cart_items = self.cart_service.get_cart_items()
         price = 0
         for item in cart_items:
-            price += item.quantity * self.one_product_discount_price(
+            price += item.quantity * self._one_product_discount_price(
                 product=item.product,
                 discount=discount,
             )
@@ -103,7 +103,7 @@ class DiscountService:
                             prefetch_related('categories').
                             filter(categories__id=item.product.category_id).
                             first())
-                price = check_type(discount=discount, max_price=max_price)
+                price = _check_type(discount=discount, max_price=max_price)
                 total_price += item.quantity * price
             else:
                 total_price += item.quantity * max_price
