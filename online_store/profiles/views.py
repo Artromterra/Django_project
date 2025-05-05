@@ -61,11 +61,6 @@ class UserLoginView(FormView):
     form_class = LoginForm
     success_url = reverse_lazy('profiles:user_profile_update_view')
 
-    # def get_success_url(self):
-    #     if Cart.objects.filter(user=self.request.user).exists():
-    #         return reverse_lazy('shop:order')
-    #     return reverse_lazy('homepage')
-
     def form_valid(self, form):
         email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password')

@@ -6,358 +6,269 @@
 {% load static %}
 
 {% block content %}
-    <div class="Middle Middle_top">
-        <div class="Section">
-            <div class="wrap">
-                <div class="Product">
-                    <div class="ProductCard">
-                        {% if images %}
-                            <div class="ProductCard-look">
-                                <div class="ProductCard-photo">
-                                    <img src="{{ product.images.all.0.url }}" alt="{{ image.description }}" />
-                                </div>
-                                <div class="ProductCard-picts">
-                                    {% for image in product.images.all %}
-                                        <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
-                                            <img src="{{ image.url }}" alt="{{ image.description }}">
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-                        <div class="ProductCard-desc">
-                            <div class="ProductCard-header">
-                                <h2 class="ProductCard-title">
-                                    {{ object.title|default:"Нет названия" }}
-                                </h2>
-                                <div class="ProductCard-info">
-                                    <div class="ProductCard-cost">
-                                        <div class="ProductCard-price">
-                                            {{ object.price|default:"Нет цены" }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ProductCard-text">
-                                {% if object.features.all %}
-                                    <ul>
-                                        {% for feature in object.features.all|slice:":3" %}
-                                            <li>
-                                                {{ feature.value }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <ul>
-                                        <li>
-                                            {% translate "Особенности отсутствуют" %}</li>
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="ProductCard-cart">
-                                <div class="ProductCard-cartElement ProductCard-cartElement_amount">
-                                    <div class="Amount Amount_product">
-                                        <button class="Amount-remove" type="button">
-                                        </button>
-                                        <input class="Amount-input form-input" name="amount" type="text" value="1" />
-                                        <button class="Amount-add" type="button">
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="ProductCard-cartElement">
-                                    <a class="btn btn_primary" href="#modal_open">
-                                        <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg" />
-                                        <span class="btn-content">
-                                            {% translate "Купить" %}
-                                        </span>
-                                    </a>
-                                </div>
-                                <div id="modal_open" class="my_modal">
-                                    <div class="my_modal-dialog">
-                                        <div class="my_modal-content">
-                                            <div class="my_modal-header">
-                                                <p class="my_modal-title">
-                                                    {% translate "Поздравляем!" %}
-                                                </p>
-                                                <a href="#" title="Закрыть модальное окно" class="close">×</a>
-                                            </div>
-                                            <div class="my_modal-body">
-                                                <p>
-                                                    {% translate "Товар успешно добавлен в корзину!" %}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ProductCard-footer">
-                                <div class="ProductCard-tags">
-                                    <strong class="ProductCard-tagsTitle">
-                                        {% translate "Тэги" %}:
-                                    </strong>
-                                    {% if object.tags.all %}
-                                        {% for tag in object.tags.all %}
-                                            <a href="#">{{ tag.name }}</a>,
-                                        {% endfor %}
-                                    {% else %}
-                                        <a href="#">
-                                            {% translate "Теги отсутствуют" %}
-                                        </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Tabs Tabs_default">
-                        <div class="Tabs-links">
-                            <a class="Tabs-link_ACTIVE Tabs-link" href="#description">
-                                <span>
-                                    {% translate "Описание" %}
-                                </span>
-                            </a>
-                            <a class="Tabs-link" href="#sellers">
-                                <span>
-                                    {% translate "Продавцы" %}
-                                </span>
-                            </a>
-                            <a class="Tabs-link" href="#addit">
-                                <span>
-                                    {% translate "Характеристика" %}
-                                </span>
-                            </a>
-                            <a class="Tabs-link" href="#reviews">
-                                <span>
-                                    {% translate "Отзывы" %} (3)</span>
-                            </a>
-                        </div>
-                        <div class="Tabs-wrap">
-                            <div class="Tabs-block" id="description">
-                                <h2>{{ object.title|default:"Нет названия" }}</h2>
-                                <p>{{ object.description|default:"Нет описания" }}</p>
-                                <img class="pict pict_right" src="{% static "assets/img/content/home/bigGoods.png" %}" alt="bigGoods.png">
-                                {% if object.features.all %}
-                                    <ul>
-                                        {% for feature in object.features.all %}
-                                            <li>
-                                                {{ feature.value }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <ul>
-                                        <li>
-                                            {% translate "Особенности отсутствуют" %}
-                                        </li>
-                                    </ul>
-                                {% endif %}
-                                <div class="clearfix">
-                                </div>
-                                <div class="table">
-                                    <table>
-                                        <tr>
-                                            <th>
-                                                {% translate "Характеристика" %}
-                                            </th>
-                                            <th>
-                                                {% translate "Значение" %}
-                                            </th>
-                                        </tr>
-                                        {% if object.properties.all %}
-                                            {% for prop in object.properties.all %}
-                                                <td>{{ prop.property.name }}</td>
-                                                <td>{{ prop.value.value }}</td>
-                                            {% endfor %}
-                                        {% else %}
-                                            <tr>
-                                                <td>
-                                                    {% translate "Характеристик нет" %}
-                                                </td>
-                                                <td></td>
-                                            </tr>
-                                        {% endif %}
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="Tabs-block" id="sellers">
-                                <div class="Section-content">
-                                    <div class="Orders">
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            Ситилинк
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" />
-                                                                <span class="btn-content">
-                                                                    {% translate "Купить" %}
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Тип доставки" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Обычная доставка" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Оплата" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Онлайн картой" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Стоимость" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">200.99$</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            ДНС
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" />
-                                                                <span class="btn-content">
-                                                                    {% translate "Купить" %}
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Тип доставки" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Обычная доставка" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Оплата" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Онлайн картой" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Стоимость" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">100.99$</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Order Order_anons">
-                                            <div class="Order-personal">
-                                                <div class="row">
-                                                    <div class="row-block">
-                                                        <a class="Order-title" href="oneorder.html">
-                                                            Эльдорадо
-                                                        </a>
-                                                        <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                                                            <a class="btn btn_primary" href="#modal_open">
-                                                                <img class="btn-icon" src="assets/img/icons/card/cart_white.svg" alt="cart_white.svg" />
-                                                                <span class="btn-content">
-                                                                    {% translate "Купить" %}</span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row-block">
-                                                        <div class="Order-info Order-info_delivery">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Тип доставки" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Обычная доставка" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info Order-info_pay">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Оплата" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent">
-                                                                {% translate "Онлайн картой" %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="Order-info">
-                                                            <div class="Order-infoType">
-                                                                {% translate "Стоимость" %}:
-                                                            </div>
-                                                            <div class="Order-infoContent"><span class="Order-price">20.00$</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="Tabs-block" id="addit">
-                                <div class="Product-props">
-                                    <div class="Product-prop">
-                                        <strong>Lorem
-                                        </strong><span> Pfizer</span>
-                                    </div>
-                                    <div class="Product-prop">
-                                        <strong>ipsum
-                                        </strong><span> Lorem ipsum dolor sit</span>
-                                    </div>
-                                    <div class="Product-prop">
-                                        <strong>dolor sit
-                                        </strong><span> 5 ans</span>
-                                    </div>
-                                    <div class="Product-prop">
-                                        <strong>psum dolo
-                                        </strong><span> 2–3 jours</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="Tabs-block" id="reviews" data-product-id="{{product.pk}}" data-list-reviews-url="{% url 'reviews:reviews-list' %}?product_id={{product.pk}}" data-create-review-url="{% url 'reviews:reviews-new' %}?product_id={{product.pk}}">
-                                <div id="reviews-list-container"></div>
-                                <div id="reviews-new-container"></div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="Middle Middle_top">
+    <div class="Section">
+      <div class="wrap">
+        <div class="Product">
+          <div class="ProductCard">
+            {% if product.images %}
+              <div class="ProductCard-look">
+                <div class="ProductCard-photo">
+                  <img style="max-height: 300px" src="/media/{{ product.images.all.0.image }}" alt="{{ product.images.all.0.description }}"/>
                 </div>
-
+                <div class="ProductCard-picts">
+                  {% for image in product.images.all %}
+                    <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ image.url }}">
+                      <img src="/media/{{ image.image }}" alt="{{ image.description }}">
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            <div class="ProductCard-desc">
+              <div class="ProductCard-header">
+                <h2 class="ProductCard-title">
+                  {{ object.title|default:"Нет названия" }}
+                </h2>
+                <div class="ProductCard-info">
+                  <div class="ProductCard-cost">
+                    <div class="ProductCard-price">
+                      {{ object.price|default:"Нет цены" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ProductCard-text">
+                {% if object.features.all %}
+                  <ul>
+                    {% for feature in object.features.all|slice:":3" %}
+                      <li>
+                        {{ feature.value }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <ul>
+                    <li>
+                      {% translate "Особенности отсутствуют" %}</li>
+                  </ul>
+                {% endif %}
+              </div>
+              <div class="ProductCard-cart">
+                <div class="ProductCard-cartElement ProductCard-cartElement_amount">
+                  <div class="Amount Amount_product">
+                    <button class="Amount-remove" type="button">
+                    </button>
+                    <input class="Amount-input form-input" name="amount" type="text" value="1"/>
+                    <button class="Amount-add" type="button">
+                    </button>
+                  </div>
+                </div>
+                <div class="ProductCard-cartElement">
+                  <a class="btn btn_primary" href="#modal_open">
+                    <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}"
+                         alt="cart_white.svg"/>
+                    <span class="btn-content">{% translate "Купить" %}</span>
+                  </a>
+                </div>
+                <div id="modal_open" class="my_modal">
+                  <div class="my_modal-dialog">
+                    <div class="my_modal-content">
+                      <div class="my_modal-header">
+                        <p class="my_modal-title">
+                          {% translate "Поздравляем!" %}
+                        </p>
+                        <a href="#" title="Закрыть модальное окно" class="close">×</a>
+                      </div>
+                      <div class="my_modal-body">
+                        <p>
+                          {% translate "Товар успешно добавлен в корзину!" %}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ProductCard-footer">
+                <div class="ProductCard-tags">
+                  <strong class="ProductCard-tagsTitle">
+                    {% translate "Тэги" %}:
+                  </strong>
+                  {% if object.tags.all %}
+                    {% for tag in object.tags.all %}
+                      <a href="#">{{ tag.name }}</a>,
+                    {% endfor %}
+                  {% else %}
+                    <a href="#">
+                      {% translate "Теги отсутствуют" %}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="Tabs Tabs_default">
+            <div class="Tabs-links">
+              <a class="Tabs-link_ACTIVE Tabs-link" href="#description">
+                <span>{% translate "Описание" %}</span>
+              </a>
+              <a class="Tabs-link" href="#sellers">
+                <span>{% translate "Продавцы" %}</span>
+              </a>
+              <a class="Tabs-link" href="#addit">
+                <span>{% translate "Характеристика" %}</span>
+              </a>
+              <a class="Tabs-link" href="#reviews">
+                <span>{% translate "Отзывы" %} (3)</span>
+              </a>
+            </div>
+            <div class="Tabs-wrap">
+              <div class="Tabs-block" id="description">
+                <h2>{{ object.title|default:"Нет названия" }}</h2>
+                <p>{{ object.description|default:"Нет описания" }}</p>
+                <img style="max-height: 150px"  class="pict pict_right" src="/media/{{ product.images.all.0.image }}" alt="{{ product.images.all.0.description }}">
+                {% if object.features.all %}
+                  <ul>
+                    {% for feature in object.features.all %}
+                      <li>
+                        {{ feature.value }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <ul>
+                    <li>
+                      {% translate "Особенности отсутствуют" %}
+                    </li>
+                  </ul>
+                {% endif %}
+                <div class="clearfix">
+                </div>
+                <div class="table">
+                  <table>
+                    <tr>
+                      <th>
+                        {% translate "Характеристика" %}
+                      </th>
+                      <th>
+                        {% translate "Значение" %}
+                      </th>
+                    </tr>
+                    {% if object.properties.all %}
+                      {% for prop in object.properties.all %}
+                        <td>{{ prop.property.name }}</td>
+                        <td>{{ prop.value.value }}</td>
+                      {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td>
+                          {% translate "Характеристик нет" %}
+                        </td>
+                        <td></td>
+                      </tr>
+                    {% endif %}
+                  </table>
+                </div>
+              </div>
+              <div class="Tabs-block" id="sellers">
+                <div class="Section-content">
+                  <div class="Orders">
+                    {% for seller in product.product_sellers.all %}
+                    <div class="Order Order_anons">
+                      <div class="Order-personal">
+                        <div class="row">
+                          <div class="row-block">
+                            <a class="Order-title" href="#">
+                              {{ seller.seller.name }}
+                            </a>
+                            <div class="ProductCard-cartElement" style="margin-top: 10px;">
+                              <a class="btn btn_primary" href="#modal_open">
+                                <img class="btn-icon" src="/static/assets/img/icons/card/cart_white.svg" alt="cart_white.svg"/>
+                                <span class="btn-content">{% translate "Купить" %}</span>
+                              </a>
+                            </div>
+                          </div>
+                          <div class="row-block">
+                            <div class="Order-info Order-info_delivery">
+                              <div class="Order-infoType">
+                                {% translate "Тип доставки" %}:
+                              </div>
+                              <div class="Order-infoContent">
+                                {% if seller.free_shipping is True %}
+                                  Бесплатная доставка
+                                {% else %}
+                                  {% translate "Обычная доставка" %}
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="Order-info Order-info_pay">
+                              <div class="Order-infoType">
+                                {% translate "Оплата" %}:
+                              </div>
+                              <div class="Order-infoContent">
+                                {% translate "Онлайн картой" %}
+                              </div>
+                            </div>
+                            <div class="Order-info">
+                              <div class="Order-infoType">
+                                {% translate "Стоимость" %}:
+                              </div>
+                              <div class="Order-infoContent"><span class="Order-price">{{ seller.price }}$</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <div class="Tabs-block" id="addit">
+                <div class="Product-props">
+                  <div class="Product-prop">
+                    <strong>Lorem
+                    </strong><span> Pfizer</span>
+                  </div>
+                  <div class="Product-prop">
+                    <strong>ipsum
+                    </strong><span> Lorem ipsum dolor sit</span>
+                  </div>
+                  <div class="Product-prop">
+                    <strong>dolor sit
+                    </strong><span> 5 ans</span>
+                  </div>
+                  <div class="Product-prop">
+                    <strong>psum dolo
+                    </strong><span> 2–3 jours</span>
+                  </div>
+                </div>
+              </div>
+              <div class="Tabs-block" id="reviews" data-product-id="{{ product.pk }}"
+                   data-list-reviews-url="{% url 'reviews:reviews-list' %}?product_id={{ product.pk }}"
+                   data-create-review-url="{% url 'reviews:reviews-new' %}?product_id={{ product.pk }}">
+                <div id="reviews-list-container"></div>
+                <div id="reviews-new-container"></div>
+              </div>
+            </div>
+          </div>
         </div>
+
+      </div>
     </div>
+  </div>
 {% endblock %}
 {% block scripts-after-footer %}
-        <!--+Middle-->
-    <!--    +div.-top-->
-    <!--        +breadcrumbs('Главная','Портфолио')-->
-    <!--    +Article('portfolio')-->
-    <!---->
-    <script src="/static/assets/plg/jQuery/jquery-3.5.0.min.js"></script>
-    <script src="/static/assets/plg/form/jquery.form.js"></script>
-    <script src="/static/assets/plg/form/jquery.maskedinput.min.js"></script>
-    <script src="/static/assets/plg/range/ion.rangeSlider.min.js"></script>
-    <script src="/static/assets/plg/Slider/slick.min.js"></script>
-    <script src="/static/assets/js/scripts.js"></script>
-    <script src="/static/assets/js/reviews.js"></script>
+  <!--+Middle-->
+  <!--    +div.-top-->
+  <!--        +breadcrumbs('Главная','Портфолио')-->
+  <!--    +Article('portfolio')-->
+  <!---->
+  <script src="/static/assets/plg/jQuery/jquery-3.5.0.min.js"></script>
+  <script src="/static/assets/plg/form/jquery.form.js"></script>
+  <script src="/static/assets/plg/form/jquery.maskedinput.min.js"></script>
+  <script src="/static/assets/plg/range/ion.rangeSlider.min.js"></script>
+  <script src="/static/assets/plg/Slider/slick.min.js"></script>
+  <script src="/static/assets/js/scripts.js"></script>
+  <script src="/static/assets/js/reviews.js"></script>
 {% endblock %}

@@ -1,0 +1,146 @@
+[
+{
+    "model": "shop.productimage",
+    "pk": 1,
+    "fields": {
+        "image": "products/product_1/images/realme_note_60X.webp",
+        "description": "",
+        "product": 1
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 2,
+    "fields": {
+        "image": "products/product_2/images/poco_x7.webp",
+        "description": "",
+        "product": 2
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 3,
+    "fields": {
+        "image": "products/product_3/images/atlant.webp",
+        "description": "",
+        "product": 3
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 4,
+    "fields": {
+        "image": "products/product_4/images/samsung_washing_mashine.webp",
+        "description": "",
+        "product": 4
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 5,
+    "fields": {
+        "image": "products/product_5/images/gorenje_plita.webp",
+        "description": "",
+        "product": 5
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 6,
+    "fields": {
+        "image": "products/product_6/images/hyundai.webp",
+        "description": "",
+        "product": 6
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 7,
+    "fields": {
+        "image": "products/product_7/images/redmond.webp",
+        "description": "",
+        "product": 7
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 8,
+    "fields": {
+        "image": "products/product_8/images/polaris.webp",
+        "description": "",
+        "product": 8
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 9,
+    "fields": {
+        "image": "products/product_10/images/samsung_tv.webp",
+        "description": "",
+        "product": 10
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 10,
+    "fields": {
+        "image": "products/product_11/images/web_os_tv.webp",
+        "description": "",
+        "product": 11
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 11,
+    "fields": {
+        "image": "products/product_12/images/lenovo.webp",
+        "description": "",
+        "product": 12
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 12,
+    "fields": {
+        "image": "products/product_13/images/asus.webp",
+        "description": "",
+        "product": 13
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 13,
+    "fields": {
+        "image": "products/product_14/images/headphone.webp",
+        "description": "",
+        "product": 14
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 14,
+    "fields": {
+        "image": "products/product_15/images/audio_bq.webp",
+        "description": "",
+        "product": 15
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 15,
+    "fields": {
+        "image": "products/product_16/images/canon_foto.webp",
+        "description": "",
+        "product": 16
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 16,
+    "fields": {
+        "image": "products/product_17/images/photocamera_1.webp",
+        "description": "",
+        "product": 17
+    }
+}
+]
