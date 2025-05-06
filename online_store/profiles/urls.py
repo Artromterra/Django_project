@@ -12,6 +12,8 @@ from .views import (
     UserProfileUpdateView,
 )
 
+app_name = "profiles"
+
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),

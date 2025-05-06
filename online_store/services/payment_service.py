@@ -8,13 +8,13 @@ YOOKASSA_API_KEY = os.getenv('YOOKASSA_API_KEY')
 class PaymentService:
     def __init__(self):
         self.api_url = 'https://api.yookassa.ru/v3/payments'
-        self.shop_id = YOOKASSA_SHOP_ID  # <-- сюда вставь свой тестовый Shop ID из личного кабинета ЮKassa
-        self.api_key = YOOKASSA_API_KEY  # <-- сюда вставь свой тестовый API-ключ
+        self.shop_id = YOOKASSA_SHOP_ID
+        self.api_key = YOOKASSA_API_KEY
 
     def pay_order(self, cart_number, expiry_month, expiry_year, cvc, total_price, order_id):
         headers = {
             'Content-Type': 'application/json',
-            'Idempotence-Key': str(uuid.uuid4()),  # уникальный ключ для избежания повторной оплаты
+            'Idempotence-Key': str(uuid.uuid4()),
         }
 
         data = {
@@ -33,7 +33,7 @@ class PaymentService:
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": "http://127.0.0.1:8000/"  # куда вернется пользователь после оплаты
+                "return_url": "http://127.0.0.1:8000/shop/order-confirm/payment/progressPayment"
             },
             "description": f"Оплата заказа #{order_id}",
             "capture": True
@@ -49,5 +49,18 @@ class PaymentService:
         if response.status_code in (200, 201):
             return response.json()
         else:
-            print("Ошибка при оплате через ЮKassa:", response.text)  # <- выведем текст ошибки
+            print("Ошибка при оплате через ЮKassa:", response.text)
+            response.raise_for_status()
+
+    def check_payment_status(self, payment_id):
+        url = f"{self.api_url}/{payment_id}"
+        response = requests.get(
+            url,
+            auth=(self.shop_id, self.api_key)
+        )
+
+        if response.status_code in (200, 201):
+            return response.json()
+        else:
+            print("Ошибка при проверке статуса оплаты:", response.text)
             response.raise_for_status()
