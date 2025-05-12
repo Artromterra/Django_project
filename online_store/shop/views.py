@@ -59,6 +59,8 @@ from services.payment_service import PaymentService
 
 import requests
 
+from django.utils.translation import gettext as _
+
 logger = getLogger("main.shop.views")
 
 
@@ -275,7 +277,7 @@ def import_from_files_page(request: HttpRequest) -> HttpResponse:
                     }
                 )
             else:
-                messages.error(request, "Unknown action")
+                messages.error(request, _("Unknown action"))
             return redirect("admin:importing")
     else:
         if (utils.celery_utils.are_there_any_active_importing_tasks() or

@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.views import View
 from services.сomparison_service import ComparisonService
 
+from django.utils.translation import gettext_lazy as _
+
 
 class ComparisonView(View):
     def _get_service(self, request):
@@ -19,13 +21,13 @@ class ComparisonView(View):
         """
         product_id = request.POST.get('product_id')
         if not product_id:
-            return JsonResponse({'error': 'Требуется идентификатор продукта'}, status=400)
+            return JsonResponse({'error': _('Требуется идентификатор продукта')}, status=400)
 
         service = self._get_service(request)
         added = service.add_product(product_id)
         if added:
-            return JsonResponse({'message': 'Продукт добавлен в список сравнения'})
-        return JsonResponse({'message': 'Продукт уже в списке сравнения'})
+            return JsonResponse({'message': _('Продукт добавлен в список сравнения')})
+        return JsonResponse({'message': _('Продукт уже в списке сравнения')})
 
     def delete(self, request, *args, **kwargs):
         """
@@ -33,11 +35,11 @@ class ComparisonView(View):
         """
         product_id = request.GET.get('product_id')
         if not product_id:
-            return JsonResponse({'error': 'Требуется идентификатор продукта'}, status=400)
+            return JsonResponse({'error': _('Требуется идентификатор продукта')}, status=400)
 
         service = self._get_service(request)
         service.remove_product(product_id)
-        return JsonResponse({'message': 'Продукт удален из списка сравнения'})
+        return JsonResponse({'message': _('Продукт удален из списка сравнения')})
 
     def get(self, request, *args, **kwargs):
         """
@@ -49,7 +51,7 @@ class ComparisonView(View):
         try:
             limit = int(limit)
         except ValueError:
-            return JsonResponse({'error': 'Предел должен быть целым числом'}, status=400)
+            return JsonResponse({'error': _('Предел должен быть целым числом')}, status=400)
 
         products = service.get_products(limit=limit)
         count = service.get_count()

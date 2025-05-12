@@ -49,7 +49,7 @@ class PaymentService:
         if response.status_code in (200, 201):
             return response.json()
         else:
-            print("Ошибка при оплате через ЮKassa:", response.text)
+            # print("Ошибка при оплате через ЮKassa:", response.text)
             response.raise_for_status()
 
     def check_payment_status(self, payment_id):
@@ -62,5 +62,5 @@ class PaymentService:
         if response.status_code in (200, 201):
             return response.json()
         else:
-            print("Ошибка при проверке статуса оплаты:", response.text)
+            # print("Ошибка при проверке статуса оплаты:", response.text)
             response.raise_for_status()
