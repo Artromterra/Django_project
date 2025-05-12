@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 
+from dto.product_list_dto import ProductDTO
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
 from services.view_history_products_service import ViewHistoryProductsService
@@ -115,6 +116,20 @@ class ProductListView(ListView):
     context_object_name: str = "products"
     paginate_by = 10
 
+    def get(self, request, *args, **kwargs):
+        """метод для фильтрации и отображения товаров в зависимости от категории,
+        для корректной работы меню категорий
+        """
+        category = self.kwargs.get("pk")
+        products_filter = Product.objects.filter(category_id=category)
+        # условие для отображения всех товаров без разделения на категории
+        if category == 0:
+            return super().get(request, *args, **kwargs)
+        else:
+            products_dto = ProductDTO.from_objects(products_filter)
+            return render(request, self.template_name, {"products": products_dto})
+
+
     def get_context_data(self, **kwargs) -> dict:
         """
         Сортировка товара, для вывода на странице каталога товаров
@@ -131,10 +146,10 @@ class ProductListView(ListView):
         """
         sorting_method = self.request.GET.get("sort", "-carts_count")
         sorted_context = get_context_data_sort(self.context_object_name, sorting_method)
-        patinated_sorted_context = self._context_pagination(sorted_context)
-        return patinated_sorted_context
+        paginated_sorted_context = self._context_pagination(sorted_context)
+        return paginated_sorted_context
 
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         """
         Обработка POST-запроса для фильтрации товаров на странице каталога.
 
@@ -149,8 +164,8 @@ class ProductListView(ListView):
         7. Возвращаем отрендеренную страницу с продуктами.
         """
         filtered_context = get_context_data_filtered(self.context_object_name, request.POST)
-        patinated_filtered_context = self._context_pagination(filtered_context)
-        return render(request, "catalog.html", patinated_filtered_context)
+        paginated_filtered_context = self._context_pagination(filtered_context)
+        return render(request, "catalog.html", paginated_filtered_context)
 
     def _context_pagination(self, context: dict) -> dict:
         """Пагинирует контекст и возвращает его же"""
@@ -481,7 +496,6 @@ class OrderConfirmView(TemplateView):
             total_prod_price=float(cart[0].cart.total_price),
             cart_queryset=cart,
             order=order,
-            delivery_price=OrderDeliveryPrice(),
         )
         order.total_discount_price = total
         order.save()

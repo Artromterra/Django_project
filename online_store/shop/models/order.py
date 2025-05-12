@@ -63,27 +63,28 @@ class Order(models.Model):
 
 
 class OrderDeliveryPrice(models.Model):
+    objects = models.Manager()
     class Meta:
         verbose_name = 'Order Delivery Price'
         verbose_name_plural = 'Order Delivery Prices'
 
     express_price = models.DecimalField(
         'Express Delivery Price',
-        decimal_places=2,
+        decimal_places=1,
         max_digits=7,
-        default=500,
+        default=0,
     )
     regular_price = models.DecimalField(
         'Regular Delivery Price',
-        decimal_places=2,
+        decimal_places=1,
         max_digits=7,
-        default=200,
+        default=0,
     )
     order_price_for_delivery = models.DecimalField(
         'Order Price For Delivery',
-        decimal_places=2,
+        decimal_places=1,
         max_digits=10,
-        default=2000,
+        default=0,
     )
 
     def __str__(self):

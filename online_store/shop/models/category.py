@@ -22,6 +22,7 @@ def validate_svg(file):
 
 
 class Category(models.Model):
+    objects = models.Manager()
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"

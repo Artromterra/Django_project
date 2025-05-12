@@ -22,7 +22,7 @@
     "pk": 3,
     "fields": {
         "image": "products/product_3/images/atlant.webp",
-        "description": "",
+        "description": "холодильник вид спереди",
         "product": 3
     }
 },
@@ -141,6 +141,33 @@
         "image": "products/product_17/images/photocamera_1.webp",
         "description": "",
         "product": 17
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 17,
+    "fields": {
+        "image": "products/product_3/images/atlant2.webp",
+        "description": "холодильник с продуктами",
+        "product": 3
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 18,
+    "fields": {
+        "image": "products/product_3/images/atlant3.webp",
+        "description": "",
+        "product": 3
+    }
+},
+{
+    "model": "shop.productimage",
+    "pk": 19,
+    "fields": {
+        "image": "products/product_9/images/leran_coffe_maker.webp",
+        "description": "",
+        "product": 9
     }
 }
 ]

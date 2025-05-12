@@ -9,7 +9,8 @@ def category_menu(request):
     Context processor, который добавляет меню категорий в контекст всех шаблонов.
     """
     return {
-        'category_menu': CategoryMenuService.get_cached_menu()
+        'category_menu': CategoryMenuService.get_cached_menu(),
+        'sub_categories': CategoryMenuService.get_sub_categories(),
     }
 
 def cart(request):

@@ -21,7 +21,7 @@ class ProductListDTO:
         return cls(
             id=object.pk,
             title=object.title,
-            price=object.price,
+            price=float(object.price),
             categories=cls.get_categories(object),
             image_url=(
                 object.images.first().image.url  # type: ignore
