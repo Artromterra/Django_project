@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.http import QueryDict
 
 from shop.models.product import Product
-from dto.product_list_dto import ProductDTO
+from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 
 SORTING_METHODS = [
@@ -22,7 +22,7 @@ SORTING_METHODS = [
 
 def get_context_data_sort(
     context_object_name: str, sorting_method: str
-) -> dict[str, list[ProductDTO]]:
+) -> dict[str, list[ProductListDTO]]:
     '''Загружает контекстные данные и сортирует их по переданному методу соритровки'''
 
     if sorting_method not in SORTING_METHODS:
@@ -40,7 +40,7 @@ def get_context_data_sort(
         .order_by(sorting_method)
         .all()
     )
-    products_dto = ProductDTO.from_objects(products)  # type: ignore
+    products_dto = ProductListDTO.from_objects(products)  # type: ignore
     cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
     return {context_object_name: products_dto}
@@ -66,7 +66,7 @@ def get_context_data_filtered(context_object_name: str, request_post_data: Query
     if free_shipping_filter:
         query = query.filter(product_sellers__free_shipping=True)
 
-    products_dto = ProductDTO.from_objects(query)
+    products_dto = ProductListDTO.from_objects(query)
     context = {
         "min_price": min_price,
         "max_price": max_price,
