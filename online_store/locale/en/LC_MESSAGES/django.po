@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-12 14:05+0000\n"
+"POT-Creation-Date: 2025-05-12 14:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: comparison/views.py:24 comparison/views.py:38
+msgid "Требуется идентификатор продукта"
+msgstr "A product ID is required"
+
+#: comparison/views.py:29
+msgid "Продукт добавлен в список сравнения"
+msgstr "The product has been added to the comparison list"
+
+#: comparison/views.py:30
+msgid "Продукт уже в списке сравнения"
+msgstr "The product is already on the comparison list"
+
+#: comparison/views.py:42
+msgid "Продукт удален из списка сравнения"
+msgstr "Продукт удален из списка сравнения"
+
+#: comparison/views.py:54
+msgid "Предел должен быть целым числом"
+msgstr "The limit must be an integer"
+
 #: online_store/settings.py:137
 msgid "English"
 msgstr ""
@@ -25,6 +45,41 @@ msgstr ""
 #: online_store/settings.py:138
 msgid "Russian"
 msgstr ""
+
+#: profiles/forms.py:18 templates/profile.html:65
+msgid "Имя"
+msgstr "First name"
+
+#: profiles/forms.py:25 profiles/forms.py:48 templates/oneorder.html:45
+#: templates/order_user.html:45 templates/profile.html:108
+#: templates/profileAvatar.html:89
+msgid "E-mail"
+msgstr ""
+
+#: profiles/forms.py:68
+
+msgid "Не верный пароль"
+msgstr "Wrong password"
+
+#: profiles/forms.py:70
+msgid "Пользователя не существует"
+msgstr "The user does not exist"
+
+#: profiles/forms.py:91
+msgid "Пользователь не активирован"
+msgstr "The user does not active"
+
+#: profiles/forms.py:93
+msgid "Нет такого пользователя"
+msgstr "The user does not exist"
+
+#: profiles/forms.py:111
+msgid "Повторите пароль"
+msgstr "Password confirmation"
+
+#: profiles/forms.py:139
+msgid "Введите корректный номер телефона."
+msgstr "Enter the correct phone number"
 
 #: shop/forms.py:19
 msgid "Загрузить новый файл импорта"
@@ -39,8 +94,8 @@ msgid ""
 "Email, куда будет отправлен отчет об импорте. Если не указать, будут "
 "использоваться email-ы админов, установленных по умолчанию."
 msgstr ""
-"The email address where the import report will be sent."
-"If omitted, the default admin email addresses will be used."
+"The email address where the import report will be sent.If omitted, the "
+"default admin email addresses will be used."
 
 #: shop/forms.py:37
 msgid "Выберете файлы импорта"
@@ -605,11 +660,6 @@ msgstr "Full name"
 msgid "Телефон"
 msgstr "Phone"
 
-#: templates/oneorder.html:45 templates/order_user.html:45
-#: templates/profile.html:108 templates/profileAvatar.html:89
-msgid "E-mail"
-msgstr ""
-
 #: templates/oneorder.html:67 templates/order_confirm.html:58
 #: templates/order_delivery_page.html:30
 msgid "Город"
@@ -744,10 +794,6 @@ msgstr "Avatar"
 #: templates/profile.html:55
 msgid "Загрузить фото"
 msgstr "Download photo"
-
-#: templates/profile.html:65
-msgid "Имя"
-msgstr "First name"
 
 #: templates/profile.html:75
 msgid "Фамилия"

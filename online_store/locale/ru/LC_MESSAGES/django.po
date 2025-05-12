@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-12 14:05+0000\n"
+"POT-Creation-Date: 2025-05-12 14:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,26 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
+#: comparison/views.py:24 comparison/views.py:38
+msgid "Требуется идентификатор продукта"
+msgstr ""
+
+#: comparison/views.py:29
+msgid "Продукт добавлен в список сравнения"
+msgstr ""
+
+#: comparison/views.py:30
+msgid "Продукт уже в списке сравнения"
+msgstr ""
+
+#: comparison/views.py:42
+msgid "Продукт удален из списка сравнения"
+msgstr ""
+
+#: comparison/views.py:54
+msgid "Предел должен быть целым числом"
+msgstr ""
+
 #: online_store/settings.py:137
 msgid "English"
 msgstr "Английский"
@@ -27,6 +47,40 @@ msgstr "Английский"
 #: online_store/settings.py:138
 msgid "Russian"
 msgstr "Русский"
+
+#: profiles/forms.py:18 templates/profile.html:65
+msgid "Имя"
+msgstr ""
+
+#: profiles/forms.py:25 profiles/forms.py:48 templates/oneorder.html:45
+#: templates/order_user.html:45 templates/profile.html:108
+#: templates/profileAvatar.html:89
+msgid "E-mail"
+msgstr "Электронная почта"
+
+#: profiles/forms.py:68
+msgid "Не верный пароль"
+msgstr ""
+
+#: profiles/forms.py:70
+msgid "Пользователя не существует"
+msgstr ""
+
+#: profiles/forms.py:91
+msgid "Пользователь не активирован"
+msgstr ""
+
+#: profiles/forms.py:93
+msgid "Нет такого пользователя"
+msgstr ""
+
+#: profiles/forms.py:111
+msgid "Повторите пароль"
+msgstr ""
+
+#: profiles/forms.py:139
+msgid "Введите корректный номер телефона."
+msgstr ""
 
 #: shop/forms.py:19
 msgid "Загрузить новый файл импорта"
@@ -603,11 +657,6 @@ msgstr ""
 msgid "Телефон"
 msgstr ""
 
-#: templates/oneorder.html:45 templates/order_user.html:45
-#: templates/profile.html:108 templates/profileAvatar.html:89
-msgid "E-mail"
-msgstr "Электронная почта"
-
 #: templates/oneorder.html:67 templates/order_confirm.html:58
 #: templates/order_delivery_page.html:30
 msgid "Город"
@@ -739,10 +788,6 @@ msgstr ""
 
 #: templates/profile.html:55
 msgid "Загрузить фото"
-msgstr ""
-
-#: templates/profile.html:65
-msgid "Имя"
 msgstr ""
 
 #: templates/profile.html:75
