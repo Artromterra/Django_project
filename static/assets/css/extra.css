@@ -5732,21 +5732,21 @@ input[type="submit"] {
     line-height: 84px;
     text-transform: uppercase;
     display: block;
-    font-size: 74px;
+    font-size: 60px;
     letter-spacing: -2.3px;
     margin-bottom: 25px;
 }
 
 @media screen and (max-width: 990px) {
     .Slider-title {
-        font-size: 50px;
+        font-size: 40px;
         line-height: 1.2em;
     }
 }
 
 @media screen and (max-width: 480px) {
     .Slider-title {
-        font-size: 38px;
+        font-size: 28px;
         line-height: 1.2em;
     }
 }

@@ -1,6 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.db.models.query import QuerySet
 
 from decimal import Decimal
 

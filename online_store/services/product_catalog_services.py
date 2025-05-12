@@ -40,7 +40,7 @@ def get_context_data_sort(
         .order_by(sorting_method)
         .all()
     )
-    products_dto = ProductListDTO.from_objects(products)  # type: ignore
+    products_dto = ProductDTO.from_objects(products)  # type: ignore
     cache.set(cache_key, products_dto, SettingsService.get_cache_timeout())
 
     return {context_object_name: products_dto}

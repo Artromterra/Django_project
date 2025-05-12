@@ -16,6 +16,7 @@ class BannerProductDTO:
     product_id: int
     product_title: str
     product_description: str
+    short_description: str
 
     @classmethod
     def from_queryset(
@@ -30,6 +31,7 @@ class BannerProductDTO:
                 product_id=b.product.id,
                 product_title=b.product.title,
                 product_description=b.product.description,
+                short_description=b.product.short_description,
             )
             for b in queryset
         ]

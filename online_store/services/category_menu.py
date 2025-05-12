@@ -15,8 +15,15 @@ class CategoryMenuService:
         """
         return Category.objects.filter(
             is_active=True,
-            products__is_active=True
-        ).distinct()
+            # products__is_active=True
+        )
+
+    @classmethod
+    def get_sub_categories(cls):
+        return Category.objects.filter(
+            parent_category_id__isnull=False,
+        )
+
 
     @classmethod
     def get_cache_timeout(cls):

@@ -78,7 +78,7 @@
             <span class="menu-label menu-label_success">
               {% translate "Скидки" %}
             </span>
-            <a class="menu-link" href="#">
+            <a class="menu-link" href="{% url 'shop:products_list' pk=0 %}">
               {% translate "Каталог" %}
             </a>
           </li>
@@ -145,54 +145,41 @@
           <div class="CategoriesButton-arrow"></div>
         </div>
         <div class="CategoriesButton-content">
-{#         код ниже представлен для примера, его нужно будет заменить для динамического отображения меню #}
-          <div class="CategoriesButton-link">
-            <a href="#">
-              <div class="CategoriesButton-icon">
-                <img src="/static/assets/img/icons/departments/1.svg" alt="1.svg" />
+          {% for category in category_menu %}
+            {% if category.parent_category is not None %}
+              <div class="CategoriesButton-link">
+              {% if category.name == 'Скидки' %}
+                <a href="{% url "shop:discount" %}">
+              {% else %}
+                <a href="{% url "shop:products_list" pk=category.pk %}">
+               {% endif %}
+                  <div class="CategoriesButton-icon">
+                    <img src="/media/{{ category.category_icon }}" alt="{{ category.name }}" />
+                  </div>
+                  <span class="CategoriesButton-text">
+                   {{ category.name }}
+    {#                {% translate "Стиральные машины" %}#}
+                  </span>
+                </a>
+{#                {% for sub_cat in sub_categories %}#}
+{#                {% if sub_cat.parent_category_id == category.id %}#}
+{#                <a class="CategoriesButton-arrow" href="#"></a>#}
+{#                <div class="CategoriesButton-submenu">#}
+{#                  <a class="CategoriesButton-link" href="#">#}
+{#                    <div class="CategoriesButton-icon">#}
+{#                      <img src="/media/{{ sub_cat.category_icon }}" alt="{{ sub_cat.name }}" />#}
+{#                    </div>#}
+{#                    <span class="CategoriesButton-text">#}
+{#                      {{ sub_cat.name }}#}
+{#                      {% translate "Аксессуары" %}#}
+{#                    </span>#}
+{#                  </a>#}
+{#                </div>#}
+{#                {% endif %}#}
+{#                {% endfor %}#}
               </div>
-              <span class="CategoriesButton-text">
-                {% translate "Телевизоры" %}
-              </span>
-            </a>
-          </div>
-          <div class="CategoriesButton-link">
-            <a href="#">
-              <div class="CategoriesButton-icon">
-                <img src="/static/assets/img/icons/departments/2.svg" alt="2.svg" />
-              </div>
-              <span class="CategoriesButton-text">
-                {% translate "Наушники" %}</span>
-            </a>
-          </div>
-          <div class="CategoriesButton-link">
-            <a href="#">
-              <div class="CategoriesButton-icon">
-                <img src="/static/assets/img/icons/departments/3.svg" alt="3.svg" />
-              </div>
-              <span class="CategoriesButton-text">
-                {% translate "Стиральные машины" %}</span>
-            </a>
-            <a class="CategoriesButton-arrow" href="#"></a>
-            <div class="CategoriesButton-submenu">
-              <a class="CategoriesButton-link" href="#">
-                <div class="CategoriesButton-icon">
-                  <img src="/static/assets/img/icons/departments/1.svg" alt="1.svg" />
-                </div>
-                <span class="CategoriesButton-text">
-                  {% translate "Аксессуары" %}
-                </span>
-              </a>
-              <a class="CategoriesButton-link" href="#">
-                <div class="CategoriesButton-icon">
-                  <img src="/static/assets/img/icons/departments/2.svg" alt="2.svg" />
-                </div>
-                <span class="CategoriesButton-text">
-                  {% translate "Чехлы" %}
-                </span>
-              </a>
-            </div>
-          </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>
