@@ -17,7 +17,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 
-from dto.product_list_dto import ProductDTO
+from dto.product_list_dto import ProductListDTO
 from services.settings_service import SettingsService
 from services.product_catalog_services import get_context_data_sort, get_context_data_filtered
 from services.view_history_products_service import ViewHistoryProductsService
@@ -126,7 +126,7 @@ class ProductListView(ListView):
         if category == 0:
             return super().get(request, *args, **kwargs)
         else:
-            products_dto = ProductDTO.from_objects(products_filter)
+            products_dto = ProductListDTO.from_objects(products_filter)
             return render(request, self.template_name, {"products": products_dto})
 
 
@@ -733,3 +733,10 @@ class YookassaReturnView(LoginRequiredMixin, View):
             messages.error(request, "Ошибка при проверке оплаты")
 
         return redirect("/shop/order-confirm/payment/")
+
+
+class DiscountView(ListView):
+    template_name = "sale.html"
+    model = Discount
+    queryset = Discount.objects.all().order_by("-end_date")
+    context_object_name = 'discounts'
