@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 17:28+0000\n"
+"POT-Creation-Date: 2025-05-12 14:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,53 +18,213 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: online_store/settings.py:134
+#: comparison/views.py:24 comparison/views.py:38
+msgid "Требуется идентификатор продукта"
+msgstr "A product ID is required"
+
+#: comparison/views.py:29
+msgid "Продукт добавлен в список сравнения"
+msgstr "The product has been added to the comparison list"
+
+#: comparison/views.py:30
+msgid "Продукт уже в списке сравнения"
+msgstr "The product is already on the comparison list"
+
+#: comparison/views.py:42
+msgid "Продукт удален из списка сравнения"
+msgstr "Продукт удален из списка сравнения"
+
+#: comparison/views.py:54
+msgid "Предел должен быть целым числом"
+msgstr "The limit must be an integer"
+
+#: online_store/settings.py:137
 msgid "English"
 msgstr ""
 
-#: online_store/settings.py:135
+#: online_store/settings.py:138
 msgid "Russian"
 msgstr ""
 
-#: shop/models/discount.py:12
+#: profiles/forms.py:18 templates/profile.html:65
+msgid "Имя"
+msgstr "First name"
+
+#: profiles/forms.py:25 profiles/forms.py:48 templates/oneorder.html:45
+#: templates/order_user.html:45 templates/profile.html:108
+#: templates/profileAvatar.html:89
+msgid "E-mail"
+msgstr ""
+
+#: profiles/forms.py:68
+
+msgid "Не верный пароль"
+msgstr "Wrong password"
+
+#: profiles/forms.py:70
+msgid "Пользователя не существует"
+msgstr "The user does not exist"
+
+#: profiles/forms.py:91
+msgid "Пользователь не активирован"
+msgstr "The user does not active"
+
+#: profiles/forms.py:93
+msgid "Нет такого пользователя"
+msgstr "The user does not exist"
+
+#: profiles/forms.py:111
+msgid "Повторите пароль"
+msgstr "Password confirmation"
+
+#: profiles/forms.py:139
+msgid "Введите корректный номер телефона."
+msgstr "Enter the correct phone number"
+
+#: shop/forms.py:19
+msgid "Загрузить новый файл импорта"
+msgstr "Download new import file"
+
+#: shop/forms.py:20
+msgid "Новый файл импорта"
+msgstr "New import file"
+
+#: shop/forms.py:30
+msgid ""
+"Email, куда будет отправлен отчет об импорте. Если не указать, будут "
+"использоваться email-ы админов, установленных по умолчанию."
+msgstr ""
+"The email address where the import report will be sent.If omitted, the "
+"default admin email addresses will be used."
+
+#: shop/forms.py:37
+msgid "Выберете файлы импорта"
+msgstr "Choose import files"
+
+#: shop/forms.py:46
+msgid "Это поле необходимо заполнить"
+msgstr "This field must be filled in"
+
+#: shop/forms.py:47
+msgid "Введите верное значение"
+msgstr "Enter the correct value"
+
+#: shop/forms.py:73
+msgid "Тут можно изменить пароль"
+msgstr "You can change the password here"
+
+#: shop/forms.py:79
+msgid "Введите пароль повторно"
+msgstr "Confirm password"
+
+#: shop/forms.py:103
+msgid "Введите корректный номер телефона"
+msgstr "Enter the correct phone number"
+
+#: shop/forms.py:105
+msgid "Поле с номером телефона не должно быть пустым"
+msgstr "The phone number field should not be empty"
+
+#: shop/forms.py:108
+msgid "Пароли должны совпадать!"
+msgstr "Passwords must match!"
+
+#: shop/forms.py:111
+msgid "Пользователь с указанным email существует, вы можете авторизоваться"
+msgstr "The user with the specified email exists, you can log in"
+
+#: shop/forms.py:124 templates/account.html:79 templates/historyorder.html:60
+#: templates/oneorder.html:61 templates/order_confirm.html:52
+#: templates/product.html:200
+msgid "Обычная доставка"
+msgstr "Ordinary shipping"
+
+#: shop/forms.py:125 templates/account.html:75 templates/historyorder.html:63
+#: templates/oneorder.html:57 templates/order_confirm.html:48
+msgid "Экспресс доставка"
+msgstr "Express shipping"
+
+#: shop/forms.py:144 templates/account.html:89 templates/historyorder.html:71
+#: templates/oneorder.html:83 templates/order_confirm.html:72
+#: templates/product.html:209
+msgid "Онлайн картой"
+msgstr "Card online"
+
+#: shop/forms.py:145
+msgid "Онлайн со случайного чужого счета"
+msgstr "Online from someone else's random account"
+
+#: shop/forms.py:159
+msgid "Номер карты"
+msgstr "Card number"
+
+#: shop/forms.py:160
+msgid "Месяц окончания (MM)"
+msgstr "Finish ,month"
+
+#: shop/forms.py:161
+msgid "Год окончания (YYYY)"
+msgstr "Finish year"
+
+#: shop/forms.py:163
+msgid "Сумма"
+msgstr "Total price"
+
+#: shop/models/discount.py:15
 msgid "Percentage"
 msgstr ""
 
-#: shop/models/discount.py:13
+#: shop/models/discount.py:16
 msgid "Fixed amount"
 msgstr ""
 
-#: shop/models/discount.py:16
+#: shop/models/discount.py:19
 msgid "Название скидки"
 msgstr "Discount"
 
-#: shop/models/discount.py:21
+#: shop/models/discount.py:24
 msgid "Тип скидки"
 msgstr "Discount type"
 
-#: shop/models/discount.py:26
+#: shop/models/discount.py:29
 msgid "Величина скидки"
 msgstr "Discount value"
 
-#: shop/models/discount.py:28
+#: shop/models/discount.py:31
 msgid "Дата начала"
 msgstr "Start date"
 
-#: shop/models/discount.py:29
+#: shop/models/discount.py:32
 msgid "Дата окончания"
 msgstr "Finish date"
 
-#: shop/models/discount.py:30
+#: shop/models/discount.py:33
 msgid "Активна"
 msgstr "Is active"
 
-#: shop/models/discount.py:31
+#: shop/models/discount.py:36
+msgid "Вес скидки, максимальная 2"
+msgstr "Discount weight, max 2"
+
+#: shop/models/discount.py:42
+msgid "Количество товара в корзине"
+msgstr "Products in cart"
+
+#: shop/models/discount.py:46
+msgid "Итоговая стоимость товаров в корзине"
+msgstr "The total cost of the items in the cart"
+
+#: shop/models/discount.py:53
 msgid "Продукты"
 msgstr "Products"
 
-#: shop/models/discount.py:32
+#: shop/models/discount.py:59
 msgid "Категории"
 msgstr "Categoties"
+
+#: shop/views.py:280
+msgid "Unknown action"
+msgstr ""
 
 #: templates/about.html:12
 msgid "About Megano"
@@ -121,13 +281,13 @@ msgstr ""
 
 #: templates/about.html:118
 msgid ""
-" \n"
+"\n"
 "                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit "
-"doli. \n"
+"doli.\n"
 "                    Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu "
-"sociis natoque penatibus \n"
+"sociis natoque penatibus\n"
 "                    et magnis dis parturient montesti, nascetur ridiculus "
-"mus. Donec quam felis, \n"
+"mus. Donec quam felis,\n"
 "                    ultricies nec, pellentesque eutu, pretiumem.\n"
 "                    "
 msgstr ""
@@ -140,11 +300,11 @@ msgid ""
 "                     aliquet nec, vulputate eget, arcu. In enim justotuio, "
 "rhoncus ut loret, imperdiet a,\n"
 "                      venenatis vitae, justo. Nullam dictum felis eu pede "
-"mollis pretium. Integer \n"
+"mollis pretium. Integer\n"
 "                      tincidunt. Cras dapibus. Vivamus element semper nisi. "
-"Aenean vulputate eleifend \n"
+"Aenean vulputate eleifend\n"
 "                      tellus. Aenean leo ligula, porttitor eu, consequat "
-"vitae  ligula eget dolor. \n"
+"vitae  ligula eget dolor.\n"
 "                      Aenean massa. Cumtipsu sociis natoque pena tibusetm t "
 "semper ni.\n"
 "                    "
@@ -162,9 +322,9 @@ msgstr ""
 msgid ""
 "\n"
 "                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit "
-"doli. Aenean commodo ligula eget dolor. \n"
+"doli. Aenean commodo ligula eget dolor.\n"
 "                    Aenean massa. Cumtipsu sociis natoque penatibus et "
-"magnis dis parturient montesti, nascetur ridiculus mus. \n"
+"magnis dis parturient montesti, nascetur ridiculus mus.\n"
 "                    Donec quam felis, ultricies nec, pellentesque eutu, "
 "pretiumem.\n"
 "                    "
@@ -213,7 +373,7 @@ msgstr "Account"
 msgid "Профиль"
 msgstr "Profile"
 
-#: templates/account.html:29 templates/account.html:63
+#: templates/account.html:29 templates/account.html:64
 #: templates/historyorder.html:32 templates/profile.html:34
 #: templates/profileAvatar.html:46
 msgid "История заказов"
@@ -223,78 +383,57 @@ msgstr "Orders history"
 msgid "Редактировать профиль"
 msgstr "Edit Profile"
 
-#: templates/account.html:70 templates/historyorder.html:57
+#: templates/account.html:71 templates/historyorder.html:57
 #: templates/oneorder.html:53 templates/order_confirm.html:44
-#: templates/product.html:203 templates/product.html:247
-#: templates/product.html:290
+#: templates/product.html:194
 msgid "Тип доставки"
 msgstr "Delivery type"
 
-#: templates/account.html:74 templates/historyorder.html:63
-#: templates/oneorder.html:57 templates/order_confirm.html:48
-msgid "Экспресс доставка"
-msgstr "Express shipping"
-
-#: templates/account.html:78 templates/historyorder.html:60
-#: templates/oneorder.html:61 templates/order_confirm.html:52
-#: templates/product.html:206 templates/product.html:250
-#: templates/product.html:293
-msgid "Обычная доставка"
-msgstr "Ordinary shipping"
-
-#: templates/account.html:84 templates/historyorder.html:68
+#: templates/account.html:85 templates/historyorder.html:68
 #: templates/oneorder.html:79 templates/order_confirm.html:69
 #: templates/payment.html:12 templates/payment.html:20
 #: templates/paymentsomeone.html:12 templates/paymentsomeone.html:19
-#: templates/product.html:211 templates/product.html:255
-#: templates/product.html:298
+#: templates/product.html:206
 msgid "Оплата"
 msgstr "Payment"
 
-#: templates/account.html:88 templates/historyorder.html:71
-#: templates/oneorder.html:83 templates/order_confirm.html:72
-#: templates/product.html:214 templates/product.html:258
-#: templates/product.html:301
-msgid "Онлайн картой"
-msgstr "Card online"
-
-#: templates/account.html:92 templates/historyorder.html:75
+#: templates/account.html:93 templates/historyorder.html:75
 #: templates/oneorder.html:87 templates/order_confirm.html:76
 msgid "Онлайн со случайного чужого счёта"
 msgstr "Online from someone else's random account"
 
-#: templates/account.html:98 templates/historyorder.html:81
+#: templates/account.html:99 templates/historyorder.html:81
 msgid "Общая стоимость"
 msgstr "Total price"
 
-#: templates/account.html:104 templates/historyorder.html:89
+#: templates/account.html:105 templates/historyorder.html:89
 #: templates/oneorder.html:93
 msgid "Статус"
 msgstr "Status"
 
-#: templates/account.html:108 templates/historyorder.html:95
+#: templates/account.html:109 templates/historyorder.html:95
 #: templates/oneorder.html:97
 msgid "Оплачен"
 msgstr "Paid"
 
-#: templates/account.html:112 templates/historyorder.html:92
+#: templates/account.html:113 templates/historyorder.html:92
 #: templates/oneorder.html:101
 msgid "Не оплачен"
 msgstr "Not paid for"
 
-#: templates/cart.html:48
+#: templates/cart.html:51
 msgid "Ваша корзина пуста"
 msgstr "Your cart is empty"
 
-#: templates/cart.html:56 templates/order_confirm.html:108
+#: templates/cart.html:59 templates/order_confirm.html:108
 msgid "Итого"
 msgstr "Total"
 
-#: templates/cart.html:62
+#: templates/cart.html:65
 msgid "Оформить заказ"
 msgstr "Place an order"
 
-#: templates/catalog.html:14 templates/catalog.html:64
+#: templates/catalog.html:14 templates/catalog.html:63
 msgid "Фильтр"
 msgstr "Filter"
 
@@ -306,53 +445,53 @@ msgstr "In stock"
 msgid "С бесплатной доставкой"
 msgstr "Free shipping"
 
-#: templates/catalog.html:79
+#: templates/catalog.html:73
 msgid "Популярные тэги"
 msgstr "Popular tags"
 
-#: templates/catalog.html:85 templates/catalog.html:94
+#: templates/catalog.html:79 templates/catalog.html:88
 msgid "Видео"
 msgstr "Video"
 
-#: templates/catalog.html:89 templates/catalog.html:93
+#: templates/catalog.html:83 templates/catalog.html:87
 msgid "Разработка"
 msgstr "Development"
 
-#: templates/catalog.html:90
+#: templates/catalog.html:84
 msgid "Игры"
 msgstr "Games"
 
-#: templates/catalog.html:102
+#: templates/catalog.html:96
 msgid "Сортировать по"
 msgstr "Sort by"
 
-#: templates/catalog.html:106
+#: templates/catalog.html:100
 msgid "Популярности"
 msgstr "Popularity"
 
-#: templates/catalog.html:109
+#: templates/catalog.html:103
 msgid "Цене"
 msgstr "Price"
 
-#: templates/catalog.html:112
+#: templates/catalog.html:106
 msgid "Отзывам"
 msgstr "Reviews"
 
-#: templates/catalog.html:115
+#: templates/catalog.html:109
 msgid "Новизне"
 msgstr "Novelty"
 
-#: templates/catalog.html:142
+#: templates/catalog.html:141
 msgid "Товаров на данный момент нет"
 msgstr "There are no products at the moment"
 
 #: templates/comparison.html:28 templates/comparison.html:140
-#: templates/product.html:125 templates/product.html:159
+#: templates/product.html:119 templates/product.html:151
 msgid "Характеристика"
 msgstr "Characteristic"
 
 #: templates/comparison.html:31 templates/comparison.html:143
-#: templates/product.html:162
+#: templates/product.html:154
 msgid "Значение"
 msgstr "Value"
 
@@ -413,15 +552,15 @@ msgid ""
 "Для восстановления пароля введите адрес электронной почты, на которую "
 "зарегистрирована учетная запись"
 msgstr ""
-"To restore the password, enter the email address to which "
-"the account is registered"
+"To restore the password, enter the email address to which the account is "
+"registered"
 
 #: templates/email.html:35 templates/header.html:40
 #: templates/header_for_authorization.html:39 templates/register.html:32
 msgid "Вход"
 msgstr "Login"
 
-#: templates/footer.html:17 templates/header.html:74 templates/sale.html:14
+#: templates/footer.html:17 templates/header.html:74 templates/sale.html:13
 msgid "Главная"
 msgstr "Main"
 
@@ -470,27 +609,7 @@ msgstr "Show navigation"
 msgid "Все категории"
 msgstr "All categories"
 
-#: templates/header.html:155
-msgid "Телевизоры"
-msgstr "NV"
-
-#: templates/header.html:165
-msgid "Наушники"
-msgstr "Headphones"
-
-#: templates/header.html:174
-msgid "Стиральные машины"
-msgstr "Washing machines"
-
-#: templates/header.html:183
-msgid "Аксессуары"
-msgstr "Accessories"
-
-#: templates/header.html:191
-msgid "Чехлы"
-msgstr "Cases"
-
-#: templates/header.html:208
+#: templates/header.html:195
 msgid "Поиск"
 msgstr "Search"
 
@@ -541,11 +660,6 @@ msgstr "Full name"
 msgid "Телефон"
 msgstr "Phone"
 
-#: templates/oneorder.html:45 templates/order_user.html:45
-#: templates/profile.html:108 templates/profileAvatar.html:89
-msgid "E-mail"
-msgstr ""
-
 #: templates/oneorder.html:67 templates/order_confirm.html:58
 #: templates/order_delivery_page.html:30
 msgid "Город"
@@ -565,7 +679,7 @@ msgid "Оплата не выполнена"
 msgstr "Payment failed"
 
 #: templates/oneorder.html:150 templates/order_confirm.html:115
-#: templates/order_confirm.html:119 templates/payment.html:45
+#: templates/order_confirm.html:119 templates/payment.html:54
 #: templates/paymentsomeone.html:42
 msgid "Оплатить"
 msgstr "Pay"
@@ -618,12 +732,8 @@ msgid ""
 "Отправлена инструкция для сброса пароля на ваш email. Если вы не получили "
 "письмо, проверьте папку спам."
 msgstr ""
-"Instructions for password reset have been sent to your email. If you haven't received the "
-" message, check the spam folder."
-
-#: templates/payment.html:33
-msgid "Номер карты"
-msgstr "Card number"
+"Instructions for password reset have been sent to your email. If you haven't "
+"received the  message, check the spam folder."
 
 #: templates/paymentsomeone.html:32
 msgid "Номер счета"
@@ -633,49 +743,47 @@ msgstr "Account number"
 msgid "Сгенирировать случайный счет"
 msgstr "Generate a random account"
 
-#: templates/product.html:53 templates/product.html:149
+#: templates/product.html:53 templates/product.html:141
 msgid "Особенности отсутствуют"
 msgstr "There are no special features"
 
-#: templates/product.html:71 templates/product.html:195
-#: templates/product.html:239 templates/product.html:283
+#: templates/product.html:71 templates/product.html:187
 msgid "Купить"
 msgstr "Buy"
 
-#: templates/product.html:80
+#: templates/product.html:79
 msgid "Поздравляем!"
 msgstr "Congratulations!"
 
-#: templates/product.html:86
+#: templates/product.html:85
 msgid "Товар успешно добавлен в корзину!"
 msgstr "The product has been successfully added to the shopping cart!"
 
-#: templates/product.html:96
+#: templates/product.html:95
 msgid "Тэги"
 msgstr "Tags"
 
-#: templates/product.html:104
+#: templates/product.html:103
 msgid "Теги отсутствуют"
 msgstr "There are no tags"
 
-#: templates/product.html:115
+#: templates/product.html:113
 msgid "Описание"
 msgstr "Description"
 
-#: templates/product.html:120
+#: templates/product.html:116
 msgid "Продавцы"
 msgstr "Sellers"
 
-#: templates/product.html:130
+#: templates/product.html:122
 msgid "Отзывы"
 msgstr "Reviews"
 
-#: templates/product.html:173
+#: templates/product.html:165
 msgid "Характеристик нет"
 msgstr "There are no characteristics"
 
-#: templates/product.html:219 templates/product.html:263
-#: templates/product.html:306
+#: templates/product.html:214
 msgid "Стоимость"
 msgstr "Cost"
 
@@ -686,10 +794,6 @@ msgstr "Avatar"
 #: templates/profile.html:55
 msgid "Загрузить фото"
 msgstr "Download photo"
-
-#: templates/profile.html:65
-msgid "Имя"
-msgstr "First name"
 
 #: templates/profile.html:75
 msgid "Фамилия"
@@ -719,6 +823,20 @@ msgstr "Waiting for payment"
 msgid "Ждем подтверждения оплаты платежной системой"
 msgstr "We are waiting for payment confirmation by the payment system"
 
-#: templates/sale.html:18
-msgid "Блог"
-msgstr "Blog"
+#~ msgid "Телевизоры"
+#~ msgstr "NV"
+
+#~ msgid "Наушники"
+#~ msgstr "Headphones"
+
+#~ msgid "Стиральные машины"
+#~ msgstr "Washing machines"
+
+#~ msgid "Аксессуары"
+#~ msgstr "Accessories"
+
+#~ msgid "Чехлы"
+#~ msgstr "Cases"
+
+#~ msgid "Блог"
+#~ msgstr "Blog"

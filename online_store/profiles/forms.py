@@ -6,6 +6,8 @@ from django.utils.text import phone2numeric
 
 from .models import User, Account
 
+from django.utils.translation import gettext_lazy as _
+
 class RegisterForm(forms.ModelForm):
     """
     форма для кастомизации регистрации пользователя
@@ -13,14 +15,14 @@ class RegisterForm(forms.ModelForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'user-input',
-            'placeholder': 'Имя',
+            'placeholder': _('Имя'),
         }),
         label='',
     )
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'user-input',
-            'placeholder': 'E-mail',
+            'placeholder': _('E-mail'),
         }),
         label='',
     )
@@ -43,7 +45,7 @@ class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'user-input',
-            'placeholder': 'E-mail',
+            'placeholder': _('E-mail'),
         }),
         label='',
     )
@@ -63,9 +65,9 @@ class LoginForm(forms.Form):
             if user.check_password(password):
                 return self.cleaned_data
             else:
-                self.add_error("password", forms.ValidationError("Не верный пароль"))
+                self.add_error("password", forms.ValidationError(_("Не верный пароль")))
         except User.DoesNotExist:
-            self.add_error("email", forms.ValidationError("Пользователя не существует"))
+            self.add_error("email", forms.ValidationError(_("Пользователя не существует")))
 
 
 class UserEmailRecoveryPasswordForm(PasswordResetForm):
@@ -86,9 +88,9 @@ class UserEmailRecoveryPasswordForm(PasswordResetForm):
         try:
             user = User.objects.get(email=email)
             if not user.is_active:
-                self.add_error("email", forms.ValidationError("Пользователь не активирован"))
+                self.add_error("email", forms.ValidationError(_("Пользователь не активирован")))
         except User.DoesNotExist:
-            self.add_error("email", forms.ValidationError("Нет такого пользователя"))
+            self.add_error("email", forms.ValidationError(_("Нет такого пользователя")))
 
 
 class UserSetNewPasswordForm(SetPasswordForm):
@@ -106,7 +108,7 @@ class UserSetNewPasswordForm(SetPasswordForm):
     new_password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'user-input',
-            'placeholder': 'Повторите пароль',
+            'placeholder': _('Повторите пароль'),
         }),
         label='',
     )
@@ -134,7 +136,7 @@ class ProfileUserUpdateForm(forms.ModelForm):
 
         # Проверяем, что длина номера ровно 11 символов (с кодом страны)
         if len(digits_only) != 11 or not digits_only.startswith("7"):
-            raise forms.ValidationError("Введите корректный номер телефона.")
+            raise forms.ValidationError(_("Введите корректный номер телефона."))
 
         # Возвращаем только 10 цифр без 7-ки (для базы данных)
         return digits_only[1:]
