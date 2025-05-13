@@ -1,7 +1,6 @@
 from services.category_menu import CategoryMenuService
 from services.cart_service import CartService
 from services.сomparison_service import ComparisonService
-# from services.discount_service import DiscountService
 
 
 def category_menu(request):

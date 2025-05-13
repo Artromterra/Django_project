@@ -64,12 +64,6 @@ from django.utils.translation import gettext as _
 logger = getLogger("main.shop.views")
 
 
-# TODO: Remove the check_integration_with_frontend view function
-#  - it is needed to check integration with the base frontend
-def check_integration_with_frontend(request: HttpRequest) -> HttpResponse:
-    return render(request, "base.html")
-
-
 class ProductDetailView(DetailView):
     template_name = "product.html"
     model = Product
@@ -181,44 +175,17 @@ class ProductListView(ListView):
         return context
 
 
-class AddToCartView(LoginRequiredMixin, View):
-    def post(self, request, product_id):
-        product = Product.objects.get(id=product_id)
-        cart, created = Cart.objects.get_or_create(user=request.user)
+class AddToCartView(TemplateView):
+    """View для добавления товара в корзину по клику"""
+    template_name = 'catalog.html'
+    model = Product
 
-        sellers = Seller.objects.filter(sellerproduct__product=product)
-        selected_seller = random.choice(sellers) if sellers else None
-
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            product=product,
-            defaults={'selected_seller': selected_seller}
-        )
-
-        if not created:
-            cart_item.quantity += 1
-            cart_item.save()
-
-        return redirect('cart')
-
-
-class UpdateCartItemView(LoginRequiredMixin, View):
-    def post(self, request, item_id):
-        cart_item = CartItem.objects.get(id=item_id)
-        action = request.POST.get('action')
-
-        if action == 'update_quantity':
-            quantity = int(request.POST.get('quantity', 1))
-            cart_item.quantity = max(1, quantity)
-        elif action == 'update_seller':
-            seller_id = request.POST.get('seller_id')
-            cart_item.selected_seller = Seller.objects.get(id=seller_id)
-        elif action == 'delete':
-            cart_item.delete()
-            return redirect('cart')
-
-        cart_item.save()
-        return redirect('cart')
+    def get(self, request, *args, **kwargs):
+        cart_service = CartService(request)
+        product_id = self.kwargs.get("pk")
+        seller_id = Product.objects.get(id=product_id).sellers.all()[0].pk
+        cart_service.add_product(product_id, seller_id)
+        return redirect('shop:products_list', pk=0)
 
 
 def load_new_import_file(request: HttpRequest) -> HttpResponse:
@@ -297,6 +264,7 @@ def import_from_files_page(request: HttpRequest) -> HttpResponse:
 class OrderUserView(FormView):
     template_name = "order_user.html"
     form_class = OrderUserForm
+    success_url = reverse_lazy('profiles:login')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -354,22 +322,16 @@ class OrderUserView(FormView):
         self.pk = user.pk
         account = Account.objects.create(user=user)
         account.save()
-        self.session['user_page'] = True
-        return super(OrderUserView, self).form_valid(form)
-
-    def get_success_url(self, *args, **kwargs):
         pk = self.kwargs.get('pk')
         cart_obj = Cart.objects.get(pk=pk)
         cart_obj.user_id = self.pk
         cart_obj.save()
-        self.session['user_page'] = True
-        return reverse_lazy("profiles:login")
+        return super(OrderUserView, self).form_valid(form)
 
 
 class OrderDeliveryView(FormView):
     template_name = 'order_delivery_page.html'
     form_class = OrderDeliveryForm
-    # success_url = 'shop:order_pay'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -380,7 +342,7 @@ class OrderDeliveryView(FormView):
         self.cart_id = request.session.get('cart_id')
         if not request.session.has_key('delivery_page'):
             # исправить на путь к корзине
-            return redirect('/')
+            return redirect('shop:cart')
         if request.session.get('delivery_page') and not request.session.get('pay_page'):
             return redirect(reverse_lazy('shop:order_pay'))
         elif request.session.get('pay_page') and request.session.get('delivery_page'):
@@ -418,8 +380,6 @@ class OrderPayView(FormView):
             return redirect('/')
         if not request.session.get('delivery_page'):
             return redirect('shop:order_delivery')
-        # if request.session.get('pay_page'):
-        #     return redirect('shop:order_confirm')
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -499,7 +459,7 @@ class OrderConfirmView(TemplateView):
             cart_queryset=cart,
             order=order,
         )
-        order.total_discount_price = total
+        order.total_price = total
         order.save()
         context = {
             "cart": cart,
@@ -539,6 +499,7 @@ class OrderDetailView(LoginRequiredMixin ,DetailView):
         ).filter(cart_id=order.cart_id)
         context['cart'] = cart
         context['user'] = user
+        context['order'] = order
         return context
 
 

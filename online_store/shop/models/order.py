@@ -7,7 +7,6 @@ class Order(models.Model):
     """
     Заказ пользователя
     """
-
     objects = models.Manager()
 
     class Meta:

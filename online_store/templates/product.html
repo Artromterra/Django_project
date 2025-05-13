@@ -65,7 +65,7 @@
                   </div>
                 </div>
                 <div class="ProductCard-cartElement">
-                  <a class="btn btn_primary" href="#modal_open">
+                  <a class="btn btn_primary" href="{% url 'shop:add_to_cart' pk=product.id %}">
                     <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}"
                          alt="cart_white.svg"/>
                     <span class="btn-content">{% translate "Купить" %}</span>
@@ -182,7 +182,7 @@
                               {{ seller.seller.name }}
                             </a>
                             <div class="ProductCard-cartElement" style="margin-top: 10px;">
-                              <a class="btn btn_primary" href="#modal_open">
+                              <a class="btn btn_primary" href="{% url 'shop:add_to_cart' pk=product.id %}">
                                 <img class="btn-icon" src="/static/assets/img/icons/card/cart_white.svg" alt="cart_white.svg"/>
                                 <span class="btn-content">{% translate "Купить" %}</span>
                               </a>
