@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.utils.crypto import get_random_string
 from django.shortcuts import get_object_or_404
 from shop.models.cart import Cart, CartItem

@@ -70,9 +70,15 @@
                 </div>
               </div>
               <div class="Order-footer">
+                {% if user.is_authenticated %}
                 <a  class="btn btn_success" href="{% url 'shop:order_delivery' %}">
                   {% translate "Дальше" %}
                 </a>
+                {% else %}
+                  <a  class="btn btn_success" href="{% url 'profiles:login' %}">
+                  {% translate "Дальше" %}
+                </a>
+                {% endif %}
               </div>
             </div>
           </form>
