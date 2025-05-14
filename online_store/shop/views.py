@@ -483,7 +483,7 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class OrderDetailView(LoginRequiredMixin ,DetailView):
+class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'oneorder.html'
