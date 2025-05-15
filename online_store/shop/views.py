@@ -703,3 +703,4 @@ class DiscountView(ListView):
     model = Discount
     queryset = Discount.objects.all().order_by("-end_date")
     context_object_name = 'discounts'
+    paginate_by = 3
