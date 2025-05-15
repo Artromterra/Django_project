@@ -1,0 +1,121 @@
+services:
+  redis:
+    container_name: online_store_redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    restart: unless-stopped
+    volumes:
+      - ./redisdata:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    ulimits:
+      nofile:
+        soft: 200000
+        hard: 200000
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          cpus: "1.0"
+    networks:
+      redis_network:
+        aliases:
+          - redis
+
+  postgres:
+    container_name: online_store_postgres
+    image: postgres:latest
+    env_file:
+      - .env
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+  app:
+    container_name: online_store_app
+    build: .
+    expose:
+      - 8000
+    command: >
+      sh -c ". .venv/bin/activate &&
+             cd online_store &&
+             python manage.py collectstatic --noinput &&
+             python manage.py makemigrations &&
+             python manage.py migrate --database=default &&
+             gunicorn online_store.wsgi:application --bind 0.0.0.0:8000"
+    env_file: ".env"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+        restart: true
+    networks:
+      - redis_network
+      - postgres_network
+      - nginx_network
+    volumes:
+      - static:/django_diploma/online_store/static
+      - media:/django_diploma/media
+
+  celery:
+    container_name: online_store_celery
+    build: .
+    env_file: ".env"
+    depends_on:
+      redis:
+        condition: service_healthy
+        restart: true
+    command: >
+      sh -c ". .venv/bin/activate &&
+             cd online_store &&
+             celery -A online_store worker --loglevel=INFO
+      "
+    networks:
+      - redis_network
+      - postgres_network
+    volumes:
+      - media:/django_diploma/media
+
+  nginx:
+    container_name: online_store_nginx
+    build:
+      context: ./nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      app:
+        condition: service_started
+    restart: always
+    networks:
+      - nginx_network
+    volumes:
+      - static:/static
+      - media:/media
+
+networks:
+  redis_network:
+    driver: bridge
+  postgres_network:
+    driver: bridge
+  nginx_network:
+    driver: bridge
+
+volumes:
+  static:
+  media:
