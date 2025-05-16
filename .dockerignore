@@ -1,0 +1,7 @@
+./nginx
+./.python-version
+**/.venv/
+./redisdata
+./docker-compose.dev.yml
+./redis.conf
+**/tests.py

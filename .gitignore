@@ -144,3 +144,10 @@ dmypy.json
 imports_with_errors
 successful_imports
 /media/import_files
+
+# Docker volumes
+redisdata
+/postgres-data/
+
+# static for nginx
+/nginx/static/

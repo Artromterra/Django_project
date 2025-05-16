@@ -34,6 +34,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
 
 
 # Application definition
@@ -101,13 +102,24 @@ WSGI_APPLICATION = 'online_store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'db'),
+            'USER': os.getenv('POSTGRES_USER', 'user'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+            'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': os.getenv('POSTGRES_PORT', 5432),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -154,7 +166,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / '..' / 'static',
@@ -249,8 +261,8 @@ CELERY_CONCURRENCY = int(os.getenv("CELERY_CONCURRENCY", 4))
 
 # import_data command settings
 DIR_WITH_IMPORT_FILES = os.getenv("DIR_WITH_IMPORT_FILES", str(BASE_DIR / ".." / "media" / "import_files"))
-DIR_WITH_SUCCESSFUL_IMPORTS = os.getenv("DIR_WITH_SUCCESSFUL_IMPORTS", str(BASE_DIR / ".." / "successful_imports"))
-DIR_WITH_IMPORTS_WITH_ERRORS = os.getenv("DIR_WITH_IMPORTS_WITH_ERRORS", str(BASE_DIR / ".." / "imports_with_errors"))
+DIR_WITH_SUCCESSFUL_IMPORTS = os.getenv("DIR_WITH_SUCCESSFUL_IMPORTS", str(BASE_DIR / ".." / "media" / "successful_imports"))
+DIR_WITH_IMPORTS_WITH_ERRORS = os.getenv("DIR_WITH_IMPORTS_WITH_ERRORS", str(BASE_DIR / ".." / "media" / "imports_with_errors"))
 
 # constance
 CONSTANCE_BACKEND = "constance.backends.redisd.RedisBackend"
