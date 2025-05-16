@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'reviews.apps.ReviewsConfig',
     'comparison.apps.ComparisonConfig',
     'viewed_products.apps.ViewedProductsConfig',
+    'search.apps.SearchConfig',
 ]
 
 MIDDLEWARE = [

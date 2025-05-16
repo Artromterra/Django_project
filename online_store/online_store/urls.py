@@ -31,7 +31,8 @@ urlpatterns += i18n_patterns(
     path('profiles/', include(('profiles.urls', 'profiles'), namespace='profiles')),
     path('shop/', include('shop.urls')),
     path('reviews/', include('reviews.urls'), name='reviews'),
-    path('comparison/', include('comparison.urls'), name='comparison')
+    path('comparison/', include('comparison.urls'), name='comparison'),
+    path('search/', include('search.urls')),
 )
 
 if settings.DEBUG:
