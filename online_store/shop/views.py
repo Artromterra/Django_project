@@ -1,7 +1,7 @@
 import os
-import random
 from typing import List
 from logging import getLogger
+import requests
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,13 +9,19 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView, View
 from django.core.cache import cache
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
+from django.utils.translation import gettext as _
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from dto.product_list_dto import ProductDTO
 from services.settings_service import SettingsService
@@ -23,10 +29,8 @@ from services.product_catalog_services import get_context_data_sort, get_context
 from services.view_history_products_service import ViewHistoryProductsService
 from services.discount_service import DiscountService
 from profiles.models import Account, User
-from .models.cart import CartItem, Cart
 from .models.discount import Discount
-from .models.seller import Seller
-from .models.order import Order, OrderDeliveryPrice
+from .models.order import Order
 from .models.product import Product
 import utils.files
 import utils.celery_utils
@@ -38,28 +42,11 @@ from .forms import (
     OrderDeliveryForm,
     OrderPayForm,
 )
-from .serializers import PaymentSerializer
 from .tasks import import_data_from_files
-
-
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from shop.models.cart import Cart, CartItem
 from services.cart_service import CartService
-
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
-from django.views.generic import TemplateView
-
 from .forms import OrderYookassaPayForm
 from services.payment_service import PaymentService
-
-import requests
-
-from django.utils.translation import gettext as _
 
 logger = getLogger("main.shop.views")
 
@@ -556,7 +543,6 @@ class CartUpdateView(APIView):
         )
 
 
-# class CartView(APIView):
 class CartView(TemplateView):
     template_name = "cart.html"
 
@@ -604,6 +590,7 @@ class CartView(TemplateView):
         context["total_discount_price"] = self.total_discount_price
         context["total_price"] = self.total_price
         return context
+
 
 class OrderPayment(LoginRequiredMixin, FormView):
     model = Order
