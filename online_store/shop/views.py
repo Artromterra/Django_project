@@ -643,7 +643,7 @@ class OrderPaymentProgress(LoginRequiredMixin, TemplateView):
             if status == "succeeded":
                 order.paid = True
                 order.save()
-                return redirect('/account/')
+                return redirect('profiles:user_account_view')
             else:
                 return self.render_to_response({
                     "status": status,
