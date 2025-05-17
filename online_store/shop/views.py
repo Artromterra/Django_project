@@ -643,6 +643,12 @@ class OrderPaymentProgress(LoginRequiredMixin, TemplateView):
             if status == "succeeded":
                 order.paid = True
                 order.save()
+
+                # Очистка корзины
+                order.cart.cart_items.all().delete()
+                order.cart.total_price = 0
+                order.cart.save()
+
                 return redirect('profiles:user_account_view')
             else:
                 return self.render_to_response({
@@ -675,6 +681,12 @@ class YookassaReturnView(LoginRequiredMixin, View):
             if payment_data.get("status") == "succeeded":
                 order.paid = True
                 order.save()
+
+                # Очистка корзины
+                order.cart.cart_items.all().delete()
+                order.cart.total_price = 0
+                order.cart.save()
+
                 messages.success(request, "Оплата прошла успешно")
                 return redirect("/account/")
             else:
