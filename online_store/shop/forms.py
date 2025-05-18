@@ -145,9 +145,7 @@ class OrderPayForm(forms.ModelForm):
         'RC': _('Онлайн со случайного чужого счета')
     }
     payment_method = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={
-                'onchange': 'submit();',
-            }),
+        widget=forms.RadioSelect(attrs={}),
         choices=CHOICES,
     )
 

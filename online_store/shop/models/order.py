@@ -1,6 +1,9 @@
 from django.db import models
 
+from profiles.models import User
+from . import Product
 from .cart import Cart, CartItem
+from .seller import Seller
 
 
 class Order(models.Model):
@@ -51,7 +54,8 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField('Created at', auto_now_add=True)
 
-    cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='order')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_order', null=True)
+    cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True, related_name='order')
     # cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -60,6 +64,36 @@ class Order(models.Model):
         return f'Заказ № {self.pk}, пользователь Anonymous'
 
     yookassa_payment_id = models.CharField(max_length=100, null=True, blank=True)
+
+
+class OrderItem(models.Model):
+    objects = models.Manager()
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='order_items'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='order_product_items',
+    )
+    selected_seller = models.ForeignKey(
+        Seller,
+        on_delete=models.CASCADE,
+        related_name='order_selected_seller',
+    )
+    quantity = models.PositiveIntegerField(default=1)
+
+    def get_final_price(self):
+        from services.discount_service import get_final_price_for_cart_product
+        price = get_final_price_for_cart_product(product=self.product)
+        return price
+
+    def __str__(self):
+        return f'{self.order.pk} {self.product.title} {self.quantity} {self.selected_seller.name}'
+
 
 
 class OrderDeliveryPrice(models.Model):

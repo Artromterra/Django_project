@@ -116,7 +116,7 @@
                 </div>
               </div>
               <div class="Cart Cart_order">
-                {% for item in cart %}
+                {% for item in order.order_items.all %}
                 <div class="Cart-product">
                   <div class="Cart-block Cart-block_row">
                     <div class="Cart-block Cart-block_pict">
@@ -129,7 +129,7 @@
                       <div class="Cart-desc">{{ item.product.short_description }}</div>
                     </div>
                     <div class="Cart-block Cart-block_price">
-                      <div class="Cart-price">{{ item.get_final_price }}$.</div>
+                      <div style="width: 65px" class="Cart-price">{{ item.get_final_price }} $</div>
                     </div>
                   </div>
                   <div class="Cart-block Cart-block_row">
@@ -146,7 +146,7 @@
                   </div>
                   <div class="Cart-block">
                     {% if order.paid == False %}
-                    <a class="btn btn_primary btn_lg" href="{% url 'shop:order_pay' %}">
+                    <a class="btn btn_primary btn_lg" href="{% url 'shop:payment' order_id=order.id %}">
                       {% translate "Оплатить" %}
                     </a>
                     {% endif %}
