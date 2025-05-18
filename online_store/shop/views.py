@@ -30,7 +30,7 @@ from services.view_history_products_service import ViewHistoryProductsService
 from services.discount_service import DiscountService
 from profiles.models import Account, User
 from .models.discount import Discount
-from .models.order import Order
+from .models.order import Order, OrderItem
 from .models.product import Product
 import utils.files
 import utils.celery_utils
@@ -316,7 +316,7 @@ class OrderUserView(FormView):
         return super(OrderUserView, self).form_valid(form)
 
 
-class OrderDeliveryView(FormView):
+class OrderDeliveryView(LoginRequiredMixin, FormView):
     template_name = 'order_delivery_page.html'
     form_class = OrderDeliveryForm
 
@@ -351,7 +351,7 @@ class OrderDeliveryView(FormView):
         return reverse_lazy('shop:order_pay')
 
 
-class OrderPayView(FormView):
+class OrderPayView(LoginRequiredMixin, FormView):
     template_name = 'order_pay.html'
     form_class = OrderPayForm
 
@@ -399,6 +399,7 @@ class OrderPayView(FormView):
                 address=data['address'],
                 delivery=data['delivery'],
                 cart_id=data['cart_id'],
+                user_id=self.request.user.pk
             )
         return super().post(request, *args, **kwargs)
 
@@ -406,33 +407,41 @@ class OrderPayView(FormView):
         return reverse_lazy('shop:order_confirm')
 
 
-class OrderConfirmView(TemplateView):
+class OrderConfirmView(LoginRequiredMixin, TemplateView):
     template_name = 'order_confirm.html'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
-        self.total_price = 0
 
     def get(self, request, *args, **kwargs):
         """
-        проверка пользователя на наличие ранее пройденных шагов при оформлении заказа
+        проверка пользователя на наличие ранее пройденных шагов при оформлении заказа,
+        сохранение данных корзины в ордере
         """
-        cart_service = CartService(request)
-        self.total_price = cart_service.get_cart_total_price()
         self.session = request.session
-        s = Session.objects.get(session_key=self.session.session_key)
-        data = s.get_decoded()
+        cart_service = CartService(request)
+        cart_items = cart_service.get_cart_items()
+        order_pk = self.session.get('order_id')
+        order = Order.objects.get(pk=order_pk)
+        order_items = OrderItem.objects.filter(order_id=order_pk)
+        if not order_items.exists():
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    selected_seller=item.selected_seller,
+                )
+
         if (request.session.has_key('delivery_page')
             and request.session.has_key('pay_page')
             and request.session.has_key('user_page')
         ):
-            # исправить на путь к корзине по желанию
             return super().get(request, *args, **kwargs)
         return redirect('/')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         order_pk = self.session.get('order_id')
         order= Order.objects.get(pk=order_pk)
         user = User.objects.get(pk=self.request.user.pk)
@@ -464,7 +473,7 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = (Order.objects.
-        filter(cart__user_id=self.request.user.pk).
+        filter(user=self.request.user).
         order_by('-created_at')[:3])
 
         return queryset
@@ -479,12 +488,7 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         order = Order.objects.get(pk=self.kwargs.get('pk'))
         user = User.objects.get(pk=self.request.user.pk)
-        cart = CartItem.objects.select_related(
-            "product",
-            "cart",
-            "selected_seller"
-        ).filter(cart_id=order.cart_id)
-        context['cart'] = cart
+
         context['user'] = user
         context['order'] = order
         return context
@@ -615,8 +619,9 @@ class OrderPayment(LoginRequiredMixin, FormView):
 
         return redirect(self.get_success_url())
 
-    def get_order(self):
-        return Order.objects.filter(cart__user=self.request.user, paid=False).first()
+    def get_order(self, *args, **kwargs):
+        order_id = self.kwargs.get('order_id')
+        return Order.objects.get(pk=order_id)
 
     def get_initial(self):
         order = self.get_order()
