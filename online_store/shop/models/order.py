@@ -52,6 +52,7 @@ class Order(models.Model):
     created_at = models.DateTimeField('Created at', auto_now_add=True)
 
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='order')
+    # cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     def __str__(self):
         if self.cart.user is not None:
