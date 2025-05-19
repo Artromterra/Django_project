@@ -11,17 +11,19 @@ class CartService:
         self.request = request
         self.cart = self.get_or_create_cart()
 
-
     def get_or_create_cart(self):
-        """ Получает или создаёт корзину для пользователя или сессии """
+        """Получает или создаёт корзину для пользователя или сессии"""
         if self.request.user.is_authenticated:
-            cart, _ = Cart.objects.get_or_create(user_id=self.request.user.id)
+            # Ищем активную корзину пользователя
+            cart = Cart.objects.filter(user=self.request.user, is_active=True).first()
+            if not cart:
+                cart = Cart.objects.create(user=self.request.user)
         else:
             session_key = self.request.session.get("cart_key")
             if not session_key:
                 session_key = get_random_string(40)
                 self.request.session["cart_key"] = session_key
-            cart, _ = Cart.objects.get_or_create(session_key=session_key)
+            cart, _ = Cart.objects.get_or_create(session_key=session_key, is_active=True)
         return cart
 
 
@@ -99,3 +101,14 @@ class CartService:
                     user_cart_service = CartService(self.request)
                     user_cart_service.add_product(item.product.id, item.selected_seller.id, item.quantity)
                 guest_cart.delete()
+
+    def create_new_cart(self):
+        """Создает новую корзину для пользователя"""
+        if self.request.user.is_authenticated:
+            new_cart = Cart.objects.create(user=self.request.user)
+            return new_cart
+        else:
+            session_key = get_random_string(40)
+            self.request.session["cart_key"] = session_key
+            new_cart = Cart.objects.create(session_key=session_key)
+            return new_cart

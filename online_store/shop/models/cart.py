@@ -30,6 +30,8 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
+    is_active = models.BooleanField(default=True)
+
     def __str__(self):
         if self.user:
             return f'Корзина № {self.pk} Пользователь {self.user.username}'

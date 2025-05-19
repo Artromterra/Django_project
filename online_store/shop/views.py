@@ -638,7 +638,8 @@ class OrderPaymentProgress(LoginRequiredMixin, TemplateView):
         order = Order.objects.filter(cart__user=request.user, paid=False).first()
 
         if not order or not order.yookassa_payment_id:
-            return redirect('/shop/order-confirm/payment/')
+            # Передаем order_id в редирект
+            return redirect('shop:payment', order_id=order.id if order else 0)
 
         service = PaymentService()
         try:
@@ -648,24 +649,20 @@ class OrderPaymentProgress(LoginRequiredMixin, TemplateView):
             if status == "succeeded":
                 order.paid = True
                 order.save()
+                old_cart = order.cart
+                old_cart.is_active = False
+                old_cart.save()
 
-                # Очистка корзины
-                order.cart.cart_items.all().delete()
-                order.cart.total_price = 0
-                order.cart.save()
+                if not Cart.objects.filter(user=request.user, is_active=True).exists():
+                    Cart.objects.create(user=request.user)
 
-                return redirect('profiles:user_account_view')
+                return redirect('profiles:user_account_view')  # Редирект в личный кабинет
             else:
-                return self.render_to_response({
-                    "status": status,
-                    "order": order
-                })
+                return self.render_to_response({"status": status, "order": order})
 
         except Exception as e:
-            print("Ошибка при проверке платежа:", str(e))
             messages.error(request, "Ошибка при проверке оплаты.")
-            return redirect('/shop/order-confirm/payment/')
-
+            return redirect('shop:payment')  # Возврат на страницу оплаты
 
 YOOKASSA_SHOP_ID = os.getenv('YOOKASSA_SHOP_ID')
 YOOKASSA_API_KEY = os.getenv('YOOKASSA_API_KEY')
@@ -675,7 +672,7 @@ class YookassaReturnView(LoginRequiredMixin, View):
         order = Order.objects.filter(cart__user=request.user, paid=False).first()
         if not order or not order.yookassa_payment_id:
             messages.error(request, "Ошибка идентификации заказа")
-            return redirect("/shop/order-confirm/payment/")
+            return redirect('shop:payment')
 
         response = requests.get(
             f"https://api.yookassa.ru/v3/payments/{order.yookassa_payment_id}",
@@ -686,20 +683,21 @@ class YookassaReturnView(LoginRequiredMixin, View):
             if payment_data.get("status") == "succeeded":
                 order.paid = True
                 order.save()
+                old_cart = order.cart
+                old_cart.is_active = False
+                old_cart.save()
 
-                # Очистка корзины
-                order.cart.cart_items.all().delete()
-                order.cart.total_price = 0
-                order.cart.save()
+                if not Cart.objects.filter(user=request.user, is_active=True).exists():
+                    Cart.objects.create(user=request.user)
 
                 messages.success(request, "Оплата прошла успешно")
-                return redirect("/account/")
+                return redirect('profiles:user_account_view')  # Редирект в личный кабинет
             else:
                 messages.error(request, "Оплата не удалась.")
         else:
             messages.error(request, "Ошибка при проверке оплаты")
 
-        return redirect("/shop/order-confirm/payment/")
+        return redirect('shop:payment')  # Возврат на страницу оплаты
 
 
 class DiscountView(ListView):
