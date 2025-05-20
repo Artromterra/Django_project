@@ -1,67 +1,81 @@
 from comparison.models import ComparisonItem
+from dto.product_list_dto import ProductDTO
 
 
 class ComparisonService:
-    def __init__(self, user=None, session_key=None):
-        """
-        Конструктор принимает либо user, либо session_key
-        """
-        # FIXME: При первом заходе на сайт после запуска вызывается это исключение.
-        #  После того как закомментировал это условие и запустил сайт, ошибка пропала,
-        #  и можно было обратно раскомментировать. Необходимо разобраться
-        if not user and not session_key:
-            raise ValueError("Either user or session_key must be provided.")
-        self.user = user
-        self.session_key = session_key
+    def __init__(self, request):
+        self.request = request
+
+    def _get_queryset(self, product_id):
+        user = self.request.user.id
+        session_key = self.request.session.session_key
+        if user:
+            queryset = ComparisonItem.objects.filter(user=user, product_id=product_id)
+        else:
+            queryset = ComparisonItem.objects.filter(session_key=session_key, product_id=product_id)
+        return queryset
+
+    def _get_user(self):
+        user = self.request.user.id
+        if user:
+            return True
+        return False
 
     def add_product(self, product_id):
         """
         Добавляет товар в список сравнения, если его там нет
         """
-        if not self._is_product_in_list(product_id):
-            ComparisonItem.objects.create(
-                user=self.user,
-                session_key=self.session_key,
-                product_id=product_id
-            )
-            return True
-        return False
+        if not self._get_queryset(product_id).exists():
+            if self._get_user() is True:
+                ComparisonItem.objects.create(
+                    user=self.request.user,
+                    product_id=product_id,
+                )
+            else:
+                ComparisonItem.objects.create(
+                    session_key=self.request.session.session_key,
+                    product_id=product_id,
+                )
 
     def remove_product(self, product_id):
         """
         Удаляет товар из списка сравнения
         """
-        ComparisonItem.objects.filter(
-            user=self.user,
-            session_key=self.session_key,
-            product_id=product_id
-        ).delete()
+        if self._get_user():
+            ComparisonItem.objects.filter(
+                user_id=self.request.user.id,
+                product_id=product_id,
+            ).delete()
+        else:
+            ComparisonItem.objects.filter(
+                session_key=self.request.session.session_key,
+                product_id=product_id,
+            ).delete()
 
-    def get_products(self, limit=3):
+    def get_products(self, limit=2):
         """
         Возвращает список товаров, добавленных к сравнению
         """
-        queryset = ComparisonItem.objects.filter(
-            user=self.user,
-            session_key=self.session_key
-        )[:limit]
-        return [item.product_id for item in queryset]
+        if self._get_user():
+            queryset = ComparisonItem.objects.filter(
+                user=self.request.user.id,
+            ).select_related('product').all()[:limit]
+        else:
+            queryset = ComparisonItem.objects.filter(
+                session_key=self.request.session.session_key,
+            ).select_related('product').all()[:limit]
+        return queryset
 
     def get_count(self):
         """
         Возвращает количество товаров в списке сравнения
         """
-        return ComparisonItem.objects.filter(
-            user=self.user,
-            session_key=self.session_key
-        ).count()
-
-    def _is_product_in_list(self, product_id):
-        """
-        Проверяет, есть ли товар в списке сравнения
-        """
-        return ComparisonItem.objects.filter(
-            user=self.user,
-            session_key=self.session_key,
-            product_id=product_id
-        ).exists()
+        if self._get_user():
+            count =  ComparisonItem.objects.filter(
+                user=self.request.user.id,
+            ).count()
+        else:
+            count = ComparisonItem.objects.filter(
+                session_key=self.request.session.session_key,
+            ).count()
+        return count

@@ -56,7 +56,6 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_order', null=True)
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True, related_name='order')
-    # cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     def __str__(self):
         if self.cart.user is not None:
