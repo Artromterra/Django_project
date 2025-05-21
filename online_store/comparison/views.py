@@ -26,8 +26,14 @@ class ComparisonView(ListView):
     def get(self, request, **kwargs):
         comparison_service = ComparisonService(request)
         products = comparison_service.get_products()
-        context = {'products': products}
+        context = {
+            'products': products,
+        }
         return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = super(ComparisonView, self).get_context_data(**kwargs)
+
 
 
 class DeleteComparisonView(View):

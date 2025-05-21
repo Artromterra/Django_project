@@ -1,0 +1,386 @@
+[
+{
+    "model": "shop.productproperties",
+    "pk": 1,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 1,
+        "value": 1,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 2,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 2,
+        "value": 2,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 3,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 3,
+        "value": 3,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 4,
+    "fields": {
+        "title": "Экран",
+        "property": 4,
+        "value": 4,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 5,
+    "fields": {
+        "title": "Экран",
+        "property": 5,
+        "value": 5,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 6,
+    "fields": {
+        "title": "Система",
+        "property": 6,
+        "value": 6,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 7,
+    "fields": {
+        "title": "Система",
+        "property": 7,
+        "value": 7,
+        "product": [
+            1
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 8,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 1,
+        "value": 1,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 9,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 2,
+        "value": 8,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 10,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 3,
+        "value": 9,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 11,
+    "fields": {
+        "title": "Экран",
+        "property": 4,
+        "value": 4,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 12,
+    "fields": {
+        "title": "Экран",
+        "property": 4,
+        "value": 10,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 13,
+    "fields": {
+        "title": "Система",
+        "property": 6,
+        "value": 6,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 14,
+    "fields": {
+        "title": "Система",
+        "property": 7,
+        "value": 7,
+        "product": [
+            2
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 15,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 1,
+        "value": 11,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 16,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 2,
+        "value": 12,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 17,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 3,
+        "value": 3,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 18,
+    "fields": {
+        "title": "Технические характеристики",
+        "property": 8,
+        "value": 13,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 19,
+    "fields": {
+        "title": "Технические характеристики",
+        "property": 9,
+        "value": 14,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 20,
+    "fields": {
+        "title": "Габариты и вес",
+        "property": 10,
+        "value": 15,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 21,
+    "fields": {
+        "title": "Габариты и вес",
+        "property": 11,
+        "value": 16,
+        "product": [
+            5
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 22,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 2,
+        "value": 22,
+        "product": [
+            3
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 23,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 11,
+        "value": 18,
+        "product": [
+            3
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 24,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 13,
+        "value": 19,
+        "product": [
+            3
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 25,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 14,
+        "value": 20,
+        "product": [
+            3
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 26,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 15,
+        "value": 21,
+        "product": [
+            3
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 27,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 1,
+        "value": 28,
+        "product": [
+            7
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 28,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 2,
+        "value": 29,
+        "product": [
+            7
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 29,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 16,
+        "value": 23,
+        "product": [
+            7
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 30,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 17,
+        "value": 25,
+        "product": [
+            7
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 31,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 18,
+        "value": 26,
+        "product": [
+            7
+        ]
+    }
+},
+{
+    "model": "shop.productproperties",
+    "pk": 32,
+    "fields": {
+        "title": "Общие параметры",
+        "property": 19,
+        "value": 27,
+        "product": [
+            7
+        ]
+    }
+}
+]

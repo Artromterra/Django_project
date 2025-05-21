@@ -22,6 +22,7 @@
                   <div class="Tabs-block" id="description">
                     <div class="table">
                       <table>
+                      {% if item.product.product_properties.all %}
                         <tr>
                           <th class="hed">
                             {% translate "Характеристика" %}
@@ -30,73 +31,20 @@
                             {% translate "Значение" %}
                           </th>
                         </tr>
-                        <tr>
-                          <td><b>
-                            {% translate "Общие параметры" %}
-                          </b></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td class="comparis">
-                            {% translate "Тип" %}
-                          </td>
-                          <td class="comparis">
-                            {% translate "Ноутбук" %}
-                          </td>
-                        </tr>
+
+                        {% for property in item.product.product_properties.all %}
                         <tr>
                           <td>
-                            {% translate "Модель" %}
+                            {{ property.property.name }}
                           </td>
-                          <td>Irbis NB270</td>
-                        </tr>
-                        <tr>
                           <td>
-                            {% translate "Год релиза" %}
+                            {{ property.value }}
                           </td>
-                          <td>2019</td>
                         </tr>
-                        <tr>
-                          <td><b>
-                            {% translate "Экран" %}
-                          </b></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>
-                            {% translate "Диагональ экрана (дюйм)" %}
-                          </td>
-                          <td>14.1"</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            {% translate "Разрешение экрана" %}
-                          </td>
-                          <td>Full HD (1920x1080)</td>
-                        </tr>
-                        <tr>
-                          <td class="comparis">
-                            {% translate "Плотность пикселей" %}
-                          </td>
-                          <td class="comparis">156 ppi</td>
-                        </tr>
-                        <tr>
-                          <td><b>
-                            {% translate "Система" %}</b></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td class="comparis">
-                            {% translate "Операционная система" %}
-                          </td>
-                          <td class="comparis">Android</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            {% translate "Версия ОС" %}
-                          </td>
-                          <td>Android 10 Go</td>
-                        </tr>
+                        {% endfor %}
+                        {% else %}
+                          <h3>У данного товара нет характеристик</h3>
+                      {% endif %}
                       </table>
                     </div>
                   </div>

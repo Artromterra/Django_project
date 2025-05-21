@@ -1,0 +1,205 @@
+[
+{
+    "model": "shop.propertyvalue",
+    "pk": 1,
+    "fields": {
+        "value": "смартфон"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 2,
+    "fields": {
+        "value": "realme Note"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 3,
+    "fields": {
+        "value": "2024"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 4,
+    "fields": {
+        "value": "6,7"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 5,
+    "fields": {
+        "value": "1600х720"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 6,
+    "fields": {
+        "value": "Android"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 7,
+    "fields": {
+        "value": "Android 14"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 8,
+    "fields": {
+        "value": "Poco  X7"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 9,
+    "fields": {
+        "value": "2025"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 10,
+    "fields": {
+        "value": "2712х1220"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 11,
+    "fields": {
+        "value": "Электрическая плита"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 12,
+    "fields": {
+        "value": "Gorenje GEC5B41SG"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 13,
+    "fields": {
+        "value": "электрические"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 14,
+    "fields": {
+        "value": "62 л"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 15,
+    "fields": {
+        "value": "38"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 16,
+    "fields": {
+        "value": "594 × 850 × 500"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 17,
+    "fields": {
+        "value": "347"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 18,
+    "fields": {
+        "value": "600 x 630 x 1950"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 19,
+    "fields": {
+        "value": "Ручное, Капельная система"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 20,
+    "fields": {
+        "value": "246"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 21,
+    "fields": {
+        "value": "A"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 22,
+    "fields": {
+        "value": "ATLANT ХМ 4024-000"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 23,
+    "fields": {
+        "value": "860"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 24,
+    "fields": {
+        "value": "Антипригарное"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 25,
+    "fields": {
+        "value": "Сенсорное"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 26,
+    "fields": {
+        "value": "5"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 27,
+    "fields": {
+        "value": "ТЭН"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 28,
+    "fields": {
+        "value": "Мультиварка"
+    }
+},
+{
+    "model": "shop.propertyvalue",
+    "pk": 29,
+    "fields": {
+        "value": "РЕДМОНД RMC-M902"
+    }
+}
+]

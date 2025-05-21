@@ -52,7 +52,7 @@ class ComparisonService:
                 product_id=product_id,
             ).delete()
 
-    def get_products(self, limit=2):
+    def get_products(self, limit=3):
         """
         Возвращает список товаров, добавленных к сравнению
         """
