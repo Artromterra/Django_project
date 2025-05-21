@@ -154,10 +154,12 @@
                         {% translate "Значение" %}
                       </th>
                     </tr>
-                    {% if object.properties.all %}
-                      {% for prop in object.properties.all %}
-                        <td>{{ prop.property.name }}</td>
-                        <td>{{ prop.value.value }}</td>
+                    {% if product.product_properties.all %}
+                      {% for prop in product.product_properties.all %}
+                        <tr>
+                          <td>{{ prop.property.name }}</td>
+                          <td>{{ prop.value }}</td>
+                        </tr>
                       {% endfor %}
                     {% else %}
                       <tr>
@@ -226,22 +228,16 @@
               </div>
               <div class="Tabs-block" id="addit">
                 <div class="Product-props">
+                {% if product.product_properties.all %}
+                  {% for prop in product.product_properties.all %}
                   <div class="Product-prop">
-                    <strong>Lorem
-                    </strong><span> Pfizer</span>
+                    <strong>{{ prop.property.name }}</strong>
+                    <span>{{ prop.value }}</span>
                   </div>
-                  <div class="Product-prop">
-                    <strong>ipsum
-                    </strong><span> Lorem ipsum dolor sit</span>
-                  </div>
-                  <div class="Product-prop">
-                    <strong>dolor sit
-                    </strong><span> 5 ans</span>
-                  </div>
-                  <div class="Product-prop">
-                    <strong>psum dolo
-                    </strong><span> 2–3 jours</span>
-                  </div>
+                  {% endfor %}
+                  {% else %}
+                  <h3>{% translate "Характеристик нет" %}</h3>
+                {% endif %}
                 </div>
               </div>
               <div class="Tabs-block" id="reviews" data-product-id="{{ product.pk }}"
