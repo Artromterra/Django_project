@@ -1,0 +1,135 @@
+[
+{
+    "model": "shop.property",
+    "pk": 1,
+    "fields": {
+        "name": "Тип"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 2,
+    "fields": {
+        "name": "Модель"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 3,
+    "fields": {
+        "name": "Год релиза"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 4,
+    "fields": {
+        "name": "Диагональ, дюймы"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 5,
+    "fields": {
+        "name": "Разрешение экрана"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 6,
+    "fields": {
+        "name": "Операционная система"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 7,
+    "fields": {
+        "name": "Версия ОС"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 8,
+    "fields": {
+        "name": "тип конфорок"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 9,
+    "fields": {
+        "name": "объем духовки"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 10,
+    "fields": {
+        "name": "Вес, кг"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 11,
+    "fields": {
+        "name": "Размеры, мм"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 12,
+    "fields": {
+        "name": "Общий объем, л"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 13,
+    "fields": {
+        "name": "Размораживание"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 14,
+    "fields": {
+        "name": "Общий объем холодильной камеры, л"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 15,
+    "fields": {
+        "name": "Класс энергопотребления"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 16,
+    "fields": {
+        "name": "Мощность, Вт"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 17,
+    "fields": {
+        "name": "Управление"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 18,
+    "fields": {
+        "name": "Объем чаши, л"
+    }
+},
+{
+    "model": "shop.property",
+    "pk": 19,
+    "fields": {
+        "name": "Тип нагревательного элемента"
+    }
+}
+]

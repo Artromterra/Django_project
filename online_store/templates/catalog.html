@@ -110,7 +110,7 @@
         <div class="Cards">
           {% for product in products %}
           <div class="Card">
-            <a class="Card-picture" href="#">
+            <a class="Card-picture" href="{% url "shop:products_detail" pk=product.id %}">
               <img style="max-height: 300px; width: auto" src="{{ product.image_url }}" alt="product_image" />
             </a>
             <div class="Card-content">
@@ -118,13 +118,17 @@
                 <a href="{% url "shop:products_detail" pk=product.id %}">{{ product.title}}</a>
               </strong>
               <div class="Card-description">
-                <div class="Card-cost"><span class="Card-price">${{ product.price }} {{ image_url.url }}</span>
+                <div class="Card-cost">
+                  <span class="Card-price">${{ product.price }} {{ image_url.url }}</span>
                 </div>
                 <div class="Card-category">{{ product.categories }}
                 </div>
                 <div class="Card-hover">
                   <a class="Card-btn" href="{% url 'shop:add_to_cart' pk=product.id %}">
                     <img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg" />
+                  </a>
+                  <a class="Card-btn" href="{% url 'comparison:add_product' product_id=product.id %}">
+                    <img src="/static/assets/img/icons/card/change.svg" alt="change.svg" />
                   </a>
                 </div>
               </div>

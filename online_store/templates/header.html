@@ -83,8 +83,8 @@
             </a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" href="#">
-              {% translate "Сравнение" %}
+            <a class="menu-link" href="{% url 'comparison:comparison_list' %}">
+              {% translate "Сравнение" %}({{ comparison_count }})
             </a>
           </li>
         </ul>

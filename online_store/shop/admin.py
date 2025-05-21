@@ -77,6 +77,7 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ("icon_preview",)
     actions = [clear_category_menu_cache]
 
+
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
     list_display = ('name', 'discount_type', 'value', 'start_date', 'end_date', 'priority', 'is_active')
@@ -87,11 +88,12 @@ class DiscountAdmin(admin.ModelAdmin):
 
 @admin.register(ProductProperties)
 class ProductPropertiesAdmin(admin.ModelAdmin):
-    list_display = ("id", "property", "value", "get_products")
+    list_display = ("get_products", "property", "value", "title")
     search_fields = ("property__name", "value__value")
+    list_display_links = ("get_products",)
 
     def get_products(self, obj):
-        return ", ".join([p.name for p in obj.product.all()])
+        return ", ".join([p.title for p in obj.product.all()])
     get_products.short_description = "Products"
 
 

@@ -35,12 +35,8 @@ def comparison(request):
         request.session.create()
         session_key = request.session.session_key
 
-    if not session_key:
-        request.session.create()
-        session_key = request.session.session_key
 
-    comparison_service = ComparisonService(user=user, session_key=session_key)
-
+    comparison_service = ComparisonService(request)
     comparison_count = comparison_service.get_count()
 
     return {

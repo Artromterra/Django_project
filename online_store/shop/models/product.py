@@ -36,6 +36,14 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('shop:products_detail', kwargs={'pk': self.pk})
 
+    def get_price(self):
+        if self.price == 0:
+            seller_obj = ProductSeller.objects.filter(
+                product=self.pk
+            ).first()
+            return seller_obj.price
+        return self.price
+
 
 class ProductSeller(models.Model):
     objects = models.Manager()
@@ -48,7 +56,7 @@ class ProductSeller(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sellers')
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='product_sellers')
     free_shipping = models.BooleanField(default=False)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=0)
     amount = models.PositiveIntegerField(default=0)
 
     def __str__(self):
