@@ -112,7 +112,7 @@ class UserAccountView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        order = Order.objects.filter(cart__user=self.request.user).order_by('-created_at').first()
+        order = Order.objects.filter(user=self.request.user).order_by('-created_at').first()
         context['order'] = order
         return context
 

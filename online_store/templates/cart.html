@@ -61,7 +61,7 @@
               <span class="Cart-price">{{ total_price }} / {{ total_discount_price }}$</span>
             </div>
             <div class="Cart-block">
-              <a class="btn btn_success btn_lg" href="{% url 'shop:order_user' pk=cart.id %}">
+              <a class="btn btn_success btn_lg" href="{% url 'shop:order_user' cart_id=cart.id %}">
                 {% translate "Оформить заказ" %}
               </a>
             </div>
