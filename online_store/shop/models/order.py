@@ -58,8 +58,8 @@ class Order(models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True, related_name='order')
 
     def __str__(self):
-        if self.cart.user is not None:
-            return f'Заказ № {self.pk}, пользователь {self.cart.user.username}'
+        if self.user:
+            return f'Заказ № {self.pk}, пользователь {self.user.username}'
         return f'Заказ № {self.pk}, пользователь Anonymous'
 
     yookassa_payment_id = models.CharField(max_length=100, null=True, blank=True)

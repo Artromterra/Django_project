@@ -39,6 +39,7 @@
         </div>
         <div class="Section-content">
           <div class="Orders">
+          {% if orders %}
             {% for order in orders %}
             <div class="Order Order_anons">
               <div class="Order-personal">
@@ -100,6 +101,9 @@
               </div>
             </div>
             {% endfor %}
+            {% else %}
+            <p class="Order-title">У вас нет истории заказов</p>
+          {% endif %}
           </div>
         </div>
       </div>

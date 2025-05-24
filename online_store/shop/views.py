@@ -264,7 +264,7 @@ class OrderUserView(FormView):
         :return: dict словарь данных пользователя
         """
         user = self.request.user
-        pk = self.kwargs.get("pk")
+        pk = self.kwargs.get("cart_id")
         cart_queryset = Cart.objects.filter(pk=pk)
         if not cart_queryset.exists():
             return redirect('/')
@@ -280,17 +280,18 @@ class OrderUserView(FormView):
             return initial
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
+        cart_id = self.kwargs.get("cart_id")
         self.session = request.session
         self.session['delivery_page'] = False
         self.session['pay_page'] = False
-        self.session['cart_id'] = self.kwargs.get('pk')
+        self.session['cart_id'] = cart_id
         session_key = request.session.session_key
-        cart = Cart.objects.filter(pk=self.kwargs.get("pk"))
-        if not cart.exists():
+        cart = Cart.objects.filter(pk=cart_id).first()
+        if not cart:
             return redirect('/')
         else:
-            cart[0].session_key = session_key
-            cart[0].save()
+            cart.session_key = session_key
+            cart.save()
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -309,7 +310,7 @@ class OrderUserView(FormView):
         self.pk = user.pk
         account = Account.objects.create(user=user)
         account.save()
-        pk = self.kwargs.get('pk')
+        pk = self.kwargs.get('cart_id')
         cart_obj = Cart.objects.get(pk=pk)
         cart_obj.user_id = self.pk
         cart_obj.save()
@@ -323,17 +324,19 @@ class OrderDeliveryView(LoginRequiredMixin, FormView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.session = None
-        self.cart_id = None
+        # self.cart_id = None
 
     def get(self, request, *args, **kwargs):
-        self.cart_id = request.session.get('cart_id')
+        # self.cart_id = request.session.get('cart_id')
         if not request.session.has_key('delivery_page'):
-            # исправить на путь к корзине
             return redirect('shop:cart')
+
         if request.session.get('delivery_page') and not request.session.get('pay_page'):
             return redirect(reverse_lazy('shop:order_pay'))
+
         elif request.session.get('pay_page') and request.session.get('delivery_page'):
             return redirect(reverse_lazy('shop:order_confirm'))
+
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -386,12 +389,13 @@ class OrderPayView(LoginRequiredMixin, FormView):
         sk = self.session.session_key
         session = Session.objects.get(session_key=sk)
         data = session.get_decoded()
-        self.order_queryset = Order.objects.filter(cart_id=self.session.get('cart_id'))
+        self.order_queryset = Order.objects.filter(cart_id=data['cart_id'])
         if self.order_queryset.exists():
             self.order_queryset.update(
-                city=self.session.get('city'),
-                address=self.session.get('address'),
-                delivery=self.session.get('delivery'),
+                city=data['city'],
+                address=data['address'],
+                delivery=data['delivery'],
+                cart_id=data['cart_id'],
             )
         else:
             self.obj, created = Order.objects.get_or_create(
@@ -615,7 +619,10 @@ class OrderPayment(LoginRequiredMixin, FormView):
 
         # Сохраняем payment_id
         order.yookassa_payment_id = response.get("id")
+        order.paid = True
         order.save()
+        old_cart = order.cart
+        old_cart.delete()
 
         return redirect(self.get_success_url())
 
@@ -628,7 +635,7 @@ class OrderPayment(LoginRequiredMixin, FormView):
         return {'total_price': order.total_price} if order else {}
 
     def get_success_url(self):
-        return '/shop/order-confirm/payment/progressPayment'
+        return 'profiles:user_account_view'
 
 
 class OrderPaymentProgress(LoginRequiredMixin, TemplateView):

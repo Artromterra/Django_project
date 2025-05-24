@@ -94,7 +94,7 @@
                       <div class="Cart-desc">{{ cart.product.short_description }}</div>
                     </div>
                     <div class="Cart-block Cart-block_price">
-                      <div class="Cart-price">{{ cart.get_final_price }} руб.</div>
+                      <div class="Cart-price">{{ cart.get_final_price }}$</div>
                     </div>
                   </div>
                   <div class="Cart-block Cart-block_row">
@@ -106,7 +106,7 @@
                   <div class="Cart-block Cart-block_total">
                     <strong class="Cart-title">
                       {% translate "Итого" %}:
-                    </strong><span class="Cart-price">{{ total }} руб.</span>
+                    </strong><span class="Cart-price">{{ total }}$</span>
                   </div>
                   <div class="Cart-block">
                     {% if order.payment_method == 'SC' %}
