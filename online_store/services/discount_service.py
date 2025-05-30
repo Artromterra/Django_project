@@ -80,7 +80,7 @@ class DiscountService:
 
 
     def discount_on_each_product_in_cart(self, discount: Discount):
-        """суммарная цена товара в корзине с учетом скидки на каждый товар"""
+        """суммарная цена товаров в корзине с учетом скидки на каждый товар"""
         cart_items = self.cart_service.get_cart_items()
         price = 0
         for item in cart_items:

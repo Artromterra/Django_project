@@ -2,6 +2,6 @@
 ./.python-version
 **/.venv/
 ./redisdata
-./docker-compose.dev.yml
+docker-compose.yml
 ./redis.conf
 **/tests.py

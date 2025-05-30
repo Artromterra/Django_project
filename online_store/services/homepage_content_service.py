@@ -75,7 +75,8 @@ class HomepageContentService:
             )
             .order_by('nearest_end')[:1]
         )
-
+        pr = discount_product.first()
+        dt = ProductDTO.from_object_for_discount_card(discount_product[0])
         return (
             ProductDTO.from_object_for_discount_card(discount_product[0])
             if discount_product
