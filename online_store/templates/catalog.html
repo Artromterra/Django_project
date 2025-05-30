@@ -111,7 +111,7 @@
           {% for product in products %}
           <div class="Card">
             <a class="Card-picture" href="{% url "shop:products_detail" pk=product.id %}">
-              <img style="max-height: 300px; width: auto" src="{{ product.image_url }}" alt="product_image" />
+              <img style="max-height: 265px; width: auto" src="{{ product.image_url }}" alt="product_image" />
             </a>
             <div class="Card-content">
               <strong class="Card-title">
